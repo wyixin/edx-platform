@@ -16,12 +16,14 @@ ${block_content}
     % endif
 </div>
 %  endif
-<div aria-hidden="true"><a href="#${element_id}_debug" id="${element_id}_trig">${_("Staff Debug Info")}</a></div>
+<div aria-hidden="true"  class="wrap-instructor-info">
+  <a  class="instructor-info-action" href="#${element_id}_debug" id="${element_id}_trig">${_("Staff Debug Info")}</a>
 
-%  if settings.FEATURES.get('ENABLE_STUDENT_HISTORY_VIEW') and \
-      location.category == 'problem':
-<div aria-hidden="true"><a href="#${element_id}_history" id="${element_id}_history_trig">${_("Submission history")}</a></div>
-%  endif
+  %  if settings.FEATURES.get('ENABLE_STUDENT_HISTORY_VIEW') and \
+    location.category == 'problem':
+    <a  class="instructor-info-action" href="#${element_id}_history" id="${element_id}_history_trig">${_("Submission history")}</a>
+  %  endif
+</div>
 
 <section aria-hidden="true" id="${element_id}_xqa-modal" class="modal xqa-modal" style="width:80%; left:20%; height:80%; overflow:auto" >
   <div class="inner-wrapper">

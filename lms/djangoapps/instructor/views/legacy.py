@@ -32,7 +32,7 @@ from xmodule.html_module import HtmlDescriptor
 from bulk_email.models import CourseEmail, CourseAuthorization
 from courseware import grades
 from courseware.access import has_access
-from courseware.courses import get_course_with_access, get_cms_course_link
+from courseware.courses import get_course_with_access, get_cms_block_link
 from student.roles import (
     CourseStaffRole, CourseInstructorRole, CourseBetaTesterRole, GlobalStaff
 )
@@ -844,10 +844,9 @@ def instructor_dashboard(request, course_id):
 
     # determine if this is a studio-backed course so we can provide a link to edit this course in studio
     is_studio_course = modulestore().get_modulestore_type(course_id) != XML_MODULESTORE_TYPE
-
     studio_url = None
     if is_studio_course:
-        studio_url = get_cms_course_link(course)
+      studio_url = get_cms_block_link(course, 'course')
 
     email_editor = None
     # HTML editor for email
