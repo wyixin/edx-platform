@@ -5,6 +5,9 @@ These are notable changes in edx-platform.  This is a rolling list of changes,
 in roughly chronological order, most recent first.  Add your entries at or near
 the top.  Include a label indicating the component affected.
 
+LMS: Enabled screen reader feedback of problem responses.
+  LMS-2158
+
 Blades: Fix issues related to videos that have separate YouTube IDs for the
 different video speeds. BLD-915, BLD-901.
 

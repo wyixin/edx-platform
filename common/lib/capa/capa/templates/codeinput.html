@@ -10,28 +10,38 @@
        % endif
   >${value|h}</textarea>
 
-  <div class="grader-status" tabindex="1">
-    % if status == 'unsubmitted':
-      <span class="unanswered" style="display:inline-block;" id="status_${id}" aria-describedby="input_${id}"><span class="sr">Status: </span>Unanswered</span>
-    % elif status == 'correct':
-      <span class="correct" id="status_${id}" aria-describedby="input_${id}"><span class="sr">Status: </span>Correct</span>
-    % elif status == 'incorrect':
-      <span class="incorrect" id="status_${id}" aria-describedby="input_${id}"><span class="sr">Status: </span>Incorrect</span>
-    % elif status == 'queued':
-      <span class="processing" id="status_${id}" aria-describedby="input_${id}"><span class="sr">Status: </span>Queued</span>
-      <span style="display:none;" class="xqueue" id="${id}" >${queue_len}</span>
+  <%
+  if status == 'unsubmitted' or not status:
+      statusclass = 'unanswered'
+  elif status == 'queued':
+      statusclass = 'processing'
+  else:
+      statusclass = status
+  %>
+  <div class="grader-status">
+      <span id="status_${id}"
+            class="${statusclass}"
+            aria-describedby="input_${id}"
+            %if status == 'unsubmitted':
+            style="display:inline-block;"
+            %endif
+      >
+          <span class="status sr">${status or ''}</span>
+      </span>
+    % if status == 'queued':
+      <span style="display:none;" class="xqueue" id="${id}">${queue_len}</span>
     % endif
 
     % if hidden:
       <div style="display:none;" name="${hidden}" inputid="input_${id}" />
     % endif
 
-    <p class="debug">${status}</p>
+    <p class="debug">${status or ''}</p>
   </div>
 
   <span id="answer_${id}"></span>
 
-  <div class="external-grader-message">
+  <div class="external-grader-message" aria-live="polite">
     ${msg|n}
   </div>
 

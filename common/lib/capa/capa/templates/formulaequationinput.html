@@ -9,7 +9,19 @@
         % endif
         />
 
-      <p class="status">${reported_status}</p>
+      <p class="status" 
+         %if status != 'unsubmitted':
+         aria-hidden="true"
+         %endif
+         >
+          <span class="sr equation">
+              %if value:
+              ${value|h}
+              % else:
+              ${label}
+              %endif
+          </span> - ${reported_status}
+      </p>
 
       <div id="input_${id}_preview" class="equation">
         \[\]
