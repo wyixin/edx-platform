@@ -96,6 +96,10 @@ class LTIFields(object):
         values={"min": 0},
     )
     has_score = Boolean(help="Does this LTI module have score?", default=False, scope=Scope.settings)
+    module_score = Float(help="The score kept in the xblock KVS -- duplicate of the published score in django DB",
+                         default=0.0,
+                         scope=Scope.user_state)
+    score_comment = String(help="Comment as returned from grader, LTI2.0 spec", default="", scope=Scope.user_state)
 
 
 class LTIModule(LTIFields, XModule):
@@ -430,7 +434,6 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
     def max_score(self):
         return self.weight if self.has_score else None
 
-
     @XBlock.handler
     def grade_handler(self, request, dispatch):
         """
@@ -554,6 +557,151 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
         log.debug("[LTI]: Incorrect action.")
         return Response(response_xml_template.format(**unsupported_values), content_type='application/xml')
 
+    #  LTI 2.0 Result Service Support -- but for now only for PUTting the grade back into an LTI xmodule
+    @XBlock.handler
+    def lti_2_0_result_rest_handler(self, request, dispatch):
+        """
+        This will in the future be the handler for the LTI 2.0 Result service REST endpoints.  Right now
+        I'm (@jbau) just implementing the PUT interface first.  All other methods get 404'ed.  It really should
+        be a 405, but LTI does not specify that as an acceptable return code.  See
+        http://www.imsglobal.org/lti/ltiv2p0/uml/purl.imsglobal.org/vocab/lis/v2/outcomes/Result/service.html
+
+        An example JSON object:
+        {
+         "@context" : "http://purl.imsglobal.org/ctx/lis/v2/Result",
+         "@type" : "Result",
+         "@id" : "anon_id:S23SD9I2",
+         "resultScore" : 0.83,
+         "comment" : "This is exceptional work."
+        }
+
+        For PUTs, the content type must be "application/vnd.ims.lis.v2.result+json".
+        Failures result in 401, 404, or 500s without any body.  Successes result in 200.  Again see
+        http://www.imsglobal.org/lti/ltiv2p0/uml/purl.imsglobal.org/vocab/lis/v2/outcomes/Result/service.html
+        (Note: this is stupid and prevents good debug messages for the client.  So I'd advocate the creating
+        another endpoint that doesn't conform to spec, but is nicer)
+        endpoint)
+        """
+        if request.method != "PUT":
+            return Response(status=404)  # have to do 404 due to stupid spec, but 405 is better, with error msg in body
+
+        try:
+            self.verify_lti20_result_rest_headers(request)
+        except LTIError:
+            return Response(status=401)  # Unauthorized in this case.  401 is right
+
+        try:
+            (anon_id, score, comment) = self.parse_lti20_result_json(request)
+        except LTIError:
+            return Response(status=404)  # have to do 404 due to stupid spec, but 400 is better, with error msg in body
+
+        real_user = self.system.get_real_user(anon_id)
+        if not real_user:  # that means we can't save to database, as we do not have real user id.
+            return Response(status=404)  # have to do 404 due to stupid spec, but 400 is better, with error msg in body
+        # now we can record the score and the comment
+        scaled_score = score * self.max_score()
+
+        self.module_score = scaled_score
+        self.score_comment = comment
+        self.system.publish(
+            self,
+            {
+                'event_name': 'grade',
+                'value': scaled_score,
+                'max_value': self.max_score(),
+            },
+            custom_user=real_user
+        )
+        return Response(status=200)
+
+    def verify_lti20_result_rest_headers(self, request):
+        """
+        Helper method to validate LTI 2.0 REST result service HTTP headers.  returns if correct, else raises LTIError
+        """
+        lti_20_content_type = 'application/vnd.ims.lis.v2.result+json'
+        content_type = request.headers.get('Content-Type')
+        if content_type != lti_20_content_type:
+            log.debug("[LTI]: v2.0 result service -- bad Content-Type: {}".format(content_type))
+            raise LTIError(
+                "For LTI 2.0 result service, Content-Type must be {}.  Got {}".format(lti_20_content_type,
+                                                                                      content_type))
+        try:
+            self.verify_oauth_body_sign(request, content_type=lti_20_content_type)
+        except (ValueError, LTIError) as e:
+            log.debug("[LTI]: v2.0 result service -- OAuth body verification failed:  {}".format(e.message))
+            raise LTIError(e.message)
+
+    def parse_lti20_result_json(self, json_str):
+        """
+        Helper method for verifying LTI 2.0 JSON object.
+        The json_str must be loadable.  It can either be an dict (object) or an array whose first element is an dict,
+        in which case that first dict is considered.
+        The dict must have the "@type" key with value equal to "Result",
+        "resultScore" key with value equal to a number [0, 1],
+        and "@id" must have a value of a CURIE http://www.w3.org/TR/curie/ in the form of "anon_id:9MD2920JF"
+        The "@context" key must be present, but we don't do anything with it.  And the "comment" key may be
+        present, in which case it must be a string.
+
+        Returns (anon_id, score, [optional]comment) if all checks out
+        """
+        try:
+            json_obj = json.loads(json_str)
+        except (ValueError, TypeError) as e:
+            msg = "Supplied JSON string in request body could not be decoded"
+            log.debug("[LTI] {}".format(msg))
+            raise LTIError(msg)
+
+        # the standard supports a list of objects, who knows why. It must contain at least 1 element, and the
+        # first element must be a dict
+        if type(json_obj) == list and len(json_obj) >= 1 and type(json_obj[0]) == dict:
+            json_obj = json_obj[0]
+        else:
+            msg = ("Supplied JSON string is a list that does not contain an object as the first element. {}"
+                   .format(json_str))
+            log.debug("[LTI] {}".format(msg))
+            raise LTIError(msg)
+
+        # '@type' must be "Result"
+        result_type = json_obj.get("@type")
+        if result_type != "Result":
+            msg = "JSON object does not contain correct @type attribute (should be 'Result', is {})".format(result_type)
+            log.debug("[LTI] {}".format(msg))
+            raise LTIError(msg)
+
+        # '@context' and '@id' must be present as a key
+        REQUIRED_KEYS = ["@context", "@id"]
+        for key in REQUIRED_KEYS:
+            if key not in json_obj:
+                msg = "JSON object does not contain required key {}".format(key)
+                log.debug("[LTI] {}".format(msg))
+                raise LTIError(msg)
+
+        # 'resultScore' must be a number between 0 and 1 inclusive
+        try:
+            score = float(json_obj.get('resultScore', "unconvertable"))  # Check if float is present and the right type
+            if not 0 <= score <= 1:
+                msg = 'score value outside the permitted range of 0-1.'
+                log.debug("[LTI] {}".format(msg))
+                raise LTIError(msg)
+        except (TypeError, ValueError) as e:
+            msg = "Could not convert resultScore to float: {}".format(e.message)
+            log.debug("[LTI] {}".format(msg))
+            raise LTIError(msg)
+
+        # parse out id
+        id_str = json_obj.get('@id', "")
+        id_parts = id_str.split(':')
+        ACCEPTED_TAGS = ['anon_id']  # this is the list of acceptable tags for identifying the student.  anon_id
+                                     # is reversible using self.system.get_real_user
+        if len(id_parts) < 2 or id_parts[0] not in ACCEPTED_TAGS:
+            msg = ('The @id you supplied is invalid.  It should be of the form "@id": "anon_id:<openedx_supplied_id>", '
+                   'but you supplied "@id": {}'.format(id_str))
+            log.debug("[LTI] {}".format(msg))
+            raise LTIError(msg)
+
+        anon_id = id_parts[-1]
+
+        return anon_id, score, json_obj.get('comment', "")
 
     @classmethod
     def parse_grade_xml_body(cls, body):
@@ -584,7 +732,7 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
 
         return imsx_messageIdentifier, sourcedId, score, action
 
-    def verify_oauth_body_sign(self, request):
+    def verify_oauth_body_sign(self, request, content_type='application/x-www-form-urlencoded'):
         """
         Verify grade request from LTI provider using OAuth body signing.
 
@@ -602,8 +750,8 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
 
         client_key, client_secret = self.get_client_key_secret()
         headers = {
-            'Authorization':unicode(request.headers.get('Authorization')),
-            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': unicode(request.headers.get('Authorization')),
+            'Content-Type': content_type,
         }
 
         sha1 = hashlib.sha1()
@@ -611,7 +759,7 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
         oauth_body_hash = base64.b64encode(sha1.digest())
 
         oauth_params = signature.collect_parameters(headers=headers, exclude_oauth_signature=False)
-        oauth_headers =dict(oauth_params)
+        oauth_headers = dict(oauth_params)
         oauth_signature = oauth_headers.pop('oauth_signature')
 
         mock_request = mock.Mock(
