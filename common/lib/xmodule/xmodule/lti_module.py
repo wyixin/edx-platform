@@ -263,6 +263,7 @@ class LTIModule(LTIFields, XModule):
             'open_in_a_new_page': self.open_in_a_new_page,
             'display_name': self.display_name,
             'form_url': self.runtime.handler_url(self, 'preview_handler').rstrip('/?'),
+            'lti_20_url': self.get_outcome_service_url(service_name="lti_2_0_result_rest_handler")
         }
 
     def get_html(self):
@@ -284,7 +285,7 @@ class LTIModule(LTIFields, XModule):
         assert user_id is not None
         return unicode(urllib.quote(user_id))
 
-    def get_outcome_service_url(self):
+    def get_outcome_service_url(self, service_name="grade_handler"):
         """
         Return URL for storing grades.
 
@@ -297,7 +298,7 @@ class LTIModule(LTIFields, XModule):
         uri = '{scheme}://{host}{path}'.format(
             scheme=scheme,
             host=self.system.hostname,
-            path=self.runtime.handler_url(self, 'grade_handler', thirdparty=True).rstrip('/?')
+            path=self.runtime.handler_url(self, service_name, thirdparty=True).rstrip('/?')
         )
         return uri
 
@@ -557,6 +558,7 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
         log.debug("[LTI]: Incorrect action.")
         return Response(response_xml_template.format(**unsupported_values), content_type='application/xml')
 
+
     #  LTI 2.0 Result Service Support -- but for now only for PUTting the grade back into an LTI xmodule
     @XBlock.handler
     def lti_2_0_result_rest_handler(self, request, dispatch):
@@ -570,7 +572,7 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
         {
          "@context" : "http://purl.imsglobal.org/ctx/lis/v2/Result",
          "@type" : "Result",
-         "@id" : "anon_id:S23SD9I2",
+         "@id" : "anon_id:1e23a9b2",
          "resultScore" : 0.83,
          "comment" : "This is exceptional work."
         }
@@ -582,6 +584,36 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
         another endpoint that doesn't conform to spec, but is nicer)
         endpoint)
         """
+
+        ######## DEBUG SECTION #######
+        sha1 = hashlib.sha1()
+        sha1.update(request.body)
+        oauth_body_hash = unicode(base64.b64encode(sha1.digest()))
+        log.debug("[LTI] oauth_body_hash = {}".format(oauth_body_hash))
+        client_key, client_secret = self.get_client_key_secret()
+        from oauthlib.oauth1 import Client
+        client = Client(client_key, client_secret)
+        params = client.get_oauth_params()
+        params.append((u'oauth_body_hash', oauth_body_hash))
+        print(request.headers)
+        mock_request = mock.Mock(
+            uri=unicode(urllib.unquote(request.url)),
+            headers=request.headers,
+            body=u"",
+            decoded_body=u"",
+            oauth_params=params,
+            http_method=unicode(request.method),
+        )
+        signature = client.get_oauth_signature(mock_request)
+        print(type(signature))
+        mock_request.oauth_params.append((u'oauth_signature', signature))
+
+        uri, headers, body = client._render(mock_request)
+        print(uri)
+        print(headers)
+        print(body)
+        ####### DEBUG SECTION END ########
+
         if request.method != "PUT":
             return Response(status=404)  # have to do 404 due to stupid spec, but 405 is better, with error msg in body
 
@@ -591,7 +623,7 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
             return Response(status=401)  # Unauthorized in this case.  401 is right
 
         try:
-            (anon_id, score, comment) = self.parse_lti20_result_json(request)
+            (anon_id, score, comment) = self.parse_lti20_result_json(request.body)
         except LTIError:
             return Response(status=404)  # have to do 404 due to stupid spec, but 400 is better, with error msg in body
 
@@ -638,7 +670,7 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
         in which case that first dict is considered.
         The dict must have the "@type" key with value equal to "Result",
         "resultScore" key with value equal to a number [0, 1],
-        and "@id" must have a value of a CURIE http://www.w3.org/TR/curie/ in the form of "anon_id:9MD2920JF"
+        and "@id" must have a value of a CURIE http://www.w3.org/TR/curie/ in the form of "anon_id:e1d2920f2c"
         The "@context" key must be present, but we don't do anything with it.  And the "comment" key may be
         present, in which case it must be a string.
 
@@ -647,19 +679,20 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
         try:
             json_obj = json.loads(json_str)
         except (ValueError, TypeError) as e:
-            msg = "Supplied JSON string in request body could not be decoded"
+            msg = "Supplied JSON string in request body could not be decoded: {}".format(json_str)
             log.debug("[LTI] {}".format(msg))
             raise LTIError(msg)
 
         # the standard supports a list of objects, who knows why. It must contain at least 1 element, and the
         # first element must be a dict
-        if type(json_obj) == list and len(json_obj) >= 1 and type(json_obj[0]) == dict:
-            json_obj = json_obj[0]
-        else:
-            msg = ("Supplied JSON string is a list that does not contain an object as the first element. {}"
-                   .format(json_str))
-            log.debug("[LTI] {}".format(msg))
-            raise LTIError(msg)
+        if type(json_obj) != dict:
+            if type(json_obj) == list and len(json_obj) >= 1 and type(json_obj[0]) == dict:
+                json_obj = json_obj[0]
+            else:
+                msg = ("Supplied JSON string is a list that does not contain an object as the first element. {}"
+                       .format(json_str))
+                log.debug("[LTI] {}".format(msg))
+                raise LTIError(msg)
 
         # '@type' must be "Result"
         result_type = json_obj.get("@type")
@@ -757,19 +790,22 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
         sha1 = hashlib.sha1()
         sha1.update(request.body)
         oauth_body_hash = base64.b64encode(sha1.digest())
-
         oauth_params = signature.collect_parameters(headers=headers, exclude_oauth_signature=False)
         oauth_headers = dict(oauth_params)
         oauth_signature = oauth_headers.pop('oauth_signature')
 
+        print(oauth_headers)
+        print(oauth_signature)
         mock_request = mock.Mock(
             uri=unicode(urllib.unquote(request.url)),
             http_method=unicode(request.method),
             params=oauth_headers.items(),
             signature=oauth_signature
         )
+
         if oauth_body_hash != oauth_headers.get('oauth_body_hash'):
             raise LTIError("OAuth body hash verification is failed.")
+
         if not signature.verify_hmac_sha1(mock_request, client_secret):
             raise LTIError("OAuth signature verification is failed.")
 
@@ -795,3 +831,5 @@ class LTIDescriptor(LTIFields, MetadataOnlyEditingDescriptor, EmptyDataRawDescri
     module_class = LTIModule
     grade_handler = module_attr('grade_handler')
     preview_handler = module_attr('preview_handler')
+    lti_2_0_result_rest_handler = module_attr('lti_2_0_result_rest_handler')
+    debug_get_oauth_body_hash = module_attr('debug_get_oauth_body_hash')
