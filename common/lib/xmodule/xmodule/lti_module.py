@@ -535,11 +535,14 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
             return Response(response_xml_template.format(**failure_values), content_type="application/xml")
 
         if action == 'replaceResultRequest':
+            scaled_score = score * self.max_score()
+            self.module_score = scaled_score
+
             self.system.publish(
                 self,
                 {
                     'event_name': 'grade',
-                    'value': score * self.max_score(),
+                    'value': scaled_score,
                     'max_value': self.max_score(),
                 },
                 custom_user=real_user
@@ -558,10 +561,9 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
         log.debug("[LTI]: Incorrect action.")
         return Response(response_xml_template.format(**unsupported_values), content_type='application/xml')
 
-
     #  LTI 2.0 Result Service Support -- but for now only for PUTting the grade back into an LTI xmodule
     @XBlock.handler
-    def lti_2_0_result_rest_handler(self, request, dispatch):
+    def lti_2_0_result_rest_handler(self, request, dispatch):  # pylint: disable=unused-argument
         """
         This will in the future be the handler for the LTI 2.0 Result service REST endpoints.  Right now
         I'm (@jbau) just implementing the PUT interface first.  All other methods get 404'ed.  It really should
@@ -595,7 +597,6 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
         client = Client(client_key, client_secret)
         params = client.get_oauth_params()
         params.append((u'oauth_body_hash', oauth_body_hash))
-        print(request.headers)
         mock_request = mock.Mock(
             uri=unicode(urllib.unquote(request.url)),
             headers=request.headers,
@@ -605,13 +606,11 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
             http_method=unicode(request.method),
         )
         signature = client.get_oauth_signature(mock_request)
-        print(type(signature))
         mock_request.oauth_params.append((u'oauth_signature', signature))
 
         uri, headers, body = client._render(mock_request)
-        print(uri)
-        print(headers)
-        print(body)
+        print("\n\n#### COPY AND PASTE AUTHORIZATION HEADER ####\n{}\n#############################################\n\n"
+              .format(headers['Authorization']))
         ####### DEBUG SECTION END ########
 
         if request.method != "PUT":
@@ -632,7 +631,6 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
             return Response(status=404)  # have to do 404 due to stupid spec, but 400 is better, with error msg in body
         # now we can record the score and the comment
         scaled_score = score * self.max_score()
-
         self.module_score = scaled_score
         self.score_comment = comment
         self.system.publish(
@@ -659,9 +657,9 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
                                                                                       content_type))
         try:
             self.verify_oauth_body_sign(request, content_type=lti_20_content_type)
-        except (ValueError, LTIError) as e:
-            log.debug("[LTI]: v2.0 result service -- OAuth body verification failed:  {}".format(e.message))
-            raise LTIError(e.message)
+        except (ValueError, LTIError) as err:
+            log.debug("[LTI]: v2.0 result service -- OAuth body verification failed:  {}".format(err.message))
+            raise LTIError(err.message)
 
     def parse_lti20_result_json(self, json_str):
         """
@@ -678,7 +676,7 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
         """
         try:
             json_obj = json.loads(json_str)
-        except (ValueError, TypeError) as e:
+        except (ValueError, TypeError):
             msg = "Supplied JSON string in request body could not be decoded: {}".format(json_str)
             log.debug("[LTI] {}".format(msg))
             raise LTIError(msg)
@@ -701,8 +699,8 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
             log.debug("[LTI] {}".format(msg))
             raise LTIError(msg)
 
-        # '@context' and '@id' must be present as a key
-        REQUIRED_KEYS = ["@context", "@id"]
+        # '@context', '@id', 'resultScore' must be present as a key
+        REQUIRED_KEYS = ["@context", "@id", "resultScore"]  # pylint: disable=invalid-name
         for key in REQUIRED_KEYS:
             if key not in json_obj:
                 msg = "JSON object does not contain required key {}".format(key)
@@ -716,16 +714,18 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
                 msg = 'score value outside the permitted range of 0-1.'
                 log.debug("[LTI] {}".format(msg))
                 raise LTIError(msg)
-        except (TypeError, ValueError) as e:
-            msg = "Could not convert resultScore to float: {}".format(e.message)
+        except (TypeError, ValueError) as err:
+            msg = "Could not convert resultScore to float: {}".format(err.message)
             log.debug("[LTI] {}".format(msg))
             raise LTIError(msg)
 
         # parse out id
         id_str = json_obj.get('@id', "")
         id_parts = id_str.split(':')
-        ACCEPTED_TAGS = ['anon_id']  # this is the list of acceptable tags for identifying the student.  anon_id
-                                     # is reversible using self.system.get_real_user
+
+        # this is the list of acceptable tags for identifying the student.  anon_id
+        # is reversible using self.system.get_real_user
+        ACCEPTED_TAGS = ['anon_id']  # pylint: disable=invalid-name
         if len(id_parts) < 2 or id_parts[0] not in ACCEPTED_TAGS:
             msg = ('The @id you supplied is invalid.  It should be of the form "@id": "anon_id:<openedx_supplied_id>", '
                    'but you supplied "@id": {}'.format(id_str))
@@ -793,9 +793,6 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
         oauth_params = signature.collect_parameters(headers=headers, exclude_oauth_signature=False)
         oauth_headers = dict(oauth_params)
         oauth_signature = oauth_headers.pop('oauth_signature')
-
-        print(oauth_headers)
-        print(oauth_signature)
         mock_request = mock.Mock(
             uri=unicode(urllib.unquote(request.url)),
             http_method=unicode(request.method),
