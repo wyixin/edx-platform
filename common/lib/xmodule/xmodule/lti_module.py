@@ -263,7 +263,6 @@ class LTIModule(LTIFields, XModule):
             'open_in_a_new_page': self.open_in_a_new_page,
             'display_name': self.display_name,
             'form_url': self.runtime.handler_url(self, 'preview_handler').rstrip('/?'),
-            'lti_20_url': self.get_outcome_service_url(service_name="lti_2_0_result_rest_handler")
         }
 
     def get_html(self):
