@@ -288,6 +288,15 @@ def click_grade(_step):
         assert iframe.is_text_present('LTI consumer (edX) responded with XML content')
 
 
+@step('I submit answer to question with LTI 2.0 PUT callback$')
+def click_grade(_step):
+    location = world.scenario_dict['LTI'].location.html_id()
+    iframe_name = 'ltiFrame-' + location
+    with world.browser.get_iframe(iframe_name) as iframe:
+        iframe.find_by_name('submit-lti2-button').first.click()
+        assert iframe.is_text_present('LTI2.0 consumer (edX) responded with content')
+
+
 @step('I see in iframe that LTI role is (.*)$')
 def check_role(_step, role):
     world.is_css_present('iframe')

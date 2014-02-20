@@ -76,3 +76,18 @@ Feature: LMS.LTI component
   And I click on the "Progress" tab
   Then I see text "Problem Scores: 5/10"
   And I see graph with total progress "5%"
+
+  #9
+  Scenario: Graded LTI component in LMS is correctly works with LTI2.0 PUT callback
+  Given the course has correct LTI credentials with registered Instructor
+  And the course has an LTI component with correct fields:
+  | open_in_a_new_page | weight | is_graded | has_score |
+  | False              | 10     | True      | True      |
+  And I submit answer to question with LTI 2.0 PUT callback
+  And I click on the "Progress" tab
+  Then I see text "Problem Scores: 8/10"
+  And I see graph with total progress "8%"
+  Then I click on the "Instructor" tab
+  And I click on the "Gradebook" tab
+  And I see in the gradebook table that "HW" is "80"
+  And I see in the gradebook table that "Total" is "8"

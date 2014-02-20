@@ -70,3 +70,13 @@ class StubLtiServiceTest(unittest.TestCase):
             mocked_post.return_value = Mock(content='Test response', status_code=200)
             response = urllib2.urlopen(grade_uri, data='')
             self.assertIn('Test response', response.read())
+
+    @patch('terrain.stubs.lti.signature.verify_hmac_sha1', return_value=True)
+    def test_lti20_outcomes_put(self, verify_hmac):
+        response = requests.post(self.launch_uri, data=self.payload)
+        self.assertIn('This is LTI tool. Success.', response.content)
+        grade_uri = self.uri + 'lti2_outcome'
+        with patch('terrain.stubs.lti.requests.put') as mocked_put:
+            mocked_put.return_value = Mock(content='Test response', status_code=200)
+            response = urllib2.urlopen(grade_uri, data='')
+            self.assertIn('Test response', response.read())
