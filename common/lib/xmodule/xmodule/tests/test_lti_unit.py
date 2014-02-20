@@ -397,6 +397,40 @@ class LTIModuleTest(LogicTest):
         #  We just want the above call to complete without exceptions, and to have called verify_oauth_body_sign
         self.assertTrue(self.xmodule.verify_oauth_body_sign.called)
 
+    BAD_DISPATCH_INPUTS = [
+        None,
+        u"",
+        u"abcd"
+        u"notuser/abcd"
+        u"user/"
+        u"user//"
+        u"user/gbere/"
+        u"user/gbere/xsdf"
+        u"user/ಠ益ಠ"  # not alphanumeric
+    ]
+
+    def test_lti20_rest_bad_dispatch(self):
+        """
+        Test the error cases for the "dispatch" argument to the LTI 2.0 handler.  Anything that doesn't
+        fit the form user/<anon_id>
+        """
+        for einput in self.BAD_DISPATCH_INPUTS:
+            with self.assertRaisesRegexp(LTIError, "No valid user id found in endpoint URL"):
+                self.xmodule.parse_lti20_handler_dispatch(einput)
+
+    GOOD_DISPATCH_INPUTS = [
+        (u"user/abcd3", u"abcd3"),
+        (u"user/Äbcdè2", u"Äbcdè2"),  # unicode, just to make sure
+    ]
+
+    def test_lti20_rest_good_dispatch(self):
+        """
+        Test the good cases for the "dispatch" argument to the LTI 2.0 handler.  Anything that does
+        fit the form user/<anon_id>
+        """
+        for ginput, expected in self.GOOD_DISPATCH_INPUTS:
+            self.assertEquals(self.xmodule.parse_lti20_handler_dispatch(ginput), expected)
+
     BAD_JSON_INPUTS = [
         # (bad inputs, error message expected)
         ([
@@ -416,43 +450,26 @@ class LTIModuleTest(LogicTest):
         ], u"JSON object does not contain correct @type attribute"),
         ([
             # @context missing
-            u'{"@type": "Result", "@id": "anon_id:abc", "resultScore": 0.1}',
-            # @id missing
-            u'{"@type": "Result", "@context": "http://purl.imsglobal.org/ctx/lis/v2/Result", "resultScore": 0.1}',
+            u'{"@type": "Result", "resultScore": 0.1}',
             # resultScore missing
-            u'{"@type": "Result", "@id": "anon_id:abc", "@context": "http://purl.imsglobal.org/ctx/lis/v2/Result"}',
+            u'{"@type": "Result", "@context": "http://purl.imsglobal.org/ctx/lis/v2/Result"}',
         ], u"JSON object does not contain required key"),
         ([
             u'''
             {"@type": "Result",
              "@context": "http://purl.imsglobal.org/ctx/lis/v2/Result",
-             "@id": "anon_id:abcdef0123456789",
              "resultScore": 100}'''  # score out of range
         ], u"score value outside the permitted range of 0-1."),
         ([
             u'''
             {"@type": "Result",
              "@context": "http://purl.imsglobal.org/ctx/lis/v2/Result",
-             "@id": "anon_id:abcdef0123456789",
              "resultScore": "1b"}''',   # score ValueError
             u'''
             {"@type": "Result",
              "@context": "http://purl.imsglobal.org/ctx/lis/v2/Result",
-             "@id": "anon_id:abcdef0123456789",
              "resultScore": {}}''',   # score TypeError
         ], u"Could not convert resultScore to float"),
-        ([
-            u'''
-            {"@type": "Result",
-             "@context": "http://purl.imsglobal.org/ctx/lis/v2/Result",
-             "@id": "id:abcdef0123456789",
-             "resultScore": 0.1}''',   # id must be tagged with 'anon_id'
-            u'''
-            {"@type": "Result",
-             "@context": "http://purl.imsglobal.org/ctx/lis/v2/Result",
-             "@id": "abcdef0123456789",
-             "resultScore": 0.1}''',   # id has no tag
-        ], u"The @id you supplied is invalid."),
     ]
 
     def test_lti20_bad_json(self):
@@ -468,17 +485,15 @@ class LTIModuleTest(LogicTest):
         (u'''
         {"@type": "Result",
          "@context": "http://purl.imsglobal.org/ctx/lis/v2/Result",
-         "@id": "anon_id:abcdef0123456789",
          "resultScore": 0.1}''', u""),  # no comment means we expect ""
         (u'''
         [{"@type": "Result",
          "@context": "http://purl.imsglobal.org/ctx/lis/v2/Result",
          "@id": "anon_id:abcdef0123456789",
-         "resultScore": 0.1}]''', u""),  # OK to have array of objects -- just take the first
+         "resultScore": 0.1}]''', u""),  # OK to have array of objects -- just take the first.  @id is okay too
         (u'''
         {"@type": "Result",
          "@context": "http://purl.imsglobal.org/ctx/lis/v2/Result",
-         "@id": "anon_id:abcdef0123456789",
          "resultScore": 0.1,
          "comment": "ಠ益ಠ"}''', u"ಠ益ಠ"),  # unicode comment
     ]
@@ -488,8 +503,7 @@ class LTIModuleTest(LogicTest):
         Test the parsing of good comments
         """
         for json_str, expected_comment in self.GOOD_JSON_INPUTS:
-            id_expected, score, comment = self.xmodule.parse_lti20_result_json(json_str)
-            self.assertEqual(id_expected, "abcdef0123456789")
+            score, comment = self.xmodule.parse_lti20_result_json(json_str)
             self.assertEqual(score, 0.1)
             self.assertEqual(comment, expected_comment)
 
@@ -537,7 +551,7 @@ class LTIModuleTest(LogicTest):
         self.setup_system_xmodule_mocks_for_lti20_request_test()
         mock_request = self.get_signed_lti20_mock_put_request()
         # Now call the handler
-        response = self.xmodule.lti_2_0_result_rest_handler(mock_request, None)
+        response = self.xmodule.lti_2_0_result_rest_handler(mock_request, "user/abcd")
         # Now assert
         self.assertEqual(response.status_code, 200)
         self.assertEqual(self.xmodule.module_score, 0.1)
@@ -553,7 +567,7 @@ class LTIModuleTest(LogicTest):
         self.setup_system_xmodule_mocks_for_lti20_request_test()
         mock_request = self.get_signed_lti20_mock_put_request()
         mock_request.method = "GET"
-        response = self.xmodule.lti_2_0_result_rest_handler(mock_request, None)
+        response = self.xmodule.lti_2_0_result_rest_handler(mock_request, "user/abcd")
         self.assertEqual(response.status_code, 404)
 
     def test_lti20_request_handler_bad_headers(self):
@@ -563,8 +577,17 @@ class LTIModuleTest(LogicTest):
         self.setup_system_xmodule_mocks_for_lti20_request_test()
         self.xmodule.verify_lti20_result_rest_headers = Mock(side_effect=LTIError())
         mock_request = self.get_signed_lti20_mock_put_request()
-        response = self.xmodule.lti_2_0_result_rest_handler(mock_request, None)
+        response = self.xmodule.lti_2_0_result_rest_handler(mock_request, "user/abcd")
         self.assertEqual(response.status_code, 401)
+
+    def test_lti20_request_handler_bad_dispatch_user(self):
+        """
+        Test that we get a 404 when there's no (or badly formatted) user specified in the url
+        """
+        self.setup_system_xmodule_mocks_for_lti20_request_test()
+        mock_request = self.get_signed_lti20_mock_put_request()
+        response = self.xmodule.lti_2_0_result_rest_handler(mock_request, None)
+        self.assertEqual(response.status_code, 404)
 
     def test_lti20_request_handler_bad_json(self):
         """
@@ -573,7 +596,7 @@ class LTIModuleTest(LogicTest):
         self.setup_system_xmodule_mocks_for_lti20_request_test()
         self.xmodule.parse_lti20_result_json = Mock(side_effect=LTIError())
         mock_request = self.get_signed_lti20_mock_put_request()
-        response = self.xmodule.lti_2_0_result_rest_handler(mock_request, None)
+        response = self.xmodule.lti_2_0_result_rest_handler(mock_request, "user/abcd")
         self.assertEqual(response.status_code, 404)
 
     def test_lti20_request_handler_bad_user(self):
@@ -583,7 +606,7 @@ class LTIModuleTest(LogicTest):
         self.setup_system_xmodule_mocks_for_lti20_request_test()
         self.system.get_real_user = Mock(return_value=None)
         mock_request = self.get_signed_lti20_mock_put_request()
-        response = self.xmodule.lti_2_0_result_rest_handler(mock_request, None)
+        response = self.xmodule.lti_2_0_result_rest_handler(mock_request, "user/abcd")
         self.assertEqual(response.status_code, 404)
 
     def test_good_custom_params(self):

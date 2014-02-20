@@ -43,6 +43,7 @@ import base64
 import urllib
 import textwrap
 import json
+import re
 from lxml import etree
 from webob import Response
 import mock
@@ -57,6 +58,8 @@ from xblock.core import String, Scope, List, XBlock
 from xblock.fields import Boolean, Float
 
 log = logging.getLogger(__name__)
+
+lti20_rest_dispatch_parser = re.compile(r"^user/(?P<anon_id>\w+)", re.UNICODE)
 
 
 class LTIError(Exception):
@@ -562,7 +565,7 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
 
     #  LTI 2.0 Result Service Support -- but for now only for PUTting the grade back into an LTI xmodule
     @XBlock.handler
-    def lti_2_0_result_rest_handler(self, request, dispatch):  # pylint: disable=unused-argument
+    def lti_2_0_result_rest_handler(self, request, dispatch):
         """
         This will in the future be the handler for the LTI 2.0 Result service REST endpoints.  Right now
         I'm (@jbau) just implementing the PUT interface first.  All other methods get 404'ed.  It really should
@@ -573,17 +576,18 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
         {
          "@context" : "http://purl.imsglobal.org/ctx/lis/v2/Result",
          "@type" : "Result",
-         "@id" : "anon_id:1e23a9b2",
          "resultScore" : 0.83,
          "comment" : "This is exceptional work."
         }
-
         For PUTs, the content type must be "application/vnd.ims.lis.v2.result+json".
+        Note the "@id" key is optional on PUT and we don't do anything with it.  Instead, we use the "dispatch"
+        parameter to parse out the user from the end of the URL.  An example endpoint url is
+        http://localhost:8000/courses/org/num/run/xblock/i4x:;_;_org;_num;_lti;_GUID/handler_noauth/lti_2_0_result_rest_handler/user/<anon_id>
+        so dispatch is of the form "user/<anon_id>"
         Failures result in 401, 404, or 500s without any body.  Successes result in 200.  Again see
         http://www.imsglobal.org/lti/ltiv2p0/uml/purl.imsglobal.org/vocab/lis/v2/outcomes/Result/service.html
-        (Note: this is stupid and prevents good debug messages for the client.  So I'd advocate the creating
+        (Note: this prevents good debug messages for the client.  So I'd advocate the creating
         another endpoint that doesn't conform to spec, but is nicer)
-        endpoint)
         """
 
         ######## DEBUG SECTION #######
@@ -604,16 +608,15 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
             oauth_params=params,
             http_method=unicode(request.method),
         )
-        signature = client.get_oauth_signature(mock_request)
-        mock_request.oauth_params.append((u'oauth_signature', signature))
+        sig = client.get_oauth_signature(mock_request)
+        mock_request.oauth_params.append((u'oauth_signature', sig))
 
         uri, headers, body = client._render(mock_request)
         print("\n\n#### COPY AND PASTE AUTHORIZATION HEADER ####\n{}\n#############################################\n\n"
               .format(headers['Authorization']))
         ####### DEBUG SECTION END ########
-
         if request.method != "PUT":
-            return Response(status=404)  # have to do 404 due to stupid spec, but 405 is better, with error msg in body
+            return Response(status=404)  # have to do 404 due to spec, but 405 is better, with error msg in body
 
         try:
             self.verify_lti20_result_rest_headers(request)
@@ -621,13 +624,18 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
             return Response(status=401)  # Unauthorized in this case.  401 is right
 
         try:
-            (anon_id, score, comment) = self.parse_lti20_result_json(request.body)
+            anon_id = self.parse_lti20_handler_dispatch(dispatch)
         except LTIError:
-            return Response(status=404)  # have to do 404 due to stupid spec, but 400 is better, with error msg in body
+            return Response(status=404)  # 404 because a part of the URL (denoting the anon user id) is invalid
+
+        try:
+            (score, comment) = self.parse_lti20_result_json(request.body)
+        except LTIError:
+            return Response(status=404)  # have to do 404 due to spec, but 400 is better, with error msg in body
 
         real_user = self.system.get_real_user(anon_id)
         if not real_user:  # that means we can't save to database, as we do not have real user id.
-            return Response(status=404)  # have to do 404 due to stupid spec, but 400 is better, with error msg in body
+            return Response(status=404)  # have to do 404 due to spec, but 400 is better, with error msg in body
         # now we can record the score and the comment
         scaled_score = score * self.max_score()
         self.module_score = scaled_score
@@ -642,6 +650,21 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
             custom_user=real_user
         )
         return Response(status=200)
+
+    def parse_lti20_handler_dispatch(self, dispatch):
+        """
+        parses the dispatch argument (the trailing parts of the URL) of the LTI2.0 REST handler.
+        must be of the form "user/<anon_id>".  Returns anon_id if match found, otherwise raises LTIError
+        """
+        if dispatch:
+            match_obj = lti20_rest_dispatch_parser.match(dispatch)
+            if match_obj:
+                return match_obj.group('anon_id')
+        # fall-through handles all error cases
+        msg = "No valid user id found in endpoint URL"
+        log.debug("[LTI]: {}".format(msg))
+        raise LTIError(msg)
+
 
     def verify_lti20_result_rest_headers(self, request):
         """
@@ -667,11 +690,10 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
         in which case that first dict is considered.
         The dict must have the "@type" key with value equal to "Result",
         "resultScore" key with value equal to a number [0, 1],
-        and "@id" must have a value of a CURIE http://www.w3.org/TR/curie/ in the form of "anon_id:e1d2920f2c"
         The "@context" key must be present, but we don't do anything with it.  And the "comment" key may be
         present, in which case it must be a string.
 
-        Returns (anon_id, score, [optional]comment) if all checks out
+        Returns (score, [optional]comment) if all checks out
         """
         try:
             json_obj = json.loads(json_str)
@@ -698,8 +720,8 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
             log.debug("[LTI] {}".format(msg))
             raise LTIError(msg)
 
-        # '@context', '@id', 'resultScore' must be present as a key
-        REQUIRED_KEYS = ["@context", "@id", "resultScore"]  # pylint: disable=invalid-name
+        # '@context', 'resultScore' must be present as a key
+        REQUIRED_KEYS = ["@context", "resultScore"]  # pylint: disable=invalid-name
         for key in REQUIRED_KEYS:
             if key not in json_obj:
                 msg = "JSON object does not contain required key {}".format(key)
@@ -718,22 +740,7 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
             log.debug("[LTI] {}".format(msg))
             raise LTIError(msg)
 
-        # parse out id
-        id_str = json_obj.get('@id', "")
-        id_parts = id_str.split(':')
-
-        # this is the list of acceptable tags for identifying the student.  anon_id
-        # is reversible using self.system.get_real_user
-        ACCEPTED_TAGS = ['anon_id']  # pylint: disable=invalid-name
-        if len(id_parts) < 2 or id_parts[0] not in ACCEPTED_TAGS:
-            msg = ('The @id you supplied is invalid.  It should be of the form "@id": "anon_id:<openedx_supplied_id>", '
-                   'but you supplied "@id": {}'.format(id_str))
-            log.debug("[LTI] {}".format(msg))
-            raise LTIError(msg)
-
-        anon_id = id_parts[-1]
-
-        return anon_id, score, json_obj.get('comment', "")
+        return score, json_obj.get('comment', "")
 
     @classmethod
     def parse_grade_xml_body(cls, body):

@@ -131,25 +131,22 @@ class StubLtiHandler(StubHttpRequestHandler):
         """
         Send lti2 json grade request.
         """
-        values = {
-            'textString': 0.8,
-            'sourcedId': self.server.grade_data['sourcedId'],
-        }
         payload = textwrap.dedent("""
         {{
          "@context" : "http://purl.imsglobal.org/ctx/lis/v2/Result",
          "@type" : "Result",
-         "@id" : "anon_id:{sourcedId}",
-         "resultScore" : {textString},
+         "resultScore" : {score},
          "comment" : "This is awesome."
         }}
         """)
-        data = payload.format(**values)
+        data = payload.format(score=0.8)
 
         ### We compute the LTI V2.0 service endpoint from the callback_url (which is set by the launch call)
         url = self.server.grade_data['callback_url']
         url_parts = url.split('/')
         url_parts[-1] = "lti_2_0_result_rest_handler"
+        anon_id = self.server.grade_data['sourcedId'].split(":")[-1]
+        url_parts.extend(["user", anon_id])
         new_url = '/'.join(url_parts)
 
         content_type = 'application/vnd.ims.lis.v2.result+json'
