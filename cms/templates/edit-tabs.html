@@ -54,6 +54,34 @@
 
           <div class="tab-list">
             <ol class='components'>
+
+            <!-- for testing -->
+            <li class="component locked" data-locator="">
+
+            <div class="wrapper wrapper-component-action-header">
+                <div class="component-header">
+               Wiki
+                </div>
+                <div class="component-actions actions-list-wrap">
+                  <ul class="actions-list">
+                    <li class="action-item action-visible">
+                        <label for="[id]"><span class="sr">${_("Show this page")}</span></label>
+                        <input type="checkbox" id="[id]" class="toggle-checkbox" data-tooltip="${_('Show/hide page')}" />
+                        <div class="action-button"><i class="icon-eye-open"></i><i class="icon-eye-close"></i></div>
+                    </li>
+                  </ul>
+
+
+                </div>
+                <a class="drag-handle" href="#" data-tooltip="Drag to reorder"></a>
+            </div>
+            <div class="xblock xblock-student_view xmodule_display xmodule_StaticTabModule" data-runtime-class="PreviewRuntime" data-init="XBlockToXModuleShim" data-runtime-version="1" data-usage-id="" data-type="HTMLModule" data-block-type="static_tab" tabindex="0">
+                Wiki
+            </div>
+            </li>
+
+            <!-- end for testing -->
+
               % for locator in components:
               <li class="component" data-locator="${locator}"/>
               % endfor
@@ -61,63 +89,6 @@
               <li class="new-component-item">
 
               </li>
-
-<!-- for testing -->
-<li class="component" data-locator="">
-
-
-<div class="wrapper wrapper-component-editor">
-    <div class="component-editor">
-        <div class="component-edit-header">
-            <span class="component-name"></span>
-            <ul class="nav-edit-modes">
-                <li id="editor-mode" class="mode active-mode" aria-controls="editor-tab" role="tab">
-                    <a href="#">Editor</a>
-                </li>
-                <li id="settings-mode" class="mode active-mode" aria-controls="settings-tab" role="tab">
-                    <a href="#">Settings</a>
-                </li>
-            </ul>
-        </div> <!-- Editor Header -->
-
-        <div class="component-edit-modes">
-            <div class="module-editor"></div>
-        </div>
-        <div class="row module-actions">
-            <a href="#" class="save-button action-primary action">Save</a>
-            <a href="#" class="cancel-button action-secondary action">Cancel</a>
-        </div> <!-- Module Actions-->
-  </div>
-</div>
-<div class="wrapper wrapper-component-action-header">
-    <div class="component-header">
-    C.A.T.
-    </div>
-    <div class="component-actions actions-list-wrap">
-      <ul class="actions-list">
-        <li class="action-item action-edit"><a class="edit-button action-button" href="#">
-<i class="icon-edit"></i>
-<span class="action-button-text">Edit</span>
-</a></li>
-        <li class="action-item action-visible">
-            <label for="[id]"><span class="sr">${_("Show this page")}</span></label>
-            <input type="checkbox" id="[id]" class="toggle-checkbox" data-tooltip="${_('Show/hide page')}" />
-            <div class="action-button"><i class="icon-eye-open"></i><i class="icon-eye-close"></i></div>
-        </li>
-        <li class="action-item action-delete"><a class="delete-button action-button" data-tooltip="Delete" href="#"><i class="icon-trash"></i><span class="sr">Delete this page</span></a></li>
-      </ul>
-
-
-    </div>
-    <a class="drag-handle" href="#" data-tooltip="Drag to reorder"></a>
-</div>
-<div class="xblock xblock-student_view xmodule_display xmodule_StaticTabModule" data-runtime-class="PreviewRuntime" data-init="XBlockToXModuleShim" data-runtime-version="1" data-usage-id="" data-type="HTMLModule" data-block-type="static_tab" tabindex="0">
-    C.A.T.
-</div>
-</li>
-
-<!-- end for testing -->
-
             </ol>
           </div>
         </article>
