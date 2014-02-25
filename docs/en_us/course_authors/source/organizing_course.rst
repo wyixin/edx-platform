@@ -15,7 +15,7 @@ You organize your course in the following hierarchy:
 - :ref:`Sections`, which contain
     - :ref:`subsections`, which contain
         - :ref:`units`, which contain
-            - :ref:`components`, which contain your actual course content.
+            - :ref:`components`, which contain your actual course content. A unit can also contain :ref:`Nested Components`
 
 
 Studio provides you with flexibility when organizing your course. A common course model is for sections to correspond to weeks or chapters, and for subsections to correspond to lessons.
@@ -237,6 +237,35 @@ When you can delete the component, the Delete icon appears in the component head
   :alt: Image of a unit with Delete icon circled
 
 Click the Delete icon.  Then follow instructions for the type of component you are editing.
+
+
+.. _Nested Components:
+
+*******************************
+Nested Components
+*******************************
+
+.. note:: In this release, nested components are read-only; you cannot edit nested components in Studio.  You must create nested verticals in XML, then import XML into Studio.  You can use Studio to verify that your course components are organized as you intended.
+
+A component can contain other components. In the unit page, a component that contains other components appears with the display name and a **VIEW** link:
+
+.. image:: Images/component_container.png
+ :alt: Image of a unit page with a parent component
+
+When you click **VIEW**, the parent component page opens.  Breadcrumbs at the top of the page indicate that the components you are viewing are children of another component:
+
+NEED IMAGE
+
+
+
+======================================
+The Student View of Nested Components
+======================================
+
+
+TO BE DONE WHEN LMS IMPLEMENTS
+
+
 
 .. _Reorganize Your Course:
 
