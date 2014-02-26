@@ -172,7 +172,8 @@
     }
   }
 
-  .component {
+  .component,
+  .course-nav-tab {
     position: relative;
     border: 1px solid $mediumGrey;
     border-top: none;
@@ -224,7 +225,8 @@
       display: none;
     }
 
-    .component-actions {
+    .component-actions,
+    .course-nav-tab-actions {
       display: inline-block;
       float: right;
       margin-right: $baseline*2;
@@ -273,18 +275,28 @@
     }
   }
 
-  // locked pages - basic course nav items
-  .component.locked {
-    background-color: $gray-l6;
+  // basic course nav items
+  .course-nav-tab {
+    padding: ($baseline*.75) $baseline;
 
-    .xblock-student_view {
-      background-color: transparent;
+    &.locked {
+      background-color: $gray-l6;
     }
 
-    .drag-handle {
-      visibility: hidden;
+    .course-nav-tab-header {
+      display: inline-block;
+      max-width: 80%;
+
+      .title {
+        @extend %t-title4;
+        font-weight: 300;
+      }
     }
 
+    .course-nav-tab-actions {
+      padding: ($baseline/10);
+      margin-right: ($baseline*1.5);
+    }
   }
 
   .component.editing {
