@@ -241,27 +241,33 @@ Click the Delete icon.  Then follow instructions for the type of component you a
 
 .. _Nested Components:
 
-*******************************
-Nested Components
-*******************************
+******************************************
+Components that Contain Other Components
+******************************************
 
-.. note:: In this release, nested components are read-only; you cannot edit nested components in Studio.  You must create nested verticals in XML, then import XML into Studio.  You can use Studio to verify that your course components are organized as you intended.
+You can configure your course content so that components contain other components.  
 
-A component can contain other components. In the unit page, a component that contains other components appears with the display name and a **VIEW** link:
+The component that contains other components is referred to as the parent; the contained components are referred to as children.  
+
+A single component can be the parent of other components, and the child of a different component. These relationships are also referred to as "nested components".
+
+.. note:: In this release, parent and child components are read-only in Studio. You set up components and their relationships to each other in XML. You can then import the course into Studio and verify that your course components are organized as you intended.
+
+In the unit page, a parent component appears with the display name and a **VIEW** link:
 
 .. image:: Images/component_container.png
  :alt: Image of a unit page with a parent component
 
-When you click **VIEW**, the parent component page opens.  Breadcrumbs at the top of the page indicate that the components you are viewing are children of another component:
+When you click **VIEW**, the parent component page opens.  Breadcrumbs at the top of the page indicate that the components you are viewing are the children components:
 
 .. image:: Images/child-components.png
  :alt: Image of a child component page
 
 ======================================
-XML for Nested Components
+XML for Parent and Child Components
 ======================================
 
-You develop nested components in XML, then import the XML course into Studio to verify that the structure is as you intended. The following examples show the XML used to create the unit and components shown in Studio above.
+You develop parent and child components in XML, then import the XML course into Studio to verify that the structure is as you intended. The following examples show the XML used to create the unit and components shown in Studio above.
 
 The XML for Unit one is:
 
@@ -272,7 +278,7 @@ The XML for Unit one is:
   <vertical url_name="131a499ddaa3474194c1aa2eced34455"/>
  </vertical>
 
-The ``<vertical>`` element in the unit references the component file that contains the nested components:
+The ``<vertical>`` element above ireferences the parent component file that contains the child components:
  
 .. code-block:: xml
 
@@ -281,7 +287,7 @@ The ``<vertical>`` element in the unit references the component file that contai
   <vertical url_name="c5c8b27c2c5546e784432f3b2b6cf2ea"/>
  </vertical>
 
-The two verticals referenced by the parent component contain references to other components, which contain the actual content of your course:
+The two verticals referenced by the parent component refer to the child components, which contain the actual content of your course:
 
 .. code-block:: xml
 
@@ -305,7 +311,7 @@ Theorectically, there is no limit to the levels of component nesting you can use
 The Student View of Nested Components
 ======================================
 
-For students, all nested components are displayed on the unit page. The following example shows the student view of the unit described above:
+For students, all parent and child components are displayed on the unit page. The following example shows the student view of the unit described above:
 
 .. image:: Images/nested_components_student_view.png
  :alt: Image of the student's view of nested components
