@@ -254,7 +254,50 @@ A component can contain other components. In the unit page, a component that con
 
 When you click **VIEW**, the parent component page opens.  Breadcrumbs at the top of the page indicate that the components you are viewing are children of another component:
 
-NEED IMAGE
+.. image:: Images/child-components.png
+ :alt: Image of a child component page
+
+======================================
+XML for Nested Components
+======================================
+
+You develop nested components in XML, then import the XML course into Studio to verify that the structure is as you intended. The following examples show the XML used to create the unit and components shown in Studio above.
+
+The XML for Unit one is:
+
+.. code-block:: xml
+
+ <vertical display_name="Unit 1">
+  <html url_name="6a5cf0ea41a54b209e0815147896d1b2"/>
+  <vertical url_name="131a499ddaa3474194c1aa2eced34455"/>
+ </vertical>
+
+The ``<vertical>`` element in the unit references the component file that contains the nested components:
+ 
+.. code-block:: xml
+
+ <vertical display_name="A/B Test">
+  <vertical url_name="2758bbc495dd40d59050da15b40bd9a5"/>
+  <vertical url_name="c5c8b27c2c5546e784432f3b2b6cf2ea"/>
+ </vertical>
+
+The two verticals referenced by the parent component contain references to other components, which contain the actual content of your course:
+
+.. code-block:: xml
+
+ <vertical display_name="Group A">
+  <html url_name="4471618afafb45bfb86cbe511973e225"/>
+  <video url_name="fbd800d0bdbd4cb69ac70c47c9f699e1"/>
+ </vertical>
+
+.. code-block:: xml
+
+ <vertical display_name="Group B">
+  <html url_name="dd6ef295fda74a639842e1a49c66b2c7"/>
+  <problem url_name="b40ecbe4ed1b4280ae93e2a158edae6f"/>
+ </vertical>
+
+Theorectically, there is no limit to the levels of component nesting you can use in your course.
 
 
 
@@ -262,10 +305,10 @@ NEED IMAGE
 The Student View of Nested Components
 ======================================
 
+For students, all nested components are displayed on the unit page. The following example shows the student view of the unit described above:
 
-TO BE DONE WHEN LMS IMPLEMENTS
-
-
+.. image:: Images/nested_components_student_view.png
+ :alt: Image of the student's view of nested components
 
 .. _Reorganize Your Course:
 
