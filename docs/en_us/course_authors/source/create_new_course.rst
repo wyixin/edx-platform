@@ -21,7 +21,7 @@ This chapter describes how to create and set up your course:
 #. :ref:`Add a Course Video`
 #. :ref:`Set Course Requirements`
 #. :ref:`Add Files to a Course`
-#. :ref:`Add Static Pages`
+#. :ref:`Add Pages`
 #. :ref:`Add a Course Update`
 #. :ref:`Add Course Handouts`
 #. :ref:`Add Textbooks`
@@ -433,26 +433,26 @@ To delete a file, click the **x** icon next to the file.  You are prompted to co
 
 .. warning:: If you have links to a file you delete, those links will be broken. Ensure you change those links before deleting the file.
  
-.. _`Add Static Pages`:
+.. _`Add Pages`:
 
 ****************
-Add Static Pages
+Add Pages
 ****************
-You can add static pages to your course. Each static page appears in your courses navigation bar. 
+You can add pages to your course. Each page appears in your courses navigation bar.
 For example, the following navigation bar includes a
-**Syllabus** and **Projects** static pages.
+**Syllabus** and **Projects** pages.
 
 .. image:: Images/image157.png
 
-You can use static pages for a syllabus, grading policy, course handouts, or any other purpose.
+You can use pages for a syllabus, grading policy, course handouts, or any other purpose.
 
-You can also add an instant hangout to a static page.  See :ref:`Using an Instant Hangout in Your Course` for more information.
+You can also add an instant hangout to a page.  See :ref:`Using an Instant Hangout in Your Course` for more information.
 
 .. note:: The Course Info, Discussion, Wiki, and Progress pages are displayed to students by default. You cannot delete these pages.   
 
-To create a static page:
+To create a page:
 
-#. From the **Content** menu, select **Static Pages**.
+#. From the **Content** menu, select **Pages**.
 #. Click **New Page**. The following screen opens:
 
   .. image:: Images/image161.png
@@ -464,15 +464,15 @@ To create a static page:
 #. To edit the Display Name, click **Settings**.
 #. Click **Save**.
 
-To delete a static page, click **Delete** in the row for the page.  Confirm the deletion.
+To delete a page, click **Delete** in the row for the page.  Confirm the deletion.
 
 
 ==================
 Add a Calendar
 ==================
-You can also use a static page to show a course calendar.
+You can also use a page to show a course calendar.
 
-You can embed a Google calendar. Paste the embed code for the calendar in the static page. 
+You can embed a Google calendar. Paste the embed code for the calendar in the page.
 
 You can also create a dynamic HTML calendar. See :ref:`Appendix B`. 
 

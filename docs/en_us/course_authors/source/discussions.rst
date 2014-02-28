@@ -35,7 +35,7 @@ This type of discussion is subject to the release date of the section that conta
 =====================================
 Create discussion categories
 =====================================
-All courses have a static page named **Discussion**. When you create a course, a discussion category named General is available for you to include by default. You can add more discussion categories to guide how students share and find information during your course. Categories might include Feedback, Troubleshooting, or Technical Help. Discussions in these categories can begin as soon as your course is available.
+All courses have a page named **Discussion**. When you create a course, a discussion category named General is available for you to include by default. You can add more discussion categories to guide how students share and find information during your course. Categories might include Feedback, Troubleshooting, or Technical Help. Discussions in these categories can begin as soon as your course is available.
 
 To create a discussion category:
 
@@ -87,7 +87,7 @@ To create a discussion category:
 
 8. Click **Save Changes**.
 
-When students click the **Discussion** static page for your course, the drop-down list includes this new category.
+When students click the **Discussion** page for your course, the drop-down list includes this new category.
 
  .. image:: Images/NewCategory_Discussion.png
   :alt: Image of a new discussion category
@@ -209,7 +209,7 @@ For information on setting up moderators for your course, see :ref:`Assigning_di
 Provide guidelines for students
 ========================================
 
-You can develop a set of best practices for discussion participation and make them avaialbe to students as a course handout file or as a static page. These guidelines can define your expectations and optionally introduce features of edX discussions. 
+You can develop a set of best practices for discussion participation and make them avaialbe to students as a course handout file or as a page. These guidelines can define your expectations and optionally introduce features of edX discussions.
 
 .. For a template that you can use to develop your own guidelines, see :ref:`Discussion Forum Guidelines`.
 

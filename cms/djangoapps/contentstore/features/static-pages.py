@@ -5,7 +5,7 @@ from lettuce import world, step
 from nose.tools import assert_equal  # pylint: disable=E0611
 
 
-@step(u'I go to the static pages page$')
+@step(u'I go to the pages page$')
 def go_to_static(step):
     menu_css = 'li.nav-course-courseware'
     static_css = 'li.nav-course-courseware-pages a'
@@ -19,20 +19,20 @@ def add_page(step):
     world.css_click(button_css)
 
 
-@step(u'I should see a static page named "([^"]*)"$')
+@step(u'I should see a page named "([^"]*)"$')
 def see_a_static_page_named_foo(step, name):
     pages_css = 'div.xmodule_StaticTabModule'
     page_name_html = world.css_html(pages_css)
     assert_equal(page_name_html, '\n    {name}\n'.format(name=name))
 
 
-@step(u'I should not see any static pages$')
+@step(u'I should not see any pages$')
 def not_see_any_static_pages(step):
     pages_css = 'div.xmodule_StaticTabModule'
     assert (world.is_css_not_present(pages_css, wait_time=30))
 
 
-@step(u'I "(edit|delete)" the static page$')
+@step(u'I "(edit|delete)" the page$')
 def click_edit_or_delete(step, edit_or_delete):
     button_css = 'ul.component-actions a.%s-button' % edit_or_delete
     world.css_click(button_css)
@@ -61,17 +61,17 @@ def reorder_tabs(_step):
     source.action_chains.release().perform()
 
 
-@step(u'I have created a static page')
+@step(u'I have created a page')
 def create_static_page(step):
     step.given('I have opened a new course in Studio')
-    step.given('I go to the static pages page')
+    step.given('I go to the pages page')
     step.given('I add a new page')
 
 
-@step(u'I have created two different static pages')
+@step(u'I have created two different pages')
 def create_two_pages(step):
-    step.given('I have created a static page')
-    step.given('I "edit" the static page')
+    step.given('I have created a page')
+    step.given('I "edit" the page')
     step.given('I change the name to "First"')
     step.given('I add a new page')
     # Verify order of tabs

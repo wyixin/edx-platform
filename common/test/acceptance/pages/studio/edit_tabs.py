@@ -1,5 +1,5 @@
 """
-Static Pages page for a course.
+Pages page for a course.
 """
 
 from .course_page import CoursePage
@@ -7,7 +7,7 @@ from .course_page import CoursePage
 
 class StaticPagesPage(CoursePage):
     """
-    Static Pages page for a course.
+    Pages page for a course.
     """
 
     url_path = "tabs"
