@@ -282,7 +282,7 @@ The ``<vertical>`` element above ireferences the parent component file that cont
  
 .. code-block:: xml
 
- <vertical display_name="A/B Test">
+ <vertical display_name="Parent Component">
   <vertical url_name="2758bbc495dd40d59050da15b40bd9a5"/>
   <vertical url_name="c5c8b27c2c5546e784432f3b2b6cf2ea"/>
  </vertical>
