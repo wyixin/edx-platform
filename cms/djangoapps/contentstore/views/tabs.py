@@ -130,15 +130,18 @@ def tabs_handler(request, tag=None, package_id=None, branch=None, version_guid=N
         if course_item.tabs is None or len(course_item.tabs) == 0:
             initialize_course_tabs(course_item, request.user)
 
-        # first get all static tabs from the tabs list
+        # get all tabs from the tabs list: static tabs (a.k.a. user-created tabs) and built-in tabs
         # we do this because this is also the order in which items are displayed in the LMS
-        static_tabs_refs = [t for t in course_item.tabs if t['type'] == 'static_tab']
-
         static_tabs = []
-        for static_tab_ref in static_tabs_refs:
-            static_tab_loc = old_location.replace(category='static_tab', name=static_tab_ref['url_slug'])
-            static_tabs.append(modulestore('direct').get_item(static_tab_loc))
+        built_in_tabs = []
+        for tab in course_item.tabs:
+            if tab['type'] == 'static_tab':
+                static_tab_loc = old_location.replace(category='static_tab', name=tab['url_slug'])
+                static_tabs.append(modulestore('direct').get_item(static_tab_loc))
+            elif 'name' in tab:
+                built_in_tabs.append({'name': tab['name']})
 
+        # create a list of xCode components for the list of static tabs
         components = [
             loc_mapper().translate_location(
                 course_item.location.course_id, static_tab.location, False, True
@@ -149,6 +152,7 @@ def tabs_handler(request, tag=None, package_id=None, branch=None, version_guid=N
 
         return render_to_response('edit-tabs.html', {
             'context_course': course_item,
+            'built_in_tabs': built_in_tabs,
             'components': components,
             'course_locator': locator
         })
