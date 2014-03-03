@@ -372,7 +372,6 @@ def select_language(_step, code):
 def click_button(_step, button):
     world.css_click(VIDEO_BUTTONS[button])
 
-
 @step('I see video starts playing from "([^"]*)" position$')
 def start_playing_video_from_n_seconds(_step, position):
     world.wait_for(
@@ -433,7 +432,6 @@ def video_alignment(_step, transcript_visibility):
     )
 
     assert all([width, height])
-
 
 @step('I can download transcript in "([^"]*)" format and has text "([^"]*)"$')
 def i_can_download_transcript(_step, format, text):
