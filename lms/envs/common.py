@@ -235,6 +235,9 @@ FEATURES = {
     # Turn on third-party auth. Disabled for now because full implementations are not yet available. Remember to syncdb
     # if you enable this; we don't create tables by default.
     'ENABLE_THIRD_PARTY_AUTH': False,
+
+    # Prevent concurrent logins per user
+    'PREVENT_CONCURRENT_LOGINS': False,
 }
 
 # Used for A/B testing
