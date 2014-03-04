@@ -436,27 +436,27 @@ You can configure the problem to shuffle answers through :ref:`Simple Editor` or
 Use the Simple Editor to Shuffle Answers
 ++++++++++++++++++++++++++++++++++++++++++
 
-You can configure the problem to shuffle answers through XML in :ref:`Simple Editor`.
+You can configure the problem to shuffle answers in :ref:`Simple Editor`.
 
-For example, the following XML defines a multiple choice problem, before shuffling is enabled. The ``(x)`` indicates the correct answer::
+For example, the following text defines a multiple choice problem, before shuffling is enabled. The ``(x)`` indicates the correct answer::
 
- What Apple device competed with the portable CD player?
+ >>What Apple device competed with the portable CD player?<<
      ( ) The iPad
      ( ) Napster
      (x) The iPod
      ( ) The vegetable peeler
 
-To add shuffling to this problem, add ``!`` in parenthesis of the first answer::
+To add shuffling to this problem, add ``!`` in the parenthesis of the first answer::
 
- What Apple device competed with the portable CD player?
+ >>What Apple device competed with the portable CD player?<<
      (!) The iPad
      ( ) Napster
      (x) The iPod
      ( ) The vegetable peeler
 
-To fix an answer's location in the list, add ``@`` in parenthesis of that answer::
+To fix an answer's location in the list, add ``@`` in the parenthesis of that answer::
 
- What Apple device competed with the portable CD player?
+ >>What Apple device competed with the portable CD player?<<
      (!) The iPad
      ( ) Napster
      (x) The iPod
@@ -524,7 +524,7 @@ To fix an answer's location in the list, add ``fixed="true"`` to the ``choice`` 
 Targeted Feedback in a Multiple Choice Problem
 ===============================================
 
-Optionally, you can configure a multiple choice problem so that explanations for incorrect answers are automatically shown to students.  You can use these explanations to guide students towards the right answer.  Therefore, targeted feedback is most useful for multiple choice problems for which students are allowed multiple attempts.
+You can configure a multiple choice problem so that explanations for incorrect answers are automatically shown to students.  You can use these explanations to guide students towards the right answer.  Therefore, targeted feedback is most useful for multiple choice problems for which students are allowed multiple attempts.
 
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -535,17 +535,19 @@ You configure the problem to provide targeted feedback through XML in :ref:`Adva
 
 Follow these XML guidelines:
 
+* Add a ``targeted-feedback`` attribute to the ``<multiplechoiceresponse>`` element, with no value: ``<multiplechoiceresponse targeted-feedback="">``
 * Add a ``<targetedfeedbackset>`` element before the ``<solution>`` element.
 * Within ``<targetedfeedbackset>``, add one or more ``<targetedfeedback>`` elements.
-* Within each ``<targetedfeedback>`` element, enter your explanation in HTML markup described below.
-* Connect the ``<targetedfeedback>`` element with a specific answer by using the same ``explanation-id`` attribute value for each.
+* Within each ``<targetedfeedback>`` element, enter your explanation for the incorrect answer in HTML as markup described below.
+* Connect the ``<targetedfeedback>`` element with a specific incorrect answer by using the same ``explanation-id`` attribute value for each.
+* Use the ``<solution>`` element for the correct answer, with the same ``explanation-id`` attribute value as the correct ``<choice>``.
 
 For example, the XML for the multiple choice problem is:
 
 .. code-block:: xml
 
    <p>What Apple device competed with the portable CD player?</p>
-   <multiplechoiceresponse>
+   <multiplechoiceresponse targeted-feedback="">
     <choicegroup type="MultipleChoice">
       <choice correct="false" explanation-id="feedback1">The iPad</choice>
       <choice correct="false" explanation-id="feedback2">Napster</choice>
@@ -571,12 +573,6 @@ This is followed by XML that defines the targeted feedback:
          <p>Napster was not an Apple product.</p>
        </div>
      </targetedfeedback>
-     <targetedfeedback explanation-id="correct">
-       <div class="detailed-targeted-feedback">
-         <p>Targeted Feedback</p>
-         <p>Yes, the iPod competed with portable CD players.</p>
-       </div>
-     </targetedfeedback>
      <targetedfeedback explanation-id="feeback3">
        <div class="detailed-targeted-feedback">
          <p>Targeted Feedback</p>
@@ -585,34 +581,38 @@ This is followed by XML that defines the targeted feedback:
      </targetedfeedback>
     </targetedfeedbackset>
 
-QUESTION -- DO YOU STILL NEED SOLUTION ELEMENT IN THIS SCENARIO?
+    <solution explanation-id="correct">
+     <div class="detailed-solution">
+      <p>Yes, the iPod competed with portable CD players.</p>
+     </div>
+    </solution>
 
 
 .. _Answer Pools in a Multiple Choice Problem:
 
-===============================================
+=============================================
 Answer Pools in a Multiple Choice Problem
-===============================================
+=============================================
 
-Optionally, you can configure a multiple choice problem so that a random subset of choices are shown to each student. For example, you can add 10 possible choices to the problem, and each student views a set of five choices.
+You can configure a multiple choice problem so that a random subset of choices are shown to each student. For example, you can add 10 possible choices to the problem, and each student views a set of five choices.
 
 The answer pool must have at least one correct answer, and can have more than one. In each set of choices shown to a student, one correct answer is included. For example, you may configure two correct answers in the set of 10. One of the two correct answers is included in each set a student views.
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Use the Advanced Editor to Configure Targeted Feedback
+Use the Advanced Editor to Configure Answer Pools
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-You configure the problem to provide targeted feedback through XML in :ref:`Advanced Editor`.
+You configure the problem to provide answer pools through XML in :ref:`Advanced Editor`.
 
 Follow these XML guidelines:
 
-* In the ``<multiplechoice>`` element, add the ``answer-pool`` attribute, with the numerical value indicating the number of possible answers in the set. For example, ``<multiplechoiceresponse answer-pool="4">``.
+* In the ``<choicegroup>`` element, add the ``answer-pool`` attribute, with the numerical value indicating the number of possible answers in the set. For example, ``<choicegroup answer-pool="4">``.
 
 * For each correct answer, to the ``<choice>`` element, add an ``explanation-id`` attribute and value that maps to a solution. For example, ``<choice correct="true" explanation-id="iPod">The iPod</choice>``.
 
 * For each ``<solution>`` element, add an ``explanation-id`` attribute and value that maps back to a correct answer. For example, ``<solution explanation-id="iPod">``.
 
-.. note:: If the choices include only one correct answer, you do not have to use the ``explanation-id`` in either the ``choice`` or ``<solution>`` element. You also do use the ``<solutionset>`` element to wrap the ``<solution>`` element.
+.. note:: If the choices include only one correct answer, you do not have to use the ``explanation-id`` in either the ``choice`` or ``<solution>`` element. You do still use the ``<solutionset>`` element to wrap the ``<solution>`` element.
 
 For example, for the following multiple choice problem, a student will see four choices, and in each set one of the choices will be one of the two correct ones. The explanation shown for the correct answer is the one with the same explanation ID.
 
@@ -620,8 +620,8 @@ For example, for the following multiple choice problem, a student will see four 
 
  <problem>
    <p>What Apple devices let you carry your digital music library in your pocket?</p>
-   <multiplechoiceresponse answer-pool="4">
-    <choicegroup type="MultipleChoice">
+   <multiplechoiceresponse>
+    <choicegroup type="MultipleChoice" answer-pool="4">
       <choice correct="false">The iPad</choice>
       <choice correct="false">Napster</choice>
       <choice correct="true" explanation-id="iPod">The iPod</choice>
@@ -681,8 +681,9 @@ Student Answers
 
 .. _Math Expression Syntax:
 
++++++++++++++++++++++++
 Math Expression Syntax
-----------------------
++++++++++++++++++++++++
 
 In numerical input problems, the student's input may be more complicated than a
 simple number. Expressions like ``sqrt(3)`` and even ``1+e^(sin(pi/2)+2*i)``
@@ -773,8 +774,9 @@ For example, the following example problems require the Advanced Editor.
 
 For more information about including a Python script in your problem, see :ref:`Custom Python Evaluated Input`.
 
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Create a Numerical Input Problem in the Simple Editor
--------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #. Under **Add New Component**, click **Problem**.
 #. In the **Select Problem Component Type** screen, click **Numerical
@@ -819,10 +821,9 @@ following.
    As of edX's first birthday, in May 2013, edX students live in 193 different countries.
    [explanation]
 
-
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Create a Numerical Input Problem in the Advanced Editor
--------------------------------------------------------
-
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 **Examples**
 
@@ -1113,7 +1114,7 @@ You can add ``regexp`` to the value of the ``type`` attribute, for example: ``ty
 
 **Sample Problem**
 
-.. image:: ../Images/TextInputExample.gif
+.. image:: /Images/TextInputExample.gif
  :alt: Image of a string response problem
 
 **XML Tags**
