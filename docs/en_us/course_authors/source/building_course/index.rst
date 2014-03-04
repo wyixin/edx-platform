@@ -5,8 +5,7 @@ Building a Course
 See the following
 
 .. toctree::
-   :numbered:
-   :maxdepth: 5
+   :maxdepth: 3
 
    create_new_course
    establish_grading_policy

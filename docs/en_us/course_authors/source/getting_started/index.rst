@@ -6,8 +6,7 @@ Get Started
 See the following
 
 .. toctree::
-   :numbered:
-   :maxdepth: 5
+   :maxdepth: 3
 
 
 

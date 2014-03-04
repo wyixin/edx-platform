@@ -141,7 +141,7 @@ Step 4. Create a Video Component
 
 #. When the new video component appears, click **Edit**. The video editor opens to the **Basic** tab.
 
-   .. image:: Images/VideoComponentEditor.gif
+   .. image:: ../Images/VideoComponentEditor.gif
     :alt: Image of the video component editor
 
    You'll replace the default values with your own. 
@@ -251,7 +251,7 @@ You can provide transcripts for your video in other languages. To do this, you'l
 
 #. In the box on the right, enter the URL for the language transcript file you uploaded to the **Files & Uploads** page. For example, you might enter **/static/Video1_Spanish.srt** or **/static/Video1_Russian.srt**.
 
-   .. image:: /Images/TranscriptTranslations.png
+   .. image:: ../Images/TranscriptTranslations.png
      :alt: Image of Transcript Translations fields
 
 .. note:: Make sure that all your transcript file names are unique to each video and language. If you use the same transcript name in more than one Video component, the same transcript will play for each video. To avoid this problem, you could name your foreign language transcript files according to the video's file name and the transcript language.

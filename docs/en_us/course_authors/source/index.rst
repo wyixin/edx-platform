@@ -15,10 +15,9 @@ Contents
    change_log
    getting_started/index
    building_course/index
+   create_content/index
    
-   create_html_component
-   create_video
-   create_discussion
+   
    create_problem_component
    common_problems
    advanced_problems

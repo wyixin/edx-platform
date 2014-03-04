@@ -37,12 +37,12 @@ For more information on Public and Private Units, see :ref:`Public and Private U
 
 #. Under **Add New Component**, click the **discussion** icon.
 
-   .. image:: Images/NewComponent_Discussion.png
+   .. image:: ../Images/NewComponent_Discussion.png
     :alt: Image of the adding a new discussion component
   
    The Discussion component is added:
   
-   .. image:: Images/EditDiscussionComponent.png
+   .. image:: ../Images/EditDiscussionComponent.png
     :alt: Image of the discussion component with the Edit button circled
 
 
@@ -50,7 +50,7 @@ For more information on Public and Private Units, see :ref:`Public and Private U
 
    The Discussion component editor opens.
    
-   .. image:: Images/DiscussionComponentEditor.png
+   .. image:: ../Images/DiscussionComponentEditor.png
     :alt: Image of the discussion component editor
 
 #. Follow the guidelines in the editor to fill in the **Category**, **Display Name**, and **Subcategory**. 
@@ -65,7 +65,7 @@ A Student's View of the Discussion
 
 For students, Discussion component names appear in the course ribbon at the top of the page:
 
-.. image:: Images/DiscussionComponent_LMS_Ribbon.png
+.. image:: ../Images/DiscussionComponent_LMS_Ribbon.png
  :alt: Image of a unit from a student's point of view with the component list showing a discussion component
 
 The Discussion space appears under other components in the unit. 
@@ -75,13 +75,13 @@ and a blue **New Post** button on the right.
 
 In the following example, the Discussion component follows Video and HTML components:
 
-.. image:: Images/DiscussionComponent_LMS.png
+.. image:: ../Images/DiscussionComponent_LMS.png
   :alt: Image of a video component followed by a discussion component
 
 In the **Discussion** tab at the top of the page, 
 students can find the category and subcategory of the discussion in the left pane.
 
-.. image:: Images/DiscussionComponent_Forum.png
+.. image:: ../Images/DiscussionComponent_Forum.png
  :alt: Image of the discussion page from a student's point of view
 
 
