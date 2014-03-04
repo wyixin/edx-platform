@@ -29,7 +29,7 @@ To set the grade range, from the **Settings** menu, select **Grading**.
 
 The control for the grade range is at the top of the Grading page.
 
-.. image:: Images/grade_range.png
+.. image:: ../Images/grade_range.png
   :width: 800
   :alt: Image of the Grade Range control
 
@@ -42,7 +42,7 @@ You use the grade range control to change these settings:
   A new grade is added to the range between the existing grades. For example, if you add a grade in the default setting, 
   the grade range changes to **F** (0 to 50), **B** (50 to 75), and **A** (75 to 100):
 
-  .. image:: Images/grade_range_b.png
+  .. image:: ../Images/grade_range_b.png
     :width: 800
     :alt: Image of an altered Grade Range control
 
@@ -176,13 +176,13 @@ You set the grading policy for the subsection from two places:
 
 From the course outline, click the checkmark next to the subsection.  Then select a grading policy from the popup menu:
 
-    .. image:: Images/course_outline_set_grade.png
+    .. image:: ../Images/course_outline_set_grade.png
        :width: 600
        :alt: Image of the assignment type for a subsection
 
 From the subsection page, click the text next to the **Graded as** label, then select a grading policy from the popup menu:
 
-    .. image:: Images/subsection_set_grade.png
+    .. image:: ../Images/subsection_set_grade.png
        :width: 600
        :alt: Image of the assignment type on the subsection page
 
@@ -205,7 +205,7 @@ You can also :ref:`Set the Grace Period` for your assignments to cover any misun
 
 Students see the due date in the course accordian under the subsection title. For example:
 
-.. image::  Images/Subsection_due_date.png
+.. image::  ../Images/Subsection_due_date.png
   :alt: Image of subsection due dates in the course accordian
 
 There are several problems in this subsection, all due November 3, 2013 at 23:30 UTC.
@@ -220,7 +220,7 @@ The Student View of Grades
 **************************
 Once a grading policy is in place, students can view both their problem scores and the percent completed and current grade in the **Progress** tab for the course.
   
-  .. image:: Images/Progress_tab.png
+  .. image:: ../Images/Progress_tab.png
     :width: 800
     :alt: Image of the student Progress tab
 

@@ -33,12 +33,12 @@ To open the course outline, on the **Content** menu, click **Outline**.
 
 The following image shows the different elements of a course outline:
 
-.. image:: Images/Course_Outline.gif
+.. image:: ../Images/Course_Outline.gif
  :alt: Image of the course outline, with callouts for sections, subsection, and units
 
 The following image shows the way this course content appears in the LMS:
 
-.. image:: Images/Course_Outline_LMS.gif
+.. image:: ../Images/Course_Outline_LMS.gif
   :alt: Image of sections from the student's point of view
 
 .. _Sections:
@@ -87,7 +87,7 @@ You add and delete subsections from the **Course Outline** page. You edit a subs
 
 On the page for the subsection, you can see all the units in the subsection.
 
-.. image:: Images/Subsection.gif
+.. image:: ../Images/Subsection.gif
  :alt: Image of the subsection page
 
 You can also do the following.
@@ -116,7 +116,7 @@ Subsections are divided into units. A unit, in turn, contains one or more compon
 
 In the LMS, each unit in the subsection appears as a link on the course ribbon at the top of the page. The following image shows a subsection that has eight units:
 
-.. image:: Images/Units_LMS.gif
+.. image:: ../Images/Units_LMS.gif
  :alt: Image of units from a student's point of view
 
 The titles in the pop-up dialog, in white text on a black background, are the display names of the components in that unit.  
@@ -153,7 +153,7 @@ A component is the part of a unit that contains your actual course content. A un
 
 A student can view the name of all components in a unit by hovering over the unit in the ribbon at the top of the page.
 
-.. image:: Images/ComponentNames_CourseRibbon.gif
+.. image:: ../Images/ComponentNames_CourseRibbon.gif
  :alt: Image of the component list for a unit
 
 By default, Studio includes four types of components.
@@ -165,7 +165,7 @@ By default, Studio includes four types of components.
 
 To add a component to the unit, click the component type that you want under **Add New Component**. 
 
-.. image:: Images/AddNewComponent.gif
+.. image:: ../Images/AddNewComponent.gif
   :alt: Image of adding a new component
 
 For more information, see the documentation for the specific component type that you want:
@@ -183,7 +183,7 @@ You can edit a component only if the unit that contains it is Private, or if you
 
 When you can edit the component, the Edit icon and the Display Name appear in the component header:
 
-.. image:: Images/unit-edit.png
+.. image:: ../Images/unit-edit.png
   :alt: Image of a unit with Edit icon circled
 
 Click the Edit icon.  Then follow instructions for the type of component you are editing.
@@ -200,7 +200,7 @@ To set the display name for a component:
 #. Click **Settings**.
 #. Edit the **Display Name** field.
 
-  .. image:: Images/display-name.png
+  .. image:: ../Images/display-name.png
    :alt: Image of the Display Name field for a component.
 
 4. Click **Save**.
@@ -217,7 +217,7 @@ When you duplicate a component, a new copy of that component is added directly b
 
 When you can duplicate the component, the Duplicate icon appears in the component header:
 
-.. image:: Images/unit-dup.png
+.. image:: ../Images/unit-dup.png
   :alt: Image of a unit with Duplicate icon circled
 
 
@@ -233,7 +233,7 @@ You can delete a component only if the unit that contains it is Private, or if y
 
 When you can delete the component, the Delete icon appears in the component header:
 
-.. image:: Images/unit-delete.png
+.. image:: ../Images/unit-delete.png
   :alt: Image of a unit with Delete icon circled
 
 Click the Delete icon.  Then follow instructions for the type of component you are editing.
@@ -248,10 +248,10 @@ You can reorganize your course by dragging and dropping sections, subsections, u
 
 To move an element, hover over the element handle on the right side of the screen until the mouse pointer changes to a four-headed arrow. Then, click and drag the element to the location that you want.
 
-.. image:: Images/DragAndDropExample.gif
+.. image:: ../Images/DragAndDropExample.gif
  :alt: Image of the course outline, with the handle for a unit selected for drag and drop
 
 When you move an element, a blue line indicates where the element will land when you release the mouse. 
 
-.. image:: Images/DragAndDrop_BlueLine.gif
+.. image:: ../Images/DragAndDrop_BlueLine.gif
  :alt: Image of the course outline, with a unit being dragged to a different location

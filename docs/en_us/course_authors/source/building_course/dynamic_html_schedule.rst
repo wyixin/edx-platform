@@ -1,11 +1,8 @@
-.. raw:: latex
-  
-      \newpage %
-      
+     
 .. _Appendix B:
 
 ===========================================
-APPENDIX B: Code for Dynamic HTML Schedule
+Code for Dynamic HTML Schedule
 ===========================================
 
  :: 

@@ -9,15 +9,13 @@ Contents
 
 .. toctree::
    :numbered:
-   :maxdepth: 5
+   :maxdepth: 2
 
    read_me
    change_log
-   accounts
-   get_started
-   create_new_course
-   establish_grading_policy
-   organizing_course
+   getting_started/index
+   building_course/index
+   
    create_html_component
    create_video
    create_discussion
@@ -45,7 +43,6 @@ Contents
    course_student
    course_grades
    staff_debug_info
-   glossary
 
 
 

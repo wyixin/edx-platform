@@ -41,7 +41,7 @@ Create a New Course
 #. Click **New Course**.
 #. Enter course information as needed and click **Create**.
 
-  .. image:: Images/new_course_info.png
+  .. image:: ../Images/new_course_info.png
      :width: 800
 
   .. note::  Enter new course information carefully. This information becomes part of the URL for your course. To change the URL after the course is created, you must contact edX through the Help site (http://help.edge.edx.org). Additionally, because this information becomes part of your course URL, the total number of characters in the following three fields must be 65 or fewer.
@@ -73,7 +73,7 @@ When you create a new course, the course opens in Studio automatically and you c
 
 If you come back to Studio later, your courses are listed on the Studio login page. 
 
- .. image:: Images/open_course.png
+ .. image:: ../Images/open_course.png
   :width: 800
  
 To open the course, click the course name. 
@@ -99,7 +99,7 @@ Categories of tasks in the Course Checklist include:
 
 From the **Tools** menu, select **Checklists**.
 
- .. image:: Images/checklist.png
+ .. image:: ../Images/checklist.png
   :width: 800
  
 
@@ -142,7 +142,7 @@ You must set dates and times for enrollment and for the course.
 
 From the **Settings** menu, select **Schedule and Details**.  
 
-.. image:: Images/schedule.png
+.. image:: ../Images/schedule.png
   :alt: An image of the course schedule page.
 
 Follow the on-screen text to enter the course and enrollment schedule.
@@ -178,7 +178,7 @@ In the dashboard, if the course has not yet started, students see the start date
 
 If the course has started, students see the start date as in the following example:
 
-.. image:: Images/dashboard-course.png
+.. image:: ../Images/dashboard-course.png
  :alt: An image of a course listing in the student dashboard, with the start date circled.
 
 
@@ -197,19 +197,19 @@ To set an advertised start date:
 #. Find the policy key **advertised_start**. The default value is **null**.
 #. Enter the date you want as an advertised start date.  You can use any string, enclosed in double quotation marks. If you format the string as a date (for example, as 02/01/2014), the value is parsed and presented to students as a date.
 
-  .. image:: Images/advertised_start.png
+  .. image:: ../Images/advertised_start.png
    :alt: Image of the advertised start date policy key
 
 4. Click **Save Changes** at the bottom of the page.
 
 The start date shown on the student's dashboard is now the value of the advertised_start policy key:
 
-.. image:: Images/dashboard-course_adver_start.png
+.. image:: ../Images/dashboard-course_adver_start.png
  :alt: An image of a course listing in the student dashboard, with the advertised start date circled.
 
 If you do not change the default course start date (01/01/2030), and the **advertised_start** policy value is ``null``, then the student dashboard does not list a start date for the course.  Students just see that the course has not yet started:
 
-.. image:: Images/dashboard-course_not_started.png
+.. image:: ../Images/dashboard-course_not_started.png
  :alt: Image of a course listing in the student dashboard, with no start date.
 
 
@@ -251,7 +251,7 @@ For example, the course description is circled in the following course summary p
 #. From the **Settings** menu, select **Schedule & Details**.
 #. Scroll down to the **Introducing Your Course** section, then locate the **Course Overview** field.
 
-.. image:: Images/course_overview.png
+.. image:: ../Images/course_overview.png
   :width: 800
 
 3. Overwrite the content as needed for your course, following the directions in the boilerplate text. Do not edit HTML tags. For a template that includes placeholders, see :doc:`appendices/a`.
@@ -317,7 +317,7 @@ To add a course introduction video:
 
 #. Upload the course video to YouTube. Make note of the code that appears between **watch?v =** and **&feature** in the URL. This code appears in the green box below.
 
-  .. image:: Images/image127.png
+  .. image:: ../Images/image127.png
     :width: 800
     
 2. From the **Settings** menu, select **Schedule & Details**.
@@ -393,7 +393,7 @@ For either the the **Date Added** or **Name** column, you can switch the sort or
 
 The current sort order is shown at the top of the file list, and the active sort column header is underlined:
 
-.. image:: Images/file_sort.png
+.. image:: ../Images/file_sort.png
   :alt: Sorting files in the Files & Uploads page
 
 
@@ -412,7 +412,7 @@ You can navigate through the pages listing files in two ways:
 * At the bottom of the page, enter the page number to skip to, then tab out of the field:
 
   
-  .. image:: Images/file_pagination.png
+  .. image:: ../Images/file_pagination.png
     :alt: Pagination in the Files & Uploads page
 
   
@@ -443,7 +443,7 @@ You can add static pages to your course. Each static page appears in your course
 For example, the following navigation bar includes a
 **Syllabus** and **Projects** static pages.
 
-.. image:: Images/image157.png
+.. image:: ../Images/image157.png
 
 You can use static pages for a syllabus, grading policy, course handouts, or any other purpose.
 
@@ -456,7 +456,7 @@ To create a static page:
 #. From the **Content** menu, select **Static Pages**.
 #. Click **New Page**. The following screen opens:
 
-  .. image:: Images/image161.png
+  .. image:: ../Images/image161.png
    :width: 800
 
 3. Click **Edit**. 
@@ -487,7 +487,7 @@ You add updates to notify students of exams, changes in the course schedule, or 
 
 Students see course updates in **Course Info** tab when they log in to the course:
 
-.. image:: Images/course_info.png
+.. image:: ../Images/course_info.png
  :width: 800
 
 To add a course update:
@@ -529,7 +529,7 @@ It's recommended that you upload a separate PDF file for each chapter of your te
 
 When students open the textbook tab in the course, they can navigate the textbook by chapter:
 
-.. image:: Images/textbook_chapters.png
+.. image:: ../Images/textbook_chapters.png
  :width: 800
 
 To add a textbook:
@@ -537,7 +537,7 @@ To add a textbook:
 #. From the **Content** menu, select **Textbooks**.
 #. Click **New Textbook**. The following screen opens:
 
-  .. image:: Images/textbook_new.png
+  .. image:: ../Images/textbook_new.png
    :width: 800
 
 3. Enter the **Textbook Name**.
