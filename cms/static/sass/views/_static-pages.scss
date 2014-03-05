@@ -14,10 +14,11 @@
     width: flex-grid(9, 12);
     margin-right: flex-gutter();
 
-    .no-pages-content {
+    .add-pages {
       @extend %ui-well;
-      padding: ($baseline*2);
+      margin: ($baseline*1.5) 0;
       background-color: $gray-l4;
+      padding: ($baseline*2);
       text-align: center;
       color: $gray;
 
