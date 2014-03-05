@@ -16,6 +16,10 @@ LOGGING = get_logger_config(ENV_ROOT / "log",
                             dev_env=True,
                             debug=True)
 
+# Note: this wiki setting is also configured in the lms.envs.dev.py file.
+# For a consistent user experience, both values should be updated together.
+WIKI_ENABLED = True
+
 modulestore_options = {
     'default_class': 'xmodule.raw_module.RawDescriptor',
     'fs_root': GITHUB_REPO_ROOT,

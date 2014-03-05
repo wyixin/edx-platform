@@ -44,6 +44,8 @@ FEATURES['ALLOW_COURSE_STAFF_GRADE_DOWNLOADS'] = True
 FEATURES['EMBARGO'] = True
 
 # Need wiki for courseware views to work. TODO (vshnayder): shouldn't need it.
+# Note: this wiki setting is also configured in the cms.envs.test.py file.
+# For a consistent user experience, both values should be updated together.
 WIKI_ENABLED = True
 
 # Makes the tests run much faster...

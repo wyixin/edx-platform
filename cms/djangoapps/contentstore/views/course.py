@@ -22,6 +22,7 @@ from edxmako.shortcuts import render_to_response
 from xmodule.error_module import ErrorDescriptor
 from xmodule.modulestore.django import modulestore, loc_mapper
 from xmodule.contentstore.content import StaticContent
+from xmodule.tabs import PDFTextbookTabs
 
 from xmodule.modulestore.exceptions import (
     ItemNotFoundError, InvalidLocationError)
@@ -38,7 +39,6 @@ from models.settings.course_metadata import CourseMetadata
 from util.json_request import expect_json
 
 from .access import has_course_access
-from .tabs import initialize_course_tabs
 from .component import (
     OPEN_ENDED_COMPONENT_TYPES, NOTE_COMPONENT_TYPES,
     ADVANCED_COMPONENT_POLICY_KEY)
@@ -400,8 +400,6 @@ def create_new_course(request):
         system=new_course.system,
         definition_data=overview_template.get('data')
     )
-
-    initialize_course_tabs(new_course, request.user)
 
     new_location = loc_mapper().translate_location(new_course.location.course_id, new_course.location, False, True)
     # can't use auth.add_users here b/c it requires request.user to already have Instructor perms in this course
@@ -831,8 +829,8 @@ def textbooks_list_handler(request, tag=None, package_id=None, branch=None, vers
                 textbook["id"] = tid
                 tids.add(tid)
 
-        if not any(tab['type'] == 'pdf_textbooks' for tab in course.tabs):
-            course.tabs.append({"type": "pdf_textbooks"})
+        if not any(isinstance(tab.type, PDFTextbookTabs) for tab in course.tabs):
+            course.tabs.append(PDFTextbookTabs())
         course.pdf_textbooks = textbooks
         store.update_item(course, request.user.id)
         return JsonResponse(course.pdf_textbooks)
@@ -848,10 +846,8 @@ def textbooks_list_handler(request, tag=None, package_id=None, branch=None, vers
         existing = course.pdf_textbooks
         existing.append(textbook)
         course.pdf_textbooks = existing
-        if not any(tab['type'] == 'pdf_textbooks' for tab in course.tabs):
-            tabs = course.tabs
-            tabs.append({"type": "pdf_textbooks"})
-            course.tabs = tabs
+        if not any(isinstance(tab.type, PDFTextbookTabs) for tab in course.tabs):
+            course.tabs.append(PDFTextbookTabs())
         store.update_item(course, request.user.id)
         resp = JsonResponse(textbook, status=201)
         resp["Location"] = locator.url_reverse('textbooks', textbook["id"])

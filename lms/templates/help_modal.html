@@ -4,7 +4,6 @@
 <%! from datetime import datetime %>
 <%! import pytz %>
 <%! from django.conf import settings %>
-<%! from courseware.tabs import get_discussion_link %>
 <%! from microsite_configuration import microsite %>
 <%! platform_name = microsite.get_value("platform_name", settings.PLATFORM_NAME) %>
 
@@ -31,7 +30,8 @@
     </header>
 
 <%
-discussion_link = get_discussion_link(course) if course else None
+  discussion_tab = course.tabs.get_discussion() if course and course.tabs else None
+  discussion_link = discussion_tab.link_func(course) if discussion_tab else None
 %>
 
 % if discussion_link:
