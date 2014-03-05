@@ -42,7 +42,7 @@ Student-reported data
 
 When students register with edX, they select a public username and supply information about themselves. Most of this information is optional, so not all of the students who are enrolled in your course provide it.
 
- .. image:: Images/Registration_page.png
+ .. image:: ../Images/Registration_page.png
    :alt: Fields that collect student information during registration
 
 Students then register for as many individual courses as they choose, which enrolls them in each selected course. 
@@ -82,7 +82,7 @@ To view or download student data:
 
    A table of the student data displays, with one row for each enrolled student. Longer values, such as student goals, are truncated.
 
- .. image:: Images/StudentData_Table.png
+ .. image:: ../Images/StudentData_Table.png
   :alt: Table with columns for the collected data points and rows for each student on the Instructor Dashboard
 
  .. note:: In the future, edX may also request that students select a language and location. This data is not collected at this time.
@@ -111,10 +111,10 @@ To display demographic data for your students:
 
    * The Gender Distribution and Level of Education sections show tables with counts of responses made by enrolled students.
 
-   .. image:: Images/Distribution_Education.png
+   .. image:: ../Images/Distribution_Education.png
     :alt: Table with columns for different possible values for gender and total count reported for each value
 
-   .. image:: Images/Distribution_Gender.png
+   .. image:: ../Images/Distribution_Gender.png
     :alt: Table with columns for different possible values for level of education completed and total count reported for each value
 
    "No Data" is the sum of the students for whom no value exists for the demographic. 

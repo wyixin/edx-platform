@@ -1,6 +1,6 @@
 .. _Appendix F:
 
-Appendix F - Files for the Example Custom JavaScript Display and Grading Problem
+Files for the Example Custom JavaScript Display and Grading Problem
 ================================================================================
 
 For the example :ref:`Custom JavaScript Display and Grading` problem, you need the following files. You can find

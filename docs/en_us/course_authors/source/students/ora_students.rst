@@ -24,12 +24,12 @@ When you come to an open response assessment problem, you see the name of the
 problem, the assessment types, the text of the question, the field where you'll
 enter your response, and the **Save** and **Submit** buttons.
 
-.. image:: /Images/ExampleORA.gif
+.. image:: ../Images/ExampleORA.gif
 
 If an open response assessment asks you to submit a file, you'll also see a button
 that you'll click to upload your file.
 
-.. image:: /Images/ExampleORA_File.gif
+.. image:: ../Images/ExampleORA_File.gif
 
 The *assessment types* can include *self assessment*, *peer assessment*, and *artificial intelligence (AI) assessment*. The
 assessment types run in the order in which they appear in the problem.
@@ -117,7 +117,7 @@ Perform a Self Assessment
 #. When the rubric appears, compare your response with the rubric, and select the
    option that you think is appropriate for each category.
 
-   .. image:: /Images/Rubric1.gif
+   .. image:: ../Images/Rubric1.gif
 
 #. Click **Submit assessment**.
 
@@ -155,7 +155,7 @@ one peer grading interface. There may be just one peer grading interface
 for the whole course, or each individual problem may have its own
 separate peer grading interface.
 
-.. image:: /Images/PGI_FromOEC_2Problems.gif
+.. image:: ../Images/PGI_FromOEC_2Problems.gif
 
 
 Perform a Peer Assessment
@@ -191,7 +191,7 @@ there are more essays from other students left to grade. If you haven't submitte
 a response or no responses are available for grading, you see a yellow message in the
 interface.*
 
-   .. image:: /Images/PAStudent_NoSubmissions.gif
+   .. image:: ../Images/PAStudent_NoSubmissions.gif
 
 
 There are several ways to access other students' responses, depending on
@@ -203,7 +203,7 @@ the way that the course is set up.
    When you see the list of problems that have responses available to grade,
    click the name of the problem that you want to open it.
 
-   .. image:: /Images/PGI_FromOEC_2Problems.gif
+   .. image:: ../Images/PGI_FromOEC_2Problems.gif
 
 -  Through the courseware, in a specific unit. This option is only available if the
    instructor has included a peer grading interface for the problem in the body of
@@ -211,7 +211,7 @@ the way that the course is set up.
    the open response assessment problem. Scroll down past the response that you
    submitted until you see the peer grading interface that appears below the problem.
 
-   .. image:: /Images/PGI_InUnitComposite.gif
+   .. image:: ../Images/PGI_InUnitComposite.gif
 
 -  Through the courseware, in a separate section. This option may not be available
    for your course. If it is, you'll see the section for peer grading in the
@@ -220,7 +220,7 @@ the way that the course is set up.
    that holds all the course peer grading interfaces. To access peer grading for
    a problem, you click the problem name.
 
-   .. image:: /Images/PGI_Multiple-600x.gif
+   .. image:: ../Images/PGI_Multiple-600x.gif
 
 
 .. _Learn to Grade:
@@ -244,9 +244,9 @@ other students' responses to the question.
 #. Review the **How did I do?** message that you receive, and then click
    **Continue**.
 
-   .. image:: /Images/PG_Calibration_Correct.gif
+   .. image:: ../Images/PG_Calibration_Correct.gif
 
-   .. image:: /Images/PG_Calibration_Incorrect.gif
+   .. image:: ../Images/PG_Calibration_Incorrect.gif
 
    When you click **Continue**, the next student response appears for
    you to grade, and you see a yellow **Calibration essay saved** message in
@@ -288,7 +288,7 @@ student who submitted the response.
    responses (usually 3). When you've graded enough responses, you
    receive the following message.
 
-   .. image:: /Images/DoneGrading.gif
+   .. image:: ../Images/DoneGrading.gif
 
    When you see this message, you can access the score for your own
    response. For more information, see :ref:`ORA Access Scores`.
@@ -373,13 +373,13 @@ For *peer assessments* and *AI assessments*, you'll access your scores through t
 For both AI and peer assessments, the score appears below your response
 in an abbreviated version of the rubric.
 
-.. image:: /Images/AIScoredResponse.gif
+.. image:: ../Images/AIScoredResponse.gif
 
 For peer assessments, you can
 also see the written feedback that your response received from different
 graders.
 
-.. image:: /Images/PeerScoredResponse.gif
+.. image:: ../Images/PeerScoredResponse.gif
 
 If you want to see the full rubric for either an AI or peer assessment,
 click **Toggle Full Rubric**.
@@ -388,7 +388,7 @@ click **Toggle Full Rubric**.
           problems to see your score, you receive a message that lets you know how
           many problems you still need to grade.
 
-.. image:: /Images/FeedbackNotAvailable.gif
+.. image:: ../Images/FeedbackNotAvailable.gif
 
 For more information about grading peer assessments, see :ref:`ORA Peer Assessment`.
 

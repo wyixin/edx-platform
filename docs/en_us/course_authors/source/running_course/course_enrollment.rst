@@ -50,7 +50,7 @@ When you enroll students, you have options to:
 
   An example of the email message that students receive when you select this option follows.
 
-  .. image:: Images/Course_Enrollment_Email.png
+  .. image:: ../Images/Course_Enrollment_Email.png
         :alt: Email message inviting a student to enroll in the EdX 101 course
 
 To enroll students or staff members:

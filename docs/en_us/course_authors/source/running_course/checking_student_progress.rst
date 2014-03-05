@@ -26,7 +26,7 @@ percent needed for each grade cutoff. Here is an example of a student's
 progress through edX101.
  
  
-.. image:: Images/image245.png
+.. image:: ../Images/image245.png
   :width: 800
   :alt: Image of a student's Course Progress page with the grade cutoffs legend highlighted
  
@@ -45,7 +45,7 @@ recorded for the student for all problems in the course. Here is a scrolled
 down view of the example Progress page for the student in the example above:
  
  
-.. image:: Images/image247.png
+.. image:: ../Images/image247.png
    :width: 800
    :alt: Image of a student's Course Progress page with problems highlighted
  
@@ -66,7 +66,7 @@ more course-specific tools get added. Here is the current view of the top of
 the Grades page of the Instructor dashboard for edX101:
  
  
-.. image:: Images/image249.png
+.. image:: ../Images/image249.png
   :width: 800
   :alt: Image of the Grades tab of the Instructor Dashboard
  

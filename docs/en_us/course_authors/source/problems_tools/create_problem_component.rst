@@ -42,7 +42,7 @@ The Student View of a Problem
 
 All problems on the edX platform have several component parts.
 
-.. image:: Images/AnatomyOfExercise1.gif
+.. image:: ../Images//AnatomyOfExercise1.gif
  :alt: Image of a problem from a student's point of view, with callouts for elements of the problem
 
 #. **Problem text.** The problem text can contain any standard HTML formatting.
@@ -72,13 +72,13 @@ All problems on the edX platform have several component parts.
 #. **Attempts.** The instructor may set a specific number of attempts or
    allow unlimited attempts.
 
-   .. image:: Images/AnatomyOfExercise2.gif
+   .. image:: ../Images//AnatomyOfExercise2.gif
     :alt: Image of a problem from a student's point of view, with callouts for attempts and showing the answer
 
 #. **Feedback.** After a student clicks **Check**, all problems return a
    green check mark or a red X.
 
-   .. image:: Images/AnatomyofaProblem_Feedback.gif
+   .. image:: ../Images//AnatomyofaProblem_Feedback.gif
     :alt: Image of feedback checkmark and x from a student's point of view
 
 #. **Correct answer.** Most problems require that the instructor specify
@@ -92,14 +92,14 @@ All problems on the edX platform have several component parts.
 
 #. **Hide Answer button.**
 
-   .. image:: Images/AnatomyOfExercise3.gif
+   .. image:: ../Images//AnatomyOfExercise3.gif
     :alt: Image of a problem in the course accordian
 
 #. **Grading.** The instructor may specify whether a group of problems
    is graded. If a group of problems is graded, a clock icon appears for
    that assignment in the course accordion.
 
-   .. image:: Images/clock_icon.gif
+   .. image:: ../Images//clock_icon.gif
 
 #. **Due date.** The date that the problem is due. A problem that is
    past due does not have a **Check** button. It also does not accept
@@ -160,7 +160,7 @@ the text for you automatically. The toolbar buttons are the following:
 
 The following image shows a multiple choice problem in the Simple Editor.
 
-.. image:: Images/MultipleChoice_SimpleEditor.png
+.. image:: ../Images//MultipleChoice_SimpleEditor.png
  :alt: Image of a problem in the simple editor
 
 .. _Advanced Editor:
@@ -175,7 +175,7 @@ For more information about the XML for different problem types, see :ref:`Append
 The following image shows the multiple choice problem above in the Advanced Editor
 instead of the Simple Editor.
 
-.. image:: Images/MultipleChoice_AdvancedEditor.png
+.. image:: ../Images//MultipleChoice_AdvancedEditor.png
  :alt: Image of a problem in the advanced editor
 
 .. _Problem Settings:
@@ -193,7 +193,7 @@ the component editor.
 -  **Randomization**
 -  **Show Answer**
 
-.. image:: Images/ProbComponent_Attributes.png
+.. image:: ../Images//ProbComponent_Attributes.png
  :alt: Image of the Settings tab in a Problem component
 
 ===============
@@ -204,7 +204,7 @@ This setting indicates the name of your problem. The display name
 appears as a heading over the problem in the LMS and in the course
 ribbon at the top of the page.
 
-.. image:: Images/ProbComponent_LMS_DisplayName.gif
+.. image:: ../Images//ProbComponent_LMS_DisplayName.gif
  :alt: Image of the problem in a unit page from a student's point of view
 
 ==============================
@@ -227,7 +227,7 @@ Problem Weight
 This setting specifies the maximum number of points possible for the
 problem. The problem weight appears next to the problem title.
 
-.. image:: Images/ProblemWeight_DD.gif
+.. image:: ../Images//ProblemWeight_DD.gif
  :alt: Image of a problem from a student's point of view, with the possible points circled
 
 By default, each response field, or “answer space,” in a Problem
@@ -239,7 +239,7 @@ to answer, and thus has three response fields.
 The following Problem component contains one text input problem,
 and has just one response field.
 
-.. image:: Images/ProblemWeight_TI.gif
+.. image:: ../Images//ProblemWeight_TI.gif
  :alt: Image of a text input problem from a student's point of view
 
 Computing Scores
@@ -294,7 +294,7 @@ This setting specifies whether certain values in your problem change each time a
 
 
 
-.. image:: Images/Rerandomize.gif
+.. image:: ../Images//Rerandomize.gif
 
 If you want to change, or "randomize," specific values in your problem, you have to do both the following:
 
@@ -385,7 +385,7 @@ page for the problem type.
    in the Advanced component.
 -  :ref:`Open Response Assessment Problems` are a new kind of problem that allow you, the
    students in your course, or a computer algorithm to grade responses in the form
-   of essays, files such as computer code, and images.
+   of essays, files such as computer code, and ../Images/.
 
 .. _Multiple Problems in One Component:
 

@@ -89,7 +89,7 @@ To create a discussion category:
 
 When students click the **Discussion** static page for your course, the drop-down list includes this new category.
 
- .. image:: Images/NewCategory_Discussion.png
+ .. image:: ../Images/NewCategory_Discussion.png
   :alt: Image of a new discussion category
 
 .. _Assigning_discussion_roles:
@@ -177,13 +177,13 @@ To encourage longer, threaded discussions rather than many similar, separate pos
 * Pin a post. 
   Pinning a post makes it appear first in the discussion, so that it is more likely that students will see and respond to it. Otherwise, each post is listed in reverse chronological order or sorted as each student chooses. You can write your own post and then pin it, or pin a post by any author. Click **Pin Thread**.
 
-    .. image:: Images/Pin_Discussion.png
+    .. image:: ../Images/Pin_Discussion.png
      :alt: Image of the pin icon for discussion posts
 
 * Endorse a response.
   Endorsing a response indicates that it provides value to the discussion, such as a correct answer to a question. Click the **check mark** that displays at upper right of the response.
 
-    .. image:: Images/Endorse_Discussion.png
+    .. image:: ../Images/Endorse_Discussion.png
      :alt: Image of the Endorse button for discussion posts
 
 * Close a thread. 

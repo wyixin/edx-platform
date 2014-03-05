@@ -129,7 +129,7 @@ To define the start of the beta test, you use Studio to specify a number of days
 
 #. Scroll down to the ``days_early_for_beta`` **Policy Key**.
 
-#. Set the **Policy Value** to a number of days before section and subsection **Release Day**s. 
+#. Set the **Policy Value** to a number of days before the **Release Day** for the section and subsection. 
 
 #. Click **Save Changes**.
 

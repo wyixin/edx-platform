@@ -1,7 +1,7 @@
 .. _Sample Student Login Guide:
 
 ======================================
-APPENDIX C: Sample Student Login Guide 
+ASample Student Login Guide 
 ======================================
 
 Create a login guide for your individual course.

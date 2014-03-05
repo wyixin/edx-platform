@@ -149,7 +149,7 @@ To make revisions to a unit that has been published, you create and edit a draft
 
 To create a draft, go to the unit's page, and then click **edit a draft** in the right pane.
 
-.. image:: Images/Viz_Revise_EditDraft.png
+.. image:: ../Images/Viz_Revise_EditDraft.png
  :width: 800
  :alt: Image of a public unit with the edit a draft link circled
 
@@ -158,7 +158,7 @@ When you edit a draft of a unit, you can view the unit's contents in two ways.
 * To view the already-published content as it appears in the live course, click **View the Live Version** in the upper-right corner of the page.
 * To view the unpublished content as you're working on it, click **Preview**.
 
-.. image:: Images/Viz_Revise_ViewLiveandPreview.png
+.. image:: ../Images/Viz_Revise_ViewLiveandPreview.png
  :alt: Image of draft unit
 
 When you're ready to publish the draft of your revised content, 
@@ -166,7 +166,7 @@ click **replace it with this draft** in the right pane.
 
 If you decide you don't want to keep the revised content, click **Delete Draft**.
 
-.. image:: Images/Viz_Revise_ReplaceorDelete.png
+.. image:: ../Images/Viz_Revise_ReplaceorDelete.png
   :alt: Image of a unit settings panel with the replace it with this draft link circled
 
 .. Warning:: Historical versions of units are not stored by Studio. After you replace the live version with a new draft, you cannot revert the unit to the previous version. 

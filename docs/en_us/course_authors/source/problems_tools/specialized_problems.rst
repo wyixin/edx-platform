@@ -18,7 +18,7 @@ Specialized problems are advanced problems such as annotations. These problems a
 By default, when you create a new component in Studio, you see the
 following options.
 
-.. image:: Images/AddNewComponent.gif
+.. image:: ../Images/AddNewComponent.gif
   :alt: Image of the Add a New Component panel
 
 To create a specialized problem, you must first add the Advanced
@@ -30,7 +30,7 @@ component to your course. To do this, follow these steps.
    Definition** section, and then locate the **advanced_modules**
    policy key (this key is at the top of the list).
 
-   .. image:: Images/AdvancedModulesEmpty.gif
+   .. image:: ../Images/AdvancedModulesEmpty.gif
      :alt: Image of the Manual Policy Definition section of the Advanced Settings page
 
 #. Under **Policy Value**, place your cursor between the brackets, and
@@ -53,7 +53,7 @@ component to your course. To do this, follow these steps.
 
        "annotatable","word_cloud"
 
-   .. image:: Images/AdvSettings_Before.png
+   .. image:: ../Images/AdvSettings_Before.png
      :alt: Image of the Manual Policy Definition section of the Advanced Settings page, with specialized problems added
 
 #. At the bottom of the page, click **Save Changes**.
@@ -63,13 +63,13 @@ component to your course. To do this, follow these steps.
 
    The text in the **Policy Value** field now appears as follows.
 
-   .. image:: Images/AdvSettings_After.png
+   .. image:: ../Images/AdvSettings_After.png
      :alt: Image of the Manual Policy Definition section of the Advanced Settings page, with specialized problems added after saving
 
 #. Return to the unit where you want to add the specialized problem. The
    list of possible components now contains an Advanced component.
 
-   .. image:: Images/AdvancedComponent.gif
+   .. image:: ../Images/AdvancedComponent.gif
      :alt: Image of the Add a New Component panel with the Advanced component option
 
 When you click the Advanced component, you can see **Annotation** and **Word cloud** in the list. More information about how to create each problem is provided in the page for that problem type.
@@ -86,7 +86,7 @@ questions appear when students hover the mouse over the highlighted
 text. The questions also appear in a section below the text block, along
 with space for students' responses.
 
-.. image:: Images/AnnotationExample.gif
+.. image:: ../Images/AnnotationExample.gif
   :alt: Image of an annotation problem
 
 Create an Annotation Problem

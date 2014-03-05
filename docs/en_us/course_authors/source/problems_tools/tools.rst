@@ -29,17 +29,17 @@ The Student View of a Full Screen Image
 -----------------------------------------
 The student sees the full screen image in a unit page. When the student hovers the mouse pointer over the image, the **Fullscreen** button appears:
 
-.. image:: Images/image-modal.png
+.. image:: ../Images/image-modal.png
  :alt: Image of the full screen image tool with the Full Screen button.
 
 When the student clicks **Fullscreen**, the image opens and expands in the full browser window.  The buttons **Close**, **Zoom In**, and **Zoom Out** appear:
 
-.. image:: Images/image-modal-window.png
+.. image:: ../Images/image-modal-window.png
  :alt: Image of the Image Modal tool with the Full Screen button.
 
 The student can then zoom in on the image, and drag the image to view the desired part of it:
 
-.. image:: Images/image-modeal-zoomed.png
+.. image:: ../Images/image-modeal-zoomed.png
  :alt: Image of the Image Modal tool with the Full Screen button.
 
 
@@ -145,14 +145,14 @@ Step 1. Add LTI to the Advanced Modules Policy Key
    Definition** section, and then locate the **advanced_modules**
    policy key (this key is at the top of the list).
 
-   .. image:: Images/AdvancedModulesEmpty.gif
+   .. image:: ../Images/AdvancedModulesEmpty.gif
     :alt: Image of the advanced_modules key in the Advanced Settings page
 
 #. Under **Policy Value**, place your cursor between the brackets, and
    then enter **“lti”**. Make sure to include the quotation marks, but
    not the period.
 
-   .. image:: Images/LTIPolicyKey.gif
+   .. image:: ../Images/LTIPolicyKey.gif
     :alt: Image of the advanced_modules key in the Advanced Settings page, with the LTI value added
 
    **Note** If the **Policy Value** field already contains text, place your
@@ -285,7 +285,7 @@ their thoughts to the group.
 For example, the following word cloud was created from students'
 responses to a question in a HarvardX course.
 
-.. image:: Images/WordCloudExample.gif
+.. image:: ../Images/WordCloudExample.gif
   :alt: Image of a word cloud problem
 
 Create a Word Cloud Exercise
@@ -332,7 +332,7 @@ Zooming Image Tool
 
 You may want to present information to your students as an image. If your image is very large or very detailed, students may not be able to see all the information in the image. You can use the zooming image tool to enlarge areas of your image as the student moves the mouse over the image, as in the example below.
 
-.. image:: Images/Zooming_Image.gif
+.. image:: ../Images/Zooming_Image.gif
   :alt: Example zooming image tool showing a chemistry exercise
 
 Components of a Zooming Image Tool
@@ -381,7 +381,7 @@ Create a Zooming Image Tool
 
    The HTML in your zooming image tool may resemble the following.
 
-   .. image:: Images/ZoomingImage_Modified.gif
+   .. image:: ../Images/ZoomingImage_Modified.gif
      :alt: Example HTML for a zooming image tool
 
 #. Click **Save** to save the HTML component.

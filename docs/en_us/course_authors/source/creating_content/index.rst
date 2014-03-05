@@ -5,7 +5,7 @@ Creating Course Content
 See the following
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 2
    
    accessibility
    create_html_component

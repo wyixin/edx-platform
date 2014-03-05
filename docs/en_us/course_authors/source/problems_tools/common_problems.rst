@@ -38,7 +38,7 @@ list of possible answers. The student must select all the options that
 apply to answer the problem correctly. Each checkbox problem must have
 at least one correct answer.
 
-.. image:: Images/CheckboxExample.gif
+.. image:: ../Images/CheckboxExample.gif
  :alt: Image of a checkbox problem
 
 ==========================
@@ -58,7 +58,7 @@ Simple Editor
 #. Determine the text of the problem to use as a label, and then surround that text with two sets of angle brackets (>><<).
 #. Select all the answer options, and then click the checkbox button. 
 
-   .. image:: Images/ProbComponent_CheckboxIcon.gif
+   .. image:: ../Images/ProbComponent_CheckboxIcon.gif
     :alt: Image of the checkbox button
    
    When you do this, brackets appear next to each answer choice.
@@ -67,7 +67,7 @@ Simple Editor
 #. In the component editor, select the text of the explanation, and then click the 
    explanation button to add explanation tags around the text.
 
-   .. image:: Images/ProbCompButton_Explanation.gif
+   .. image:: ../Images/ProbCompButton_Explanation.gif
     :alt: Image of the explanation button
 
 #. On the **Settings** tab, specify the settings that you want. 
@@ -133,7 +133,7 @@ problems, whose answers are always visible directly below the question,
 dropdown problems don't show answer choices until the student clicks
 the dropdown arrow.
 
-.. image:: Images/DropdownExample.gif
+.. image:: ../Images/DropdownExample.gif
  :alt: Image of a dropdown problem
 
 ==========================
@@ -156,7 +156,7 @@ To create a dropdown problem, follow these steps.
 #. Determine the text of the problem to use as a label, and then surround that text with two sets of angle brackets (>><<).
 #. Select all the answer options, and then click the dropdown button. 
       
-   .. image:: Images/ProbCompButton_Dropdown.gif
+   .. image:: ../Images/ProbCompButton_Dropdown.gif
     :alt: Image of the dropdown button
       
    When you do this, a double set of brackets ([[ ]]) appears and surrounds the 
@@ -166,7 +166,7 @@ To create a dropdown problem, follow these steps.
 #. In the component editor, select the text of the explanation, and then click the 
    explanation button to add explanation tags around the text.
 
-   .. image:: Images/ProbCompButton_Explanation.gif
+   .. image:: ../Images/ProbCompButton_Explanation.gif
     :alt: Image of the explanation button
 
 #. On the **Settings** tab, specify the settings that you want. 
@@ -226,7 +226,7 @@ don't appear until the student clicks the drop-down arrow, answer
 choices for multiple choice problems are always visible directly below
 the question.
 
-.. image:: Images/MultipleChoiceExample.gif
+.. image:: ../Images/MultipleChoiceExample.gif
  :alt: Image of a multiple choice problem
 
 ==================================
@@ -247,7 +247,7 @@ Simple Editor
 #. Determine the text of the problem to use as a label, and then surround that text with two sets of angle brackets (>><<).
 #. Select all the answer options, and then click the multiple choice button. 
    
-   .. image:: Images/ProbCompButton_MultChoice.gif
+   .. image:: ../Images/ProbCompButton_MultChoice.gif
     :alt: Image of the multiple choice button
    
    When you do this, the component editor adds a pair of parentheses next to each 
@@ -258,7 +258,7 @@ Simple Editor
 #. In the component editor, select the text of the explanation, and then click the 
    explanation button to add explanation tags around the text.
 
-   .. image:: Images/ProbCompButton_Explanation.gif
+   .. image:: ../Images/ProbCompButton_Explanation.gif
     :alt: Image of the explanation button
 
 #. On the **Settings** tab, specify the settings that you want. 
@@ -325,7 +325,7 @@ Numerical Input
 In numerical input problems, students enter numbers or specific and
 relatively simple mathematical expressions to answer a question. 
 
-.. image:: Images/image292.png
+.. image:: ../Images/image292.png
  :alt: Image of a numerical input problem
 
 Note that students' responses don't have to be exact for these problems. You can 
@@ -340,21 +340,21 @@ text that the student enters into mathematical symbols. The following
 example shows the way Studio renders students' text responses in
 numerical input problems. 
 
-.. image:: Images/Math5.gif
+.. image:: ../Images/Math5.gif
  :alt: Image of a numerical input probem rendered by Studio
 
 The following are a few more examples of the way that Studio renders numerical input
 text that students enter.
 
-.. image:: Images/Math1.gif
+.. image:: ../Images/Math1.gif
  :alt: Image of a numerical input probem rendered by Studio
-.. image:: Images/Math2.gif
+.. image:: ../Images/Math2.gif
  :alt: Image of a numerical input probem rendered by Studio
-.. image:: Images/Math3.gif
+.. image:: ../Images/Math3.gif
  :alt: Image of a numerical input probem rendered by Studio
-.. image:: Images/Math4.gif
+.. image:: ../Images/Math4.gif
  :alt: Image of a numerical input probem rendered by Studio
-.. image:: Images/Math5.gif
+.. image:: ../Images/Math5.gif
  :alt: Image of a numerical input probem rendered by Studio
 
 ==================
@@ -450,7 +450,7 @@ You can create numerical problems in the Simple Editor and in the Advanced Edito
 
 For example, the following example problems require the Advanced Editor. 
 
-.. image:: Images/NumericalInput_Complex.png
+.. image:: ../Images/NumericalInput_Complex.png
  :alt: Image of a more complex numerical input problem
 
 For more information about including a Python script in your problem, see :ref:`Custom Python Evaluated Input`.
@@ -466,7 +466,7 @@ Simple Editor
 #. Determine the text of the problem to use as a label, and then surround that text with two sets of angle brackets (>><<).
 #. Select the text of the answer, and then click the numerical input button. 
 
-   .. image:: Images/ProbCompButton_NumInput.gif
+   .. image:: ../Images/ProbCompButton_NumInput.gif
     :alt: Image of the numerical input button
    
    When you do this, an equal sign appears next to the answer.
@@ -482,7 +482,7 @@ Simple Editor
 #. In the component editor, select the text of the explanation, and then click the 
    explanation button to add explanation tags around the text.
 
-   .. image:: Images/ProbCompButton_Explanation.gif
+   .. image:: ../Images/ProbCompButton_Explanation.gif
     :alt: Image of athe explanation button
 
 #. On the **Settings** tab, specify the settings that you want. 
@@ -571,7 +571,7 @@ the instructor's specified answer exactly, including spelling and
 punctuation, we recommend that you specify more than one attempt for
 text input problems to allow for typographical errors.
 
-.. image:: Images/TextInputExample.gif
+.. image:: ../Images/TextInputExample.gif
  :alt: Image of a text input probem
 
 ==================================
@@ -593,7 +593,7 @@ To create a text input problem in the Simple Editor, follow these steps.
 #. Determine the text of the problem to use as a label, and then surround that text with two sets of angle brackets (>><<).
 #. Select the text of the answer, and then click the text input button. 
    
-   .. image:: Images/ProbCompButton_TextInput.gif
+   .. image:: ../Images/ProbCompButton_TextInput.gif
     :alt: Image of the text input button
    
    When you do this, an equal sign appears next to the answer.
@@ -602,7 +602,7 @@ To create a text input problem in the Simple Editor, follow these steps.
 #. In the component editor, select the text of the explanation, and then click the 
    explanation button to add explanation tags around the text.
 
-   .. image:: Images/ProbCompButton_Explanation.gif
+   .. image:: ../Images/ProbCompButton_Explanation.gif
     :alt: Image of the explanation button
 
 #. On the **Settings** tab, specify the settings that you want. 

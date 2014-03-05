@@ -36,12 +36,12 @@ You establish a grading policy for your course when you create it in Studio. Whi
 
    A list of the assignment types in your course displays. In this example, Homework is weighted as 60% of the grade. 
 
-   .. image:: Images/Grading_Configuration.png
+   .. image:: ../Images/Grading_Configuration.png
      :alt: XML of course assignment types and weights for grading
 
    In Studio, you define this information by selecting **Settings** > **Grading**.
 
-   .. image:: Images/Grading_Configuration_Studio.png
+   .. image:: ../Images/Grading_Configuration_Studio.png
      :alt: Studio example of homework assignment type and grading weight
 
 For more information, see :ref:`Configure the Assignment Types`.
@@ -115,7 +115,7 @@ To view current grades for a student:
 
 The Course Progress page for the student displays a chart with the grade for each homework, lab, midterm, final, and any other assignment types in your course, and the total grade earned for the course to date. 
 
-   .. image:: Images/Student_Progress.png
+   .. image:: ../Images/Student_Progress.png
      :alt: A bar chart from a student's Progress page showing grade acheived for each assignment
 
 =========================================================
@@ -195,7 +195,7 @@ To find the unique identifier in the URL for a problem:
 
    Information about the problem displays, including its location or URL. This URL ends with the type of module, which is typically "problem", and the unique identifier. 
 
-   .. image:: Images/Problem_URL.png
+   .. image:: ../Images/Problem_URL.png
     :alt: The Staff Debug view of a problem with the unique identifier indicated at the end of a URL address
 
 

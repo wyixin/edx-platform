@@ -16,40 +16,7 @@ Contents
    getting_started/index
    building_course/index
    create_content/index
-   
-   
-   create_problem_component
-   common_problems
-   advanced_problems
-   specialized_problems
-   external_graders
-   open_response_assessment
-   google_hangouts
-   tools
-   additional_tools
-   set_content_releasedates
-   view_course_content
-   export_import_course
-   accessibility
-   checking_student_progress
-   ora_students
-   discussions
-   discussion_guidance_moderators
-   course_data
-   course_enrollment
-   course_staffing
-   beta_testing
-   course_student
-   course_grades
-   staff_debug_info
-
-
-
-Appendices
-==========
-
-.. toctree::
-   :maxdepth: 3
-   :glob:
-
-   appendices/*
+   problems_tools/index
+   releasing_course/index
+   running_course/index
+   students/index

@@ -34,7 +34,7 @@ You can enter Preview mode in two ways.
  
 * On any subsection page, click **Preview Drafts**.
 
-  .. image:: Images/preview_draft.png
+  .. image:: ../Images/preview_draft.png
    :width: 800
    :alt: Image of a subsection with the Preview Drafts button circled
  
@@ -43,7 +43,7 @@ You can enter Preview mode in two ways.
   The following example shows the **Preview** button for a unit that
   is set to Public.
  
-  .. image:: Images/preview_public.png
+  .. image:: ../Images/preview_public.png
    :width: 800
    :alt: Image of a public unit with the Preview button circled
  
@@ -51,7 +51,7 @@ You can enter Preview mode in two ways.
   The following example shows the **Preview** button for a unit that
   is set to Private.
  
-  .. image:: Images/preview_private.png
+  .. image:: ../Images/preview_private.png
    :width: 800
    :alt: Image of a private unit with the Preview button circled
  
@@ -72,19 +72,19 @@ You can view the live course from three different places in Studio:
  
 * The **Course Outline** page.
 
-  .. image:: Images/course_outline_view_live.png
+  .. image:: ../Images/course_outline_view_live.png
    :width: 800
    :alt: Image of the course outline with the View Live button circled
  
 * Any Subsection page.
  
-  .. image:: Images/subsection_view_live.png
+  .. image:: ../Images/subsection_view_live.png
     :width: 800
     :alt: Image of a subsection with the View Live button circled
  
 * The Unit page, if the Unit is Public.
  
-  .. image:: Images/unit_view_live.png
+  .. image:: ../Images/unit_view_live.png
      :width: 800
      :alt: Image of a unit with the View Live button circled
 
