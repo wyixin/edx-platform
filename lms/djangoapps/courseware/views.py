@@ -91,6 +91,14 @@ def render_accordion(request, course, chapter, section, field_data_cache):
     Returns the html string
     """
 
+    ### jbau random test ###
+    # from xmodule.modulestore.django import modulestore
+    # from xmodule.modulestore import Location
+    # from django.contrib.auth.models import AnonymousUser
+    # lti_descriptors = modulestore().get_items(Location("i4x", course.org, course.number, "lti", None), course.id)
+    # print([get_module_for_descriptor(AnonymousUser(), request, descriptor, field_data_cache, course.id).service_url()
+    #        for descriptor in lti_descriptors])
+
     # grab the table of contents
     user = User.objects.prefetch_related("groups").get(id=request.user.id)
     request.user = user	# keep just one instance of User

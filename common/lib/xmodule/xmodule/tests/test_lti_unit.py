@@ -560,15 +560,18 @@ class LTIModuleTest(LogicTest):
         self.assertEqual(called_grade_obj, {'event_name': 'grade', 'value': 0.1, 'max_value': 1.0})
         self.assertEqual(kwargs, {'custom_user': self.USER_STANDIN})
 
-    def test_lti20_non_put_error(self):
+    UNSUPPORTED_HTTP_METHODS = ["OPTIONS", "HEAD", "POST", "DELETE", "TRACE", "CONNECT"]
+
+    def test_lti20_unsupported_method_error(self):
         """
-        Test we get a 404 when we don't PUT
+        Test we get a 404 when we don't GET or PUT
         """
         self.setup_system_xmodule_mocks_for_lti20_request_test()
         mock_request = self.get_signed_lti20_mock_put_request()
-        mock_request.method = "GET"
-        response = self.xmodule.lti_2_0_result_rest_handler(mock_request, "user/abcd")
-        self.assertEqual(response.status_code, 404)
+        for bad_method in self.UNSUPPORTED_HTTP_METHODS:
+            mock_request.method = bad_method
+            response = self.xmodule.lti_2_0_result_rest_handler(mock_request, "user/abcd")
+            self.assertEqual(response.status_code, 404)
 
     def test_lti20_request_handler_bad_headers(self):
         """

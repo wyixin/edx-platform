@@ -59,7 +59,8 @@ from xblock.fields import Boolean, Float
 
 log = logging.getLogger(__name__)
 
-lti20_rest_dispatch_parser = re.compile(r"^user/(?P<anon_id>\w+)", re.UNICODE)
+LTI_20_REST_DISPATCH_PARSER = re.compile(r"^user/(?P<anon_id>\w+)", re.UNICODE)
+LTI_20_JSON_CONTENT_TYPE = 'application/vnd.ims.lis.v2.result+json'
 
 
 class LTIError(Exception):
@@ -100,7 +101,7 @@ class LTIFields(object):
     )
     has_score = Boolean(help="Does this LTI module have score?", default=False, scope=Scope.settings)
     module_score = Float(help="The score kept in the xblock KVS -- duplicate of the published score in django DB",
-                         default=0.0,
+                         default=None,
                          scope=Scope.user_state)
     score_comment = String(help="Comment as returned from grader, LTI2.0 spec", default="", scope=Scope.user_state)
 
@@ -537,14 +538,11 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
             return Response(response_xml_template.format(**failure_values), content_type="application/xml")
 
         if action == 'replaceResultRequest':
-            scaled_score = score * self.max_score()
-            self.module_score = scaled_score
-
             self.system.publish(
                 self,
                 {
                     'event_name': 'grade',
-                    'value': scaled_score,
+                    'value': score * self.max_score(),
                     'max_value': self.max_score(),
                 },
                 custom_user=real_user
@@ -615,31 +613,77 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
         print("\n\n#### COPY AND PASTE AUTHORIZATION HEADER ####\n{}\n#############################################\n\n"
               .format(headers['Authorization']))
         ####### DEBUG SECTION END ########
-        if request.method != "PUT":
-            return Response(status=404)  # have to do 404 due to spec, but 405 is better, with error msg in body
-
-        try:
-            self.verify_lti20_result_rest_headers(request)
-        except LTIError:
-            return Response(status=401)  # Unauthorized in this case.  401 is right
-
         try:
             anon_id = self.parse_lti20_handler_dispatch(dispatch)
         except LTIError:
             return Response(status=404)  # 404 because a part of the URL (denoting the anon user id) is invalid
 
         try:
+            self.verify_lti20_result_rest_headers(request, verify_content_type=True)
+        except LTIError:
+            return Response(status=401)  # Unauthorized in this case.  401 is right
+
+        real_user = self.system.get_real_user(anon_id)
+        if not real_user:  # that means we can't save to database, as we do not have real user id.
+            msg = "[LTI]: Real user not found against anon_id: {}".format(anon_id)
+            log.debug(msg)
+            return Response(status=404)  # have to do 404 due to spec, but 400 is better, with error msg in body
+
+        if request.method == "PUT":
+            return self._lti_2_0_result_put_handler(request, real_user)
+        elif request.method == "GET":
+            return self._lti_2_0_result_get_handler(request, real_user)
+        else:
+            return Response(status=404)  # have to do 404 due to spec, but 405 is better, with error msg in body
+
+    def parse_lti20_handler_dispatch(self, dispatch):
+        """
+        parses the dispatch argument (the trailing parts of the URL) of the LTI2.0 REST handler.
+        must be of the form "user/<anon_id>".  Returns anon_id if match found, otherwise raises LTIError
+        """
+        if dispatch:
+            match_obj = LTI_20_REST_DISPATCH_PARSER.match(dispatch)
+            if match_obj:
+                return match_obj.group('anon_id')
+        # fall-through handles all error cases
+        msg = "No valid user id found in endpoint URL"
+        log.debug("[LTI]: {}".format(msg))
+        raise LTIError(msg)
+
+    def _lti_2_0_result_get_handler(self, request, real_user):
+        """
+        PUT handler for lti_2_0_result.  Assumes all authorization has been checked.
+        """
+        base_json_obj = {"@context": "http://purl.imsglobal.org/ctx/lis/v2/Result",
+                         "@type": "Result"}
+        user_instance = self.system.get_real_user_module_for_noauth_handler(real_user)
+        print(dir(user_instance))
+        if user_instance.module_score is None:  # In this case, no score has been ever set
+            return Response(json.dumps(base_json_obj), content_type=LTI_20_JSON_CONTENT_TYPE)
+
+        # Fall through to returning grade and comment
+        base_json_obj['resultScore'] = round(user_instance.module_score, 2)
+        base_json_obj['comment'] = user_instance.score_comment
+        return Response(json.dumps(base_json_obj), content_type=LTI_20_JSON_CONTENT_TYPE)
+
+    def _lti_2_0_result_put_handler(self, request, real_user):
+        """
+        PUT handler for lti_2_0_result
+        """
+        try:
             (score, comment) = self.parse_lti20_result_json(request.body)
         except LTIError:
             return Response(status=404)  # have to do 404 due to spec, but 400 is better, with error msg in body
 
-        real_user = self.system.get_real_user(anon_id)
-        if not real_user:  # that means we can't save to database, as we do not have real user id.
-            return Response(status=404)  # have to do 404 due to spec, but 400 is better, with error msg in body
         # now we can record the score and the comment
         scaled_score = score * self.max_score()
-        self.module_score = scaled_score
-        self.score_comment = comment
+#        self.module_score = scaled_score
+#        self.score_comment = comment
+        print(self.scope_ids)
+        print(self._dirty_fields)
+        user_instance = self.system.get_real_user_module_for_noauth_handler(real_user)
+        user_instance.module_score = scaled_score
+        user_instance.score_comment = comment
         self.system.publish(
             self,
             {
@@ -649,36 +693,21 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
             },
             custom_user=real_user
         )
+        print(self._dirty_fields)
         return Response(status=200)
 
-    def parse_lti20_handler_dispatch(self, dispatch):
-        """
-        parses the dispatch argument (the trailing parts of the URL) of the LTI2.0 REST handler.
-        must be of the form "user/<anon_id>".  Returns anon_id if match found, otherwise raises LTIError
-        """
-        if dispatch:
-            match_obj = lti20_rest_dispatch_parser.match(dispatch)
-            if match_obj:
-                return match_obj.group('anon_id')
-        # fall-through handles all error cases
-        msg = "No valid user id found in endpoint URL"
-        log.debug("[LTI]: {}".format(msg))
-        raise LTIError(msg)
-
-
-    def verify_lti20_result_rest_headers(self, request):
+    def verify_lti20_result_rest_headers(self, request, verify_content_type=True):
         """
         Helper method to validate LTI 2.0 REST result service HTTP headers.  returns if correct, else raises LTIError
         """
-        lti_20_content_type = 'application/vnd.ims.lis.v2.result+json'
         content_type = request.headers.get('Content-Type')
-        if content_type != lti_20_content_type:
+        if verify_content_type and content_type != LTI_20_JSON_CONTENT_TYPE:
             log.debug("[LTI]: v2.0 result service -- bad Content-Type: {}".format(content_type))
             raise LTIError(
-                "For LTI 2.0 result service, Content-Type must be {}.  Got {}".format(lti_20_content_type,
+                "For LTI 2.0 result service, Content-Type must be {}.  Got {}".format(LTI_20_JSON_CONTENT_TYPE,
                                                                                       content_type))
         try:
-            self.verify_oauth_body_sign(request, content_type=lti_20_content_type)
+            self.verify_oauth_body_sign(request, content_type=LTI_20_JSON_CONTENT_TYPE)
         except (ValueError, LTIError) as err:
             log.debug("[LTI]: v2.0 result service -- OAuth body verification failed:  {}".format(err.message))
             raise LTIError(err.message)
@@ -835,4 +864,3 @@ class LTIDescriptor(LTIFields, MetadataOnlyEditingDescriptor, EmptyDataRawDescri
     grade_handler = module_attr('grade_handler')
     preview_handler = module_attr('preview_handler')
     lti_2_0_result_rest_handler = module_attr('lti_2_0_result_rest_handler')
-    debug_get_oauth_body_hash = module_attr('debug_get_oauth_body_hash')

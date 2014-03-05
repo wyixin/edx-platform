@@ -333,6 +333,30 @@ def get_module_for_descriptor_internal(user, descriptor, field_data_cache, cours
 
         dog_stats_api.increment("lms.courseware.question_answered", tags=tags)
 
+
+    def get_real_user_module_for_noauth_handler(real_user):
+        """
+        A function that allows an module to get a module instance bound to a real user.  Will only work
+        within a module bound to an AnonymousUser, e.g. one that's instantiated by the noauth_handler.
+        """
+        if user.is_authenticated():
+            err_msg = ("get_real_user_module_for_noauth_handler can only be called from a module bound to "
+                       "an anonymous user")
+            log.error(err_msg)
+            raise ProcessingError(err_msg)
+
+        field_data_cache_real_user = FieldDataCache.cache_for_descriptor_descendents(
+            course_id,
+            real_user,
+            descriptor
+        )
+        print(field_data_cache)
+
+        return get_module_for_descriptor_internal(real_user, descriptor, field_data_cache_real_user, course_id,
+                                                  track_function, xqueue_callback_url_prefix,
+                                                  position, wrap_xmodule_display, grade_bucket_type,
+                                                  static_asset_path)
+
     # Build a list of wrapping functions that will be applied in order
     # to the Fragment content coming out of the xblocks that are about to be rendered.
     block_wrappers = []
@@ -418,6 +442,7 @@ def get_module_for_descriptor_internal(user, descriptor, field_data_cache, cours
         ),
         node_path=settings.NODE_PATH,
         publish=publish,
+        get_real_user_module_for_noauth_handler=get_real_user_module_for_noauth_handler,
         anonymous_student_id=anonymous_student_id,
         course_id=course_id,
         open_ended_grading_interface=open_ended_grading_interface,
