@@ -1,16 +1,32 @@
-.. _A/B Tests:
+.. _Setting Up A/B Tests:
 
 ###############################
-A/B Tests
+Setting Up A/B Tests
 ###############################
+
+This chapter describes how you can use A/B tests in your course. See:
+
+* :ref:`Overview of A/B Tests`
+* :ref:`The Course Staff View of A/B Tests`
+* :ref:`The Studio Outline View of A/B Tests`
+* :ref:`Configure the A/B Test in XML`
+
+.. _Overview of A/B Tests:
+
+***********************************
+Overview of A/B Tests
+***********************************
 
 You can set up A/B tests to provide different course content to different groups of students. 
 
-Within a unit, you can set specify that a component is part of an A/B test and will be shown to one group of students and not the other.
+Within a unit, you can specify that a component is part of an A/B test and will be shown to one group of students and not the other.
 
 Students are randomly assigned to content groups. You can then research and compare the performance of the groups to gain more insight into the relative effectiveness of your course content.
 
-.. note:: In the current release, you must configure A/B tests through XML, then import the XML course into edX Studio. You can view A/B tests in Studio, but you cannot create or edit the content of A/B tests directly in Studio. See :ref:`Import a Course` for instructions.
+.. note:: In the current release, you must configure A/B tests through XML, then import the XML course into edX Studio. You can view A/B tests in Studio, but you cannot create or edit the content of A/B tests directly. See :ref:`Import a Course` for instructions.
+
+
+.. _The Course Staff View of A/B Tests:
 
 ***********************************
 The Course Staff View of A/B Tests
@@ -18,7 +34,7 @@ The Course Staff View of A/B Tests
 
 When you view a unit that contains an A/B test in the LMS in the Staff view, you use a drop-down list to select a group. The unit page then shows the content for that group of students.
 
-For example, in the following page, Group 0 is selected, and a video component that is configured to show for Group 0 is shown:
+For example, in the following page, Group 0 is selected, and the video component that is configured to show for Group 0 is shown:
 
 .. image:: Images/a-b-test-lms-group-0.png
  :alt: Image of a unit page with Group 0 selected
@@ -28,6 +44,7 @@ You can change the group selection to see the different video that a different g
 .. image:: Images/a-b-test-lms-group-2.png
  :alt: Image of a unit page with Group 2 selected
 
+.. _The Studio Outline View of A/B Tests:
 
 ********************************************
 The Studio Outline View of A/B Tests
@@ -49,9 +66,44 @@ For example, the following unit page contains just one component, which is the A
 
 .. no image, studio issue currently
 
+.. _Configure the A/B Test in XML:
 
-*************************
-XML
-*************************
+******************************
+Configure the A/B Test in XML
+******************************
 
+You work with multiple XML files to configure an A/B test in your course. This section continues the example above and steps through the files involved in the A/B test that shows different videos to different groups of students.
+
+For information about XML courses, see the `edX XML Tutorial <http://edx.readthedocs.org/projects/devdata/en/latest/course_data_formats/course_xml.html>`_.
+
+++++++++++++++++++++++++++++++++++++++++++++++
+Define the A/B Test in the Sequential File
+++++++++++++++++++++++++++++++++++++++++++++++
+
+You reference an A/B test in the file for the subsection in the ``sequential`` directory. For example:
+
+.. code-block:: xml
+
+ <vertical url_name="name for the unit that contains the A/B test">
+  <split_test url_name="name of A/B test file"/>
+ </vertical>
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Define the A/B Test Content in the Split Test File
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+You define the A/B test in a file in the ``split_test`` directory.
+
+The following example file defines an A/B test with 
+
+.. code-block:: xml
+
+ <split_test url_name="name of the A/B test" user_partition_id="0" 
+          group_id_to_child='{"0": "path to the video file for group 0", 
+          "2": "path to the video file for group 2"}'>
+    <video url_name="name of the video file from group 0"/>
+    <video url_name="name of the video file from group 0"/>
+  </video>
+ </split_test>
 

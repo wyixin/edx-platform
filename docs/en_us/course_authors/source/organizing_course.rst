@@ -245,7 +245,7 @@ Click the Delete icon.  Then follow instructions for the type of component you a
 Components that Contain Other Components
 ******************************************
 
-You can configure your course content so that components contain other components.  
+You can configure your course content so that components contain other components.  One example of when you would need to do this is for A/B tests.  See `Setting Up A/B Tests` for more information.
 
 The component that contains other components is referred to as the parent; the contained components are referred to as children.  
 
@@ -278,7 +278,7 @@ The XML for Unit one is:
   <vertical url_name="131a499ddaa3474194c1aa2eced34455"/>
  </vertical>
 
-The ``<vertical>`` element above ireferences the parent component file that contains the child components:
+The ``<vertical>`` element above references the parent component file that contains the child components:
  
 .. code-block:: xml
 
@@ -303,7 +303,7 @@ The two verticals referenced by the parent component refer to the child componen
   <problem url_name="b40ecbe4ed1b4280ae93e2a158edae6f"/>
  </vertical>
 
-Theorectically, there is no limit to the levels of component nesting you can use in your course.
+Theoretically, there is no limit to the levels of component nesting you can use in your course.
 
 
 
