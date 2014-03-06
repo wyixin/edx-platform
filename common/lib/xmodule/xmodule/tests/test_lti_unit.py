@@ -56,6 +56,8 @@ class LTIModuleTest(LogicTest):
             """)
         self.system.get_real_user = Mock()
         self.system.publish = Mock()
+        self.system.get_real_user_module_for_noauth_handler = Mock(return_value=self.xmodule)
+        self.xmodule.publish_proxy = self.system.publish
 
         self.user_id = self.xmodule.runtime.anonymous_student_id
         self.lti_id = self.xmodule.lti_id
@@ -374,7 +376,7 @@ class LTIModuleTest(LogicTest):
         """
         with self.assertRaisesRegexp(LTIError, "Content-Type must be"):
             request = Mock(headers={u'Content-Type': u'Non-existent'})
-            self.xmodule.verify_lti20_result_rest_headers(request)
+            self.xmodule.verify_lti_2_0_result_rest_headers(request)
 
     def test_lti20_rest_failed_oauth_body_verify(self):
         """
@@ -384,7 +386,7 @@ class LTIModuleTest(LogicTest):
         self.xmodule.verify_oauth_body_sign = Mock(side_effect=LTIError(err_msg))
         with self.assertRaisesRegexp(LTIError, err_msg):
             request = Mock(headers={u'Content-Type': u'application/vnd.ims.lis.v2.result+json'})
-            self.xmodule.verify_lti20_result_rest_headers(request)
+            self.xmodule.verify_lti_2_0_result_rest_headers(request)
 
     def test_lti20_rest_good_headers(self):
         """
@@ -393,7 +395,7 @@ class LTIModuleTest(LogicTest):
         self.xmodule.verify_oauth_body_sign = Mock(return_value=True)
 
         request = Mock(headers={u'Content-Type': u'application/vnd.ims.lis.v2.result+json'})
-        self.xmodule.verify_lti20_result_rest_headers(request)
+        self.xmodule.verify_lti_2_0_result_rest_headers(request)
         #  We just want the above call to complete without exceptions, and to have called verify_oauth_body_sign
         self.assertTrue(self.xmodule.verify_oauth_body_sign.called)
 
@@ -416,7 +418,7 @@ class LTIModuleTest(LogicTest):
         """
         for einput in self.BAD_DISPATCH_INPUTS:
             with self.assertRaisesRegexp(LTIError, "No valid user id found in endpoint URL"):
-                self.xmodule.parse_lti20_handler_dispatch(einput)
+                self.xmodule.parse_lti_2_0_handler_dispatch(einput)
 
     GOOD_DISPATCH_INPUTS = [
         (u"user/abcd3", u"abcd3"),
@@ -429,7 +431,7 @@ class LTIModuleTest(LogicTest):
         fit the form user/<anon_id>
         """
         for ginput, expected in self.GOOD_DISPATCH_INPUTS:
-            self.assertEquals(self.xmodule.parse_lti20_handler_dispatch(ginput), expected)
+            self.assertEquals(self.xmodule.parse_lti_2_0_handler_dispatch(ginput), expected)
 
     BAD_JSON_INPUTS = [
         # (bad inputs, error message expected)
@@ -451,8 +453,6 @@ class LTIModuleTest(LogicTest):
         ([
             # @context missing
             u'{"@type": "Result", "resultScore": 0.1}',
-            # resultScore missing
-            u'{"@type": "Result", "@context": "http://purl.imsglobal.org/ctx/lis/v2/Result"}',
         ], u"JSON object does not contain required key"),
         ([
             u'''
@@ -474,12 +474,12 @@ class LTIModuleTest(LogicTest):
 
     def test_lti20_bad_json(self):
         """
-        Test that bad json_str to parse_lti20_result_json inputs raise appropriate LTI Error
+        Test that bad json_str to parse_lti_2_0_result_json inputs raise appropriate LTI Error
         """
         for error_inputs, error_message in self.BAD_JSON_INPUTS:
             for einput in error_inputs:
                 with self.assertRaisesRegexp(LTIError, error_message):
-                    self.xmodule.parse_lti20_result_json(einput)
+                    self.xmodule.parse_lti_2_0_result_json(einput)
 
     GOOD_JSON_INPUTS = [
         (u'''
@@ -503,7 +503,7 @@ class LTIModuleTest(LogicTest):
         Test the parsing of good comments
         """
         for json_str, expected_comment in self.GOOD_JSON_INPUTS:
-            score, comment = self.xmodule.parse_lti20_result_json(json_str)
+            score, comment = self.xmodule.parse_lti_2_0_result_json(json_str)
             self.assertEqual(score, 0.1)
             self.assertEqual(comment, expected_comment)
 
@@ -578,7 +578,7 @@ class LTIModuleTest(LogicTest):
         Test that we get a 401 when header verification fails
         """
         self.setup_system_xmodule_mocks_for_lti20_request_test()
-        self.xmodule.verify_lti20_result_rest_headers = Mock(side_effect=LTIError())
+        self.xmodule.verify_lti_2_0_result_rest_headers = Mock(side_effect=LTIError())
         mock_request = self.get_signed_lti20_mock_put_request()
         response = self.xmodule.lti_2_0_result_rest_handler(mock_request, "user/abcd")
         self.assertEqual(response.status_code, 401)
@@ -597,7 +597,7 @@ class LTIModuleTest(LogicTest):
         Test that we get a 404 when json verification fails
         """
         self.setup_system_xmodule_mocks_for_lti20_request_test()
-        self.xmodule.parse_lti20_result_json = Mock(side_effect=LTIError())
+        self.xmodule.parse_lti_2_0_result_json = Mock(side_effect=LTIError())
         mock_request = self.get_signed_lti20_mock_put_request()
         response = self.xmodule.lti_2_0_result_rest_handler(mock_request, "user/abcd")
         self.assertEqual(response.status_code, 404)

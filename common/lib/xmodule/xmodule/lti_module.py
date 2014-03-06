@@ -51,7 +51,7 @@ from xml.sax.saxutils import escape
 
 from xmodule.editing_module import MetadataOnlyEditingDescriptor
 from xmodule.raw_module import EmptyDataRawDescriptor
-from xmodule.x_module import XModule, module_attr
+from xmodule.x_module import XModule, module_attr, module_runtime_attr
 from xmodule.course_module import CourseDescriptor
 from pkg_resources import resource_string
 from xblock.core import String, Scope, List, XBlock
@@ -59,8 +59,8 @@ from xblock.fields import Boolean, Float
 
 log = logging.getLogger(__name__)
 
-LTI_20_REST_DISPATCH_PARSER = re.compile(r"^user/(?P<anon_id>\w+)", re.UNICODE)
-LTI_20_JSON_CONTENT_TYPE = 'application/vnd.ims.lis.v2.result+json'
+LTI_2_0_REST_DISPATCH_PARSER = re.compile(r"^user/(?P<anon_id>\w+)", re.UNICODE)
+LTI_2_0_JSON_CONTENT_TYPE = 'application/vnd.ims.lis.v2.result+json'
 
 
 class LTIError(Exception):
@@ -538,15 +538,9 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
             return Response(response_xml_template.format(**failure_values), content_type="application/xml")
 
         if action == 'replaceResultRequest':
-            self.system.publish(
-                self,
-                {
-                    'event_name': 'grade',
-                    'value': score * self.max_score(),
-                    'max_value': self.max_score(),
-                },
-                custom_user=real_user
-            )
+            user_instance = self.system.get_real_user_module_for_noauth_handler(real_user)
+
+            LTIModule.set_user_module_score(real_user, user_instance, score, self.max_score())
 
             values = {
                 'imsx_codeMajor': 'success',
@@ -614,12 +608,12 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
               .format(headers['Authorization']))
         ####### DEBUG SECTION END ########
         try:
-            anon_id = self.parse_lti20_handler_dispatch(dispatch)
+            anon_id = self.parse_lti_2_0_handler_dispatch(dispatch)
         except LTIError:
             return Response(status=404)  # 404 because a part of the URL (denoting the anon user id) is invalid
 
         try:
-            self.verify_lti20_result_rest_headers(request, verify_content_type=True)
+            self.verify_lti_2_0_result_rest_headers(request, verify_content_type=True)
         except LTIError:
             return Response(status=401)  # Unauthorized in this case.  401 is right
 
@@ -636,13 +630,13 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
         else:
             return Response(status=404)  # have to do 404 due to spec, but 405 is better, with error msg in body
 
-    def parse_lti20_handler_dispatch(self, dispatch):
+    def parse_lti_2_0_handler_dispatch(self, dispatch):
         """
         parses the dispatch argument (the trailing parts of the URL) of the LTI2.0 REST handler.
         must be of the form "user/<anon_id>".  Returns anon_id if match found, otherwise raises LTIError
         """
         if dispatch:
-            match_obj = LTI_20_REST_DISPATCH_PARSER.match(dispatch)
+            match_obj = LTI_2_0_REST_DISPATCH_PARSER.match(dispatch)
             if match_obj:
                 return match_obj.group('anon_id')
         # fall-through handles all error cases
@@ -652,67 +646,100 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
 
     def _lti_2_0_result_get_handler(self, request, real_user):
         """
-        PUT handler for lti_2_0_result.  Assumes all authorization has been checked.
+        GET handler for lti_2_0_result.  Assumes all authorization has been checked.
         """
         base_json_obj = {"@context": "http://purl.imsglobal.org/ctx/lis/v2/Result",
                          "@type": "Result"}
         user_instance = self.system.get_real_user_module_for_noauth_handler(real_user)
-        print(dir(user_instance))
         if user_instance.module_score is None:  # In this case, no score has been ever set
-            return Response(json.dumps(base_json_obj), content_type=LTI_20_JSON_CONTENT_TYPE)
+            return Response(json.dumps(base_json_obj), content_type=LTI_2_0_JSON_CONTENT_TYPE)
 
         # Fall through to returning grade and comment
         base_json_obj['resultScore'] = round(user_instance.module_score, 2)
         base_json_obj['comment'] = user_instance.score_comment
-        return Response(json.dumps(base_json_obj), content_type=LTI_20_JSON_CONTENT_TYPE)
+        return Response(json.dumps(base_json_obj), content_type=LTI_2_0_JSON_CONTENT_TYPE)
+
+    def _lti_2_0_result_del_handler(self, request, real_user):
+        """
+        DELETE handler for lti_2_0_result.  Assumes all authorization has been checked.
+        """
+        user_instance = self.system.get_real_user_module_for_noauth_handler(real_user)
+        LTIModule.clear_user_module_score(real_user, user_instance)
+        return Response(status=200)
 
     def _lti_2_0_result_put_handler(self, request, real_user):
         """
-        PUT handler for lti_2_0_result
+        PUT handler for lti_2_0_result.  Assumes all authorization has been checked.
         """
         try:
-            (score, comment) = self.parse_lti20_result_json(request.body)
+            (score, comment) = self.parse_lti_2_0_result_json(request.body)
         except LTIError:
             return Response(status=404)  # have to do 404 due to spec, but 400 is better, with error msg in body
 
-        # now we can record the score and the comment
-        scaled_score = score * self.max_score()
-#        self.module_score = scaled_score
-#        self.score_comment = comment
-        print(self.scope_ids)
-        print(self._dirty_fields)
         user_instance = self.system.get_real_user_module_for_noauth_handler(real_user)
-        user_instance.module_score = scaled_score
-        user_instance.score_comment = comment
-        self.system.publish(
-            self,
+
+        # According to http://www.imsglobal.org/lti/ltiv2p0/ltiIMGv2p0.html#_Toc361225514
+        # PUTting a JSON object with no "resultScore" field is equivalent to a DELETE.
+        if score is None:
+            LTIModule.clear_user_module_score(real_user, user_instance)
+            return Response(status=200)
+
+        # Fall-through record the score and the comment in the module
+        LTIModule.set_user_module_score(real_user, user_instance, score, self.max_score(), comment)
+        return Response(status=200)
+
+    @classmethod
+    def clear_user_module_score(cls, user, user_module):
+        """
+        Clears the module user state, including grades and comments.
+        This is a classmethod with user and module as params because we often invoke this from
+        a module bound to a noauth user.
+        Note that user_module SHOULD be bound to user
+        """
+        user_module.publish_proxy(user_module, {'event_name': 'grade_delete'}, custom_user=user)
+        del user_module.module_score
+        del user_module.score_comment
+
+    @classmethod
+    def set_user_module_score(cls, user, user_module, score, max_score, comment=""):
+        """
+        Sets the module user state, including grades and comments.
+        This is a classmethod with user and module as params because we often invoke this from
+        a module bound to a noauth user.
+        Note that user_module SHOULD be bound to user
+        """
+        scaled_score = score * max_score
+        user_module.module_score = scaled_score
+        user_module.score_comment = comment
+
+        # have to publish for the progress page...
+        user_module.publish_proxy(
+            user_module,
             {
                 'event_name': 'grade',
                 'value': scaled_score,
-                'max_value': self.max_score(),
+                'max_value': max_score,
             },
-            custom_user=real_user
+            custom_user=user
         )
-        print(self._dirty_fields)
-        return Response(status=200)
 
-    def verify_lti20_result_rest_headers(self, request, verify_content_type=True):
+    def verify_lti_2_0_result_rest_headers(self, request, verify_content_type=True):
         """
         Helper method to validate LTI 2.0 REST result service HTTP headers.  returns if correct, else raises LTIError
         """
         content_type = request.headers.get('Content-Type')
-        if verify_content_type and content_type != LTI_20_JSON_CONTENT_TYPE:
+        if verify_content_type and content_type != LTI_2_0_JSON_CONTENT_TYPE:
             log.debug("[LTI]: v2.0 result service -- bad Content-Type: {}".format(content_type))
             raise LTIError(
-                "For LTI 2.0 result service, Content-Type must be {}.  Got {}".format(LTI_20_JSON_CONTENT_TYPE,
+                "For LTI 2.0 result service, Content-Type must be {}.  Got {}".format(LTI_2_0_JSON_CONTENT_TYPE,
                                                                                       content_type))
         try:
-            self.verify_oauth_body_sign(request, content_type=LTI_20_JSON_CONTENT_TYPE)
+            self.verify_oauth_body_sign(request, content_type=LTI_2_0_JSON_CONTENT_TYPE)
         except (ValueError, LTIError) as err:
             log.debug("[LTI]: v2.0 result service -- OAuth body verification failed:  {}".format(err.message))
             raise LTIError(err.message)
 
-    def parse_lti20_result_json(self, json_str):
+    def parse_lti_2_0_result_json(self, json_str):
         """
         Helper method for verifying LTI 2.0 JSON object.
         The json_str must be loadable.  It can either be an dict (object) or an array whose first element is an dict,
@@ -749,15 +776,21 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
             log.debug("[LTI] {}".format(msg))
             raise LTIError(msg)
 
-        # '@context', 'resultScore' must be present as a key
-        REQUIRED_KEYS = ["@context", "resultScore"]  # pylint: disable=invalid-name
+        # '@context' must be present as a key
+        REQUIRED_KEYS = ["@context"]  # pylint: disable=invalid-name
         for key in REQUIRED_KEYS:
             if key not in json_obj:
                 msg = "JSON object does not contain required key {}".format(key)
                 log.debug("[LTI] {}".format(msg))
                 raise LTIError(msg)
 
-        # 'resultScore' must be a number between 0 and 1 inclusive
+        # 'resultScore' is not present.  If this was a PUT this means it's actually a DELETE according
+        # to the LTI spec.  We will indicate this by returning None as score, "" as comment.
+        # The actual delete will be handled by the caller
+        if "resultScore" not in json_obj:
+            return None, json_obj.get('comment', "")
+
+        # if present, 'resultScore' must be a number between 0 and 1 inclusive
         try:
             score = float(json_obj.get('resultScore', "unconvertable"))  # Check if float is present and the right type
             if not 0 <= score <= 1:
@@ -864,3 +897,5 @@ class LTIDescriptor(LTIFields, MetadataOnlyEditingDescriptor, EmptyDataRawDescri
     grade_handler = module_attr('grade_handler')
     preview_handler = module_attr('preview_handler')
     lti_2_0_result_rest_handler = module_attr('lti_2_0_result_rest_handler')
+    clear_user_module_score = module_attr('clear_user_module_score')
+    publish_proxy = module_runtime_attr('publish')

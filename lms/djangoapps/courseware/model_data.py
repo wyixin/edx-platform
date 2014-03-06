@@ -61,12 +61,9 @@ class FieldDataCache(object):
         self.select_for_update = select_for_update
         self.course_id = course_id
         self.user = user
-        print(user.is_authenticated())
         if user.is_authenticated():
             for scope, fields in self._fields_to_cache().items():
                 for field_object in self._retrieve_fields(scope, fields):
-                    print("FO:{}".format(field_object))
-                    print("key:{}".format(field_object.module_state_key))
                     self.cache[self._cache_key_from_field_object(scope, field_object)] = field_object
 
     @classmethod
@@ -217,7 +214,6 @@ class FieldDataCache(object):
 
         returns the found object, or None if the object doesn't exist
         '''
-        print("ran find {}".format(self._cache_key_from_kvs_key(key)))
         if key.scope.user == UserScope.ONE and not self.user.is_anonymous():
             # If we're getting user data, we expect that the key matches the
             # user we were constructed for.
@@ -233,11 +229,9 @@ class FieldDataCache(object):
         field_object = self.find(key)
 
         if field_object is not None:
-            print("found key: {}".format(key))
             return field_object
 
         if key.scope == Scope.user_state:
-            print("inserting key: {}".format(key))
             field_object, _ = StudentModule.objects.get_or_create(
                 course_id=self.course_id,
                 student=User.objects.get(id=key.user_id),
@@ -294,13 +288,10 @@ class DjangoKeyValueStore(KeyValueStore):
         Scope.user_info,
     )
 
-
     def __init__(self, field_data_cache):
         self._field_data_cache = field_data_cache
 
     def get(self, key):
-        print(key)
-
         if key.scope not in self._allowed_scopes:
             raise InvalidScopeError(key)
 
@@ -346,9 +337,7 @@ class DjangoKeyValueStore(KeyValueStore):
             if field.scope == Scope.user_state:
                 state = json.loads(field_object.state)
                 state[field.field_name] = kv_dict[field]
-                print(field_object.student)
                 field_object.state = json.dumps(state)
-                print(json.dumps(state))
             else:
             # The remaining scopes save fields on different rows, so
             # we don't have to worry about conflicts
@@ -382,7 +371,6 @@ class DjangoKeyValueStore(KeyValueStore):
             field_object.delete()
 
     def has(self, key):
-        print("ran has {}".format(key))
         if key.scope not in self._allowed_scopes:
             raise InvalidScopeError(key)
 
