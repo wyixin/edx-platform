@@ -627,6 +627,8 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
             return self._lti_2_0_result_put_handler(request, real_user)
         elif request.method == "GET":
             return self._lti_2_0_result_get_handler(request, real_user)
+        elif request.method == "DELETE":
+            return self._lti_2_0_result_del_handler(request, real_user)
         else:
             return Response(status=404)  # have to do 404 due to spec, but 405 is better, with error msg in body
 

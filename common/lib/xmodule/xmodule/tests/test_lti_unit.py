@@ -507,9 +507,24 @@ class LTIModuleTest(LogicTest):
             self.assertEqual(score, 0.1)
             self.assertEqual(comment, expected_comment)
 
-    def get_signed_lti20_mock_put_request(self):
+    GOOD_JSON_PUT = textwrap.dedent(u"""
+        {"@type": "Result",
+         "@context": "http://purl.imsglobal.org/ctx/lis/v2/Result",
+         "@id": "anon_id:abcdef0123456789",
+         "resultScore": 0.1,
+         "comment": "ಠ益ಠ"}
+    """).encode('utf-8')
+
+    GOOD_JSON_PUT_LIKE_DELETE = textwrap.dedent(u"""
+        {"@type": "Result",
+         "@context": "http://purl.imsglobal.org/ctx/lis/v2/Result",
+         "@id": "anon_id:abcdef0123456789",
+         "comment": "ಠ益ಠ"}
+    """).encode('utf-8')
+
+    def get_signed_lti20_mock_request(self, body, method=u'PUT'):
         """
-        Example of signed PUT from LTI 2.0 Provider.  Signatures and hashes are example only and won't verify
+        Example of signed from LTI 2.0 Provider.  Signatures and hashes are example only and won't verify
         """
         mock_request = Mock()
         mock_request.headers = {
@@ -522,15 +537,9 @@ class LTIModuleTest(LogicTest):
                 oauth_body_hash="gz+PeJZuF2//n9hNUnDj2v5kN70="'
         }
         mock_request.url = u'http://testurl'
-        mock_request.http_method = u'PUT'
-        mock_request.method = u'PUT'
-        mock_request.body = textwrap.dedent(u"""
-            {"@type": "Result",
-             "@context": "http://purl.imsglobal.org/ctx/lis/v2/Result",
-             "@id": "anon_id:abcdef0123456789",
-             "resultScore": 0.1,
-             "comment": "ಠ益ಠ"}
-        """).encode('utf-8')
+        mock_request.http_method = method
+        mock_request.method = method
+        mock_request.body = body
         return mock_request
 
     USER_STANDIN = "IamAStringStandingInForAUser"
@@ -544,12 +553,52 @@ class LTIModuleTest(LogicTest):
         self.xmodule.get_client_key_secret = Mock(return_value=('test_client_key', u'test_client_secret'))
         self.xmodule.verify_oauth_body_sign = Mock()
 
-    def test_lti20_put_request_success(self):
+    def test_lti20_put_like_delete_success(self):
         """
-        The happy path for LTI 2.0 PUT
+        The happy path for LTI 2.0 PUT that acts like a delete
         """
         self.setup_system_xmodule_mocks_for_lti20_request_test()
-        mock_request = self.get_signed_lti20_mock_put_request()
+        SCORE = 0.55
+        COMMENT = u"ಠ益ಠ"
+        self.xmodule.module_score = SCORE
+        self.xmodule.score_comment = COMMENT
+        mock_request = self.get_signed_lti20_mock_request(self.GOOD_JSON_PUT_LIKE_DELETE)
+        # Now call the handler
+        response = self.xmodule.lti_2_0_result_rest_handler(mock_request, "user/abcd")
+        # Now assert there's no score
+        self.assertEqual(response.status_code, 200)
+        self.assertIsNone(self.xmodule.module_score)
+        self.assertEqual(self.xmodule.score_comment, u"")
+        (_, called_grade_obj), kwargs = self.system.publish.call_args
+        self.assertEqual(called_grade_obj, {'event_name': 'grade_delete'})
+        self.assertEqual(kwargs, {'custom_user': self.USER_STANDIN})
+
+    def test_lti20_delete_success(self):
+        """
+        The happy path for LTI 2.0 DELETE
+        """
+        self.setup_system_xmodule_mocks_for_lti20_request_test()
+        SCORE = 0.55
+        COMMENT = u"ಠ益ಠ"
+        self.xmodule.module_score = SCORE
+        self.xmodule.score_comment = COMMENT
+        mock_request = self.get_signed_lti20_mock_request("", method=u'DELETE')
+        # Now call the handler
+        response = self.xmodule.lti_2_0_result_rest_handler(mock_request, "user/abcd")
+        # Now assert there's no score
+        self.assertEqual(response.status_code, 200)
+        self.assertIsNone(self.xmodule.module_score)
+        self.assertEqual(self.xmodule.score_comment, u"")
+        (_, called_grade_obj), kwargs = self.system.publish.call_args
+        self.assertEqual(called_grade_obj, {'event_name': 'grade_delete'})
+        self.assertEqual(kwargs, {'custom_user': self.USER_STANDIN})
+
+    def test_lti20_put_set_score_success(self):
+        """
+        The happy path for LTI 2.0 PUT that sets a score
+        """
+        self.setup_system_xmodule_mocks_for_lti20_request_test()
+        mock_request = self.get_signed_lti20_mock_request(self.GOOD_JSON_PUT)
         # Now call the handler
         response = self.xmodule.lti_2_0_result_rest_handler(mock_request, "user/abcd")
         # Now assert
@@ -560,14 +609,46 @@ class LTIModuleTest(LogicTest):
         self.assertEqual(called_grade_obj, {'event_name': 'grade', 'value': 0.1, 'max_value': 1.0})
         self.assertEqual(kwargs, {'custom_user': self.USER_STANDIN})
 
-    UNSUPPORTED_HTTP_METHODS = ["OPTIONS", "HEAD", "POST", "DELETE", "TRACE", "CONNECT"]
+    def test_lti20_get_no_score_success(self):
+        """
+        The happy path for LTI 2.0 GET when there's no score
+        """
+        self.setup_system_xmodule_mocks_for_lti20_request_test()
+        mock_request = self.get_signed_lti20_mock_request("", method=u'GET')
+        # Now call the handler
+        response = self.xmodule.lti_2_0_result_rest_handler(mock_request, "user/abcd")
+        # Now assert
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json, {"@context": "http://purl.imsglobal.org/ctx/lis/v2/Result",
+                                         "@type": "Result"})
+
+    def test_lti20_get_with_score_success(self):
+        """
+        The happy path for LTI 2.0 GET when there is a score
+        """
+        self.setup_system_xmodule_mocks_for_lti20_request_test()
+        SCORE = 0.55
+        COMMENT = u"ಠ益ಠ"
+        self.xmodule.module_score = SCORE
+        self.xmodule.score_comment = COMMENT
+        mock_request = self.get_signed_lti20_mock_request("", method=u'GET')
+        # Now call the handler
+        response = self.xmodule.lti_2_0_result_rest_handler(mock_request, "user/abcd")
+        # Now assert
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json, {"@context": "http://purl.imsglobal.org/ctx/lis/v2/Result",
+                                         "@type": "Result",
+                                         "resultScore": SCORE,
+                                         "comment": COMMENT})
+
+    UNSUPPORTED_HTTP_METHODS = ["OPTIONS", "HEAD", "POST", "TRACE", "CONNECT"]
 
     def test_lti20_unsupported_method_error(self):
         """
         Test we get a 404 when we don't GET or PUT
         """
         self.setup_system_xmodule_mocks_for_lti20_request_test()
-        mock_request = self.get_signed_lti20_mock_put_request()
+        mock_request = self.get_signed_lti20_mock_request(self.GOOD_JSON_PUT)
         for bad_method in self.UNSUPPORTED_HTTP_METHODS:
             mock_request.method = bad_method
             response = self.xmodule.lti_2_0_result_rest_handler(mock_request, "user/abcd")
@@ -579,7 +660,7 @@ class LTIModuleTest(LogicTest):
         """
         self.setup_system_xmodule_mocks_for_lti20_request_test()
         self.xmodule.verify_lti_2_0_result_rest_headers = Mock(side_effect=LTIError())
-        mock_request = self.get_signed_lti20_mock_put_request()
+        mock_request = self.get_signed_lti20_mock_request(self.GOOD_JSON_PUT)
         response = self.xmodule.lti_2_0_result_rest_handler(mock_request, "user/abcd")
         self.assertEqual(response.status_code, 401)
 
@@ -588,7 +669,7 @@ class LTIModuleTest(LogicTest):
         Test that we get a 404 when there's no (or badly formatted) user specified in the url
         """
         self.setup_system_xmodule_mocks_for_lti20_request_test()
-        mock_request = self.get_signed_lti20_mock_put_request()
+        mock_request = self.get_signed_lti20_mock_request(self.GOOD_JSON_PUT)
         response = self.xmodule.lti_2_0_result_rest_handler(mock_request, None)
         self.assertEqual(response.status_code, 404)
 
@@ -598,7 +679,7 @@ class LTIModuleTest(LogicTest):
         """
         self.setup_system_xmodule_mocks_for_lti20_request_test()
         self.xmodule.parse_lti_2_0_result_json = Mock(side_effect=LTIError())
-        mock_request = self.get_signed_lti20_mock_put_request()
+        mock_request = self.get_signed_lti20_mock_request(self.GOOD_JSON_PUT)
         response = self.xmodule.lti_2_0_result_rest_handler(mock_request, "user/abcd")
         self.assertEqual(response.status_code, 404)
 
@@ -608,7 +689,7 @@ class LTIModuleTest(LogicTest):
         """
         self.setup_system_xmodule_mocks_for_lti20_request_test()
         self.system.get_real_user = Mock(return_value=None)
-        mock_request = self.get_signed_lti20_mock_put_request()
+        mock_request = self.get_signed_lti20_mock_request(self.GOOD_JSON_PUT)
         response = self.xmodule.lti_2_0_result_rest_handler(mock_request, "user/abcd")
         self.assertEqual(response.status_code, 404)
 
