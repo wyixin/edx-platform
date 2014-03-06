@@ -25,6 +25,7 @@ Contents
    common_problems
    advanced_problems
    specialized_problems
+   a_b_tests
    external_graders
    open_response_assessment
    google_hangouts
