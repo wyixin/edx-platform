@@ -1,10 +1,5 @@
-.. raw:: latex
-  
-      \newpage %
-      
-
 ======================
-APPENDIX D: Time Zones
+Time Zones
 ======================
 
     **Overview**

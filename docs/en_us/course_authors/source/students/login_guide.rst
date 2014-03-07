@@ -1,7 +1,7 @@
 .. _Sample Student Login Guide:
 
 ======================================
-ASample Student Login Guide 
+Sample Student Login Guide 
 ======================================
 
 Create a login guide for your individual course.

@@ -2,8 +2,6 @@
 Running Your Course
 ##########################
 
-See the following
-
 .. toctree::
    :maxdepth: 2
    

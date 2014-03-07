@@ -3,8 +3,6 @@
 Get Started
 #############
 
-See the following
-
 .. toctree::
    :maxdepth: 3
 

@@ -2,7 +2,6 @@
 Creating Course Content
 ##########################
 
-See the following
 
 .. toctree::
    :maxdepth: 2

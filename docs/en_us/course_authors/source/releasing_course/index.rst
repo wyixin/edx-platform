@@ -2,8 +2,6 @@
 Releasing Your Course
 ##########################
 
-See the following
-
 .. toctree::
    :maxdepth: 2
    

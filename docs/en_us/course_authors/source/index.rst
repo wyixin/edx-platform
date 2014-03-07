@@ -4,8 +4,8 @@
    contain the root `toctree` directive.
 
 
-Contents
-========
+Building and Running an edX Course
+========================================
 
 .. toctree::
    :numbered:
@@ -15,7 +15,7 @@ Contents
    change_log
    getting_started/index
    building_course/index
-   create_content/index
+   creating_content/index
    problems_tools/index
    releasing_course/index
    running_course/index

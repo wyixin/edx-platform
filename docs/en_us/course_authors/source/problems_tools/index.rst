@@ -2,8 +2,6 @@
 Working with Problems
 ##########################
 
-See the following
-
 .. toctree::
    :maxdepth: 2
    

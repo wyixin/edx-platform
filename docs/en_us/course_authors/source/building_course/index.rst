@@ -2,8 +2,6 @@
 Building a Course
 ##########################
 
-See the following
-
 .. toctree::
    :maxdepth: 2
 
