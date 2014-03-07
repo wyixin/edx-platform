@@ -371,3 +371,32 @@ def switch_view(_step, view):
         world.css_click('#staffstatus')
         world.wait_for_ajax_complete()
 
+
+@step("I do not see a launch button")
+def check_no_launch_button(_step):
+    SELECTOR = 'link_lti_new_window'
+    XPATH = '//a[@class="{selector}"]'.format(
+        selector=SELECTOR,
+    )
+    node = world.browser.find_by_xpath(XPATH)
+    assert not node
+
+
+@step("I do see the module title")
+def check_module_title(_step):
+    SELECTOR = 'title'
+    XPATH = '//h3[@class="{selector}"]'.format(
+        selector=SELECTOR,
+    )
+    node = world.browser.find_by_xpath(XPATH)
+    assert node
+
+
+@step("I do not see an provider iframe")
+def check_no_provider_iframe(_step):
+    SELECTOR = 'ltiLaunchFrame'
+    XPATH = '//iframe[@class="{selector}"]'.format(
+        selector=SELECTOR,
+    )
+    node = world.browser.find_by_xpath(XPATH)
+    assert not node

@@ -46,13 +46,14 @@ class StubLtiHandler(StubHttpRequestHandler):
             status_message = 'LTI consumer (edX) responded with XML content:<br>' + self.server.grade_data['TC answer']
             content = self._create_content(status_message)
             self.send_response(200, content)
-
-        if 'lti2_outcome' in self.path and self._send_lti2_outcome().status_code == 200:
+        elif 'lti2_outcome' in self.path and self._send_lti2_outcome().status_code == 200:
+            status_message = 'LTI consumer (edX) responded with XML content:<br>' + self.server.grade_data['TC answer']
+            content = self._create_content(status_message)
             self.send_response(200, content)
-
-        if 'lti2_delete' in self.path and self._send_lti2_delete().status_code == 200:
+        elif 'lti2_delete' in self.path and self._send_lti2_delete().status_code == 200:
+            status_message = 'LTI consumer (edX) responded with XML content:<br>' + self.server.grade_data['TC answer']
+            content = self._create_content(status_message)
             self.send_response(200, content)
-
         # Respond to request with correct lti endpoint
         elif self._is_correct_lti_request():
             params = {k: v for k, v in self.post_dict.items() if k != 'oauth_signature'}

@@ -117,3 +117,20 @@ Feature: LMS.LTI component
   And I see in the gradebook table that "HW" is "0"
   And I see in the gradebook table that "Total" is "0"
 
+  #11
+  Scenario: LTI component that set to hide_launch and open_in_a_new_page shows no button
+  Given the course has correct LTI credentials with registered Instructor
+  And the course has an LTI component with correct fields:
+  | open_in_a_new_page | hide_launch |
+  | False              | True        |
+  Then I do not see a launch button
+  Then I do see the module title
+
+  #12
+  Scenario: LTI component that set to hide_launch and not open_in_a_new_page shows no iframe
+  Given the course has correct LTI credentials with registered Instructor
+  And the course has an LTI component with correct fields:
+  | open_in_a_new_page | hide_launch |
+  | True               | True        |
+  Then I do not see an provider iframe
+  Then I do see the module title

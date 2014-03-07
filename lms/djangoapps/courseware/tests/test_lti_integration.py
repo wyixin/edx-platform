@@ -69,7 +69,13 @@ class TestLTI(BaseTestXmodule):
             'element_id': self.item_descriptor.location.html_id(),
             'launch_url': 'http://www.example.com',  # default value
             'open_in_a_new_page': True,
-            'form_url': self.item_descriptor.xmodule_runtime.handler_url(self.item_descriptor, 'preview_handler').rstrip('/?'),
+            'form_url': self.item_descriptor.xmodule_runtime.handler_url(self.item_descriptor,
+                                                                         'preview_handler').rstrip('/?'),
+            'hide_launch': False,
+            'has_score': False,
+            'module_score': None,
+            'comment': u'',
+            'weight': 1.0,
         }
 
         def mocked_sign(self, *args, **kwargs):
@@ -93,7 +99,7 @@ class TestLTI(BaseTestXmodule):
 
     def test_lti_constructor(self):
         generated_content = self.item_descriptor.render('student_view').content
-        expected_content =  self.runtime.render_template('lti.html', self.expected_context)
+        expected_content = self.runtime.render_template('lti.html', self.expected_context)
         self.assertEqual(generated_content, expected_content)
 
     def test_lti_preview_handler(self):
