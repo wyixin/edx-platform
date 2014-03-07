@@ -248,6 +248,51 @@ def check_lti_popup():
     world.browser.switch_to_window(parent_window) # Switch to the main window again
 
 
+@step('visit the LTI component')
+def visit_lti_component(_step):
+    visit_scenario_item('LTI')
+
+
+@step('I see progress div with text "([^"]*)"$')
+def see_progress_div(_step, text):
+    SELECTOR = 'problem-progress'
+    XPATH = '//div[@class="{selector}"]'.format(
+        selector=SELECTOR,
+    )
+    node = world.browser.find_by_xpath(XPATH)
+    assert (text in node.first.text)
+
+
+@step('I see feedback div with text "([^"]*)"$')
+def see_feedback_div(_step, text):
+    SELECTOR = 'problem-feedback'
+    XPATH = '//div[@class="{selector}"]'.format(
+        selector=SELECTOR,
+    )
+    node = world.browser.find_by_xpath(XPATH)
+    assert (text in node.first.text)
+
+
+@step('I do not see feedback div')
+def not_see_feedback_div(_step):
+    SELECTOR = 'problem-feedback'
+    XPATH = '//div[@class="{selector}"]'.format(
+        selector=SELECTOR,
+    )
+    node = world.browser.find_by_xpath(XPATH)
+    assert not node
+
+
+@step('I do not see progress div')
+def not_see_progress_div(_step):
+    SELECTOR = 'problem-progress'
+    XPATH = '//div[@class="{selector}"]'.format(
+        selector=SELECTOR,
+    )
+    node = world.browser.find_by_xpath(XPATH)
+    assert not node
+
+
 @step('I see text "([^"]*)"$')
 def check_progress(_step, text):
     assert world.browser.is_text_present(text)
@@ -294,7 +339,14 @@ def click_grade(_step):
     iframe_name = 'ltiFrame-' + location
     with world.browser.get_iframe(iframe_name) as iframe:
         iframe.find_by_name('submit-lti2-button').first.click()
-        assert iframe.is_text_present('LTI2.0 consumer (edX) responded with content')
+
+
+@step('LTI provider deletes my grade and feedback$')
+def click_delete_button(_step):
+    location = world.scenario_dict['LTI'].location.html_id()
+    iframe_name = 'ltiFrame-' + location
+    with world.browser.get_iframe(iframe_name) as iframe:
+        iframe.find_by_name('submit-lti2-delete-button').first.click()
 
 
 @step('I see in iframe that LTI role is (.*)$')

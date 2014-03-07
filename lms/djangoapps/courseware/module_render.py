@@ -296,7 +296,6 @@ def get_module_for_descriptor_internal(user, descriptor, field_data_cache, cours
         """A function that allows XModules to publish events. This only supports grade changes right now."""
         if event.get('event_name') not in ('grade', 'grade_delete'):
             return
-        print(block._dirty_fields)
 
         if custom_user:
             user_id = custom_user.id
@@ -310,28 +309,20 @@ def get_module_for_descriptor_internal(user, descriptor, field_data_cache, cours
             block_scope_id=descriptor.location,
             field_name='grade'
         )
-        print(block._dirty_fields)
 
         student_module = field_data_cache.find_or_create(key)
 
-        print(block._dirty_fields)
-
         # if we're deleting grades, just delete them and return fast
-#        if event.get('event_name') == 'grade_delete':
-#            student_module.grade = None
-#            student_module.max_grade = None
-#            student_module.save()
-#            return
+        if event.get('event_name') == 'grade_delete':
+            student_module.grade = None
+            student_module.max_grade = None
+            student_module.save()
+            return
 
         # Update the grades
         student_module.grade = event.get('value')
         student_module.max_grade = event.get('max_value')
         # Save all changes to the underlying KeyValueStore
-        print(student_module)
-        print(field_data_cache.user)
-        print(field_data_cache.cache)
-        print(student_module.grade)
-        print(student_module.max_grade)
         student_module.save()
 
         # Bin score into range and increment stats

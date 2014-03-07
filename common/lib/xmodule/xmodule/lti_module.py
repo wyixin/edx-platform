@@ -44,6 +44,7 @@ import urllib
 import textwrap
 import json
 import re
+import bleach
 from lxml import etree
 from webob import Response
 import mock
@@ -104,7 +105,7 @@ class LTIFields(object):
                          default=None,
                          scope=Scope.user_state)
     score_comment = String(help="Comment as returned from grader, LTI2.0 spec", default="", scope=Scope.user_state)
-
+    hide_launch = Boolean(help="Do not show the launch button or iframe", default=False, scope=Scope.settings)
 
 class LTIModule(LTIFields, XModule):
     """
@@ -257,6 +258,32 @@ class LTIModule(LTIFields, XModule):
         """
         Returns a context.
         """
+        # use bleach defaults. see https://github.com/jsocol/bleach/blob/master/bleach/__init__.py
+        # ALLOWED_TAGS = [
+        #     'a',
+        #     'abbr',
+        #     'acronym',
+        #     'b',
+        #     'blockquote',
+        #     'code',
+        #     'em',
+        #     'i',
+        #     'li',
+        #     'ol',
+        #     'strong',
+        #     'ul',
+        # ]
+        #
+        # ALLOWED_ATTRIBUTES = {
+        #     'a': ['href', 'title'],
+        #     'abbr': ['title'],
+        #     'acronym': ['title'],
+        # }
+        #
+        # ALLOWED_STYLES = []
+        # This lets all plaintext through.
+        sanitized_comment = bleach.clean(self.score_comment)
+
         return {
             'input_fields': self.get_input_fields(),
 
@@ -267,6 +294,11 @@ class LTIModule(LTIFields, XModule):
             'open_in_a_new_page': self.open_in_a_new_page,
             'display_name': self.display_name,
             'form_url': self.runtime.handler_url(self, 'preview_handler').rstrip('/?'),
+            'hide_launch': self.hide_launch,
+            'has_score': self.has_score,
+            'weight': self.weight,
+            'module_score': self.module_score,
+            'comment': sanitized_comment,
         }
 
     def get_html(self):
@@ -611,7 +643,6 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
             anon_id = self.parse_lti_2_0_handler_dispatch(dispatch)
         except LTIError:
             return Response(status=404)  # 404 because a part of the URL (denoting the anon user id) is invalid
-
         try:
             self.verify_lti_2_0_result_rest_headers(request, verify_content_type=True)
         except LTIError:
@@ -622,7 +653,6 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
             msg = "[LTI]: Real user not found against anon_id: {}".format(anon_id)
             log.debug(msg)
             return Response(status=404)  # have to do 404 due to spec, but 400 is better, with error msg in body
-
         if request.method == "PUT":
             return self._lti_2_0_result_put_handler(request, real_user)
         elif request.method == "GET":
@@ -679,7 +709,6 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
             return Response(status=404)  # have to do 404 due to spec, but 400 is better, with error msg in body
 
         user_instance = self.system.get_real_user_module_for_noauth_handler(real_user)
-
         # According to http://www.imsglobal.org/lti/ltiv2p0/ltiIMGv2p0.html#_Toc361225514
         # PUTting a JSON object with no "resultScore" field is equivalent to a DELETE.
         if score is None:

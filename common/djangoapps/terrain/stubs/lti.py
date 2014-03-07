@@ -48,8 +48,9 @@ class StubLtiHandler(StubHttpRequestHandler):
             self.send_response(200, content)
 
         if 'lti2_outcome' in self.path and self._send_lti2_outcome().status_code == 200:
-            status_message = 'LTI2.0 consumer (edX) responded with content:<br>' + self.server.grade_data['TC answer']
-            content = self._create_content(status_message)
+            self.send_response(200, content)
+
+        if 'lti2_delete' in self.path and self._send_lti2_delete().status_code == 200:
             self.send_response(200, content)
 
         # Respond to request with correct lti endpoint
@@ -129,7 +130,7 @@ class StubLtiHandler(StubHttpRequestHandler):
 
     def _send_lti2_outcome(self):
         """
-        Send lti2 json grade request.
+        Send a grade back to consumer
         """
         payload = textwrap.dedent("""
         {{
@@ -139,6 +140,24 @@ class StubLtiHandler(StubHttpRequestHandler):
          "comment" : "This is awesome."
         }}
         """)
+        return self._send_lti2(payload)
+
+    def _send_lti2_delete(self):
+        """
+        Send a delete back to consumer
+        """
+        payload = textwrap.dedent("""
+        {{
+         "@context" : "http://purl.imsglobal.org/ctx/lis/v2/Result",
+         "@type" : "Result"
+        }}
+        """)
+        return self._send_lti2(payload)
+
+    def _send_lti2(self, payload):
+        """
+        Send lti2 json result service request.
+        """
         data = payload.format(score=0.8)
 
         ### We compute the LTI V2.0 service endpoint from the callback_url (which is set by the launch call)
@@ -173,6 +192,9 @@ class StubLtiHandler(StubHttpRequestHandler):
                 </form>
                 <form action="{submit_url}/lti2_outcome" method="post">
                     <input type="submit" name="submit-lti2-button" value="Submit">
+                </form>
+                <form action="{submit_url}/lti2_delete" method="post">
+                    <input type="submit" name="submit-lti2-delete-button" value="Submit">
                 </form>
             """).format(submit_url=submit_url)
         else:

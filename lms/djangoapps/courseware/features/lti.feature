@@ -91,3 +91,29 @@ Feature: LMS.LTI component
   And I click on the "Gradebook" tab
   And I see in the gradebook table that "HW" is "80"
   And I see in the gradebook table that "Total" is "8"
+  And I visit the LTI component
+  Then I see progress div with text "Score: 8.00 / 10.0"
+  Then I see feedback div with text "awesome"
+
+  #10
+  Scenario: Graded LTI component in LMS is correctly works with LTI2.0 PUT delete callback
+  Given the course has correct LTI credentials with registered Instructor
+  And the course has an LTI component with correct fields:
+  | open_in_a_new_page | weight | is_graded | has_score |
+  | False              | 10     | True      | True      |
+  And I submit answer to question with LTI 2.0 PUT callback
+  And I visit the LTI component
+  Then I see progress div with text "Score: 8.00 / 10.0"
+  Then I see feedback div with text "awesome"
+  And the LTI provider deletes my grade and feedback
+  And I visit the LTI component (have to reload)
+  Then I do not see progress div
+  Then I do not see feedback div
+  And I click on the "Progress" tab
+  Then I see text "Problem Scores: 0/10"
+  And I see graph with total progress "0%"
+  Then I click on the "Instructor" tab
+  And I click on the "Gradebook" tab
+  And I see in the gradebook table that "HW" is "0"
+  And I see in the gradebook table that "Total" is "0"
+

@@ -6,7 +6,7 @@
     class="${element_class}"
 >
 
-% if launch_url and launch_url !=  'http://www.example.com':
+% if launch_url and launch_url !=  'http://www.example.com' and not hide_launch:
     % if open_in_a_new_page:
         <div class="wrapper-lti-link">
             <h3 class="title">
@@ -25,9 +25,29 @@
             src="${form_url}"
         ></iframe>
     % endif
+% elif hide_launch:
+  <h3 class="title">
+    ${display_name} (${_('External resource')})
+  </h3>
 % else:
     <h3 class="error_message">
         ${_('Please provide launch_url. Click "Edit", and fill in the required fields.')}
     </h3>
 %endif
+
+% if has_score:
+  % if weight and module_score is not None:
+    <div class="problem-progress">
+      ${_('Score:')} ${"{:.2f}".format(module_score)} / ${weight}
+    </div>
+  % endif
+  % if comment:
+    <div class="problem-feedback">
+      ## sanitized with bleach in view
+      ${comment}
+    </div>
+  % endif
+% endif
+
+
 </div>
