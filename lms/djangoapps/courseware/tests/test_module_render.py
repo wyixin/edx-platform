@@ -12,6 +12,7 @@ from django.conf import settings
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.test.utils import override_settings
+from django.contrib.auth.models import AnonymousUser
 
 from capa.tests.response_xml_factory import OptionResponseXMLFactory
 from xblock.field_data import FieldData
@@ -27,10 +28,12 @@ from xmodule.x_module import XModuleDescriptor
 from courseware import module_render as render
 from courseware.courses import get_course_with_access, course_image_url, get_course_info_section
 from courseware.model_data import FieldDataCache
+from courseware.models import StudentModule
 from courseware.tests.factories import StudentModuleFactory, UserFactory
 from courseware.tests.tests import LoginEnrollmentTestCase
 from courseware.tests.modulestore_config import TEST_DATA_MIXED_MODULESTORE
-
+from student.models import anonymous_id_for_user
+from courseware.tests.test_submitting_problems import TestSubmittingProblems
 from lms.lib.xblock.runtime import quote_slashes
 
 
@@ -63,6 +66,42 @@ class ModuleRenderTestCase(ModuleStoreTestCase, LoginEnrollmentTestCase):
             None,
             render.get_module('dummyuser', None, 'invalid location', None, None)
         )
+
+    def get_module_for_user(self, user):
+        """Helper function to get useful module at self.location in self.course_id for user"""
+        mock_request = MagicMock()
+        mock_request.user = user
+        course = get_course_with_access(user, self.course_id, 'load')
+        field_data_cache = FieldDataCache.cache_for_descriptor_descendents(
+            self.course_id, user, course, depth=2)
+
+        return render.get_module(user, mock_request, self.location, field_data_cache, self.course_id)
+
+    def test_get_real_user_module_for_noauth_handler_not_anonymous(self):
+        """
+        Tests that an exception is thrown when get_real_user_module_for_noauth_handler is run from a
+        module bound to a real user
+        """
+        module = self.get_module_for_user(self.mock_user)
+        user2 = UserFactory()
+        user2.id = 2
+        with self.assertRaisesRegexp(
+            render.LmsModuleRenderError,
+            "get_real_user_module_for_noauth_handler can only be called from a module bound to an anonymous user"
+        ):
+            self.assertTrue(module.xmodule_runtime.get_real_user_module_for_noauth_handler(user2))
+
+    def test_get_real_user_module_for_noauth_handler_anonymous(self):
+        """
+        Tests that get_real_user_module_for_noauth_handler succeeds when run is run from a
+        module bound to AnonymousUser
+        """
+        module = self.get_module_for_user(AnonymousUser())
+        user2 = UserFactory()
+        user2.id = 2
+        module2 = module.xmodule_runtime.get_real_user_module_for_noauth_handler(user2)
+        self.assertTrue(module2)
+        self.assertEqual(module2.xmodule_runtime.anonymous_student_id, anonymous_id_for_user(user2, ''))
 
     def test_module_render_with_jump_to_id(self):
         """
@@ -758,3 +797,46 @@ class TestModuleTrackingContext(ModuleStoreTestCase):
     def test_missing_display_name(self, mock_tracker):
         actual_display_name = self.handle_callback_and_get_display_name_from_event(mock_tracker)
         self.assertTrue(actual_display_name.startswith('problem'))
+
+class TestXmoduleRuntimeEvent(TestSubmittingProblems):
+    """
+    Inherit from TestSubmittingProblems to get functionality that set up a course and problems structure
+    """
+
+    grade_dict = {'event_name': 'grade', 'value': 0.18, 'max_value': 32}
+    delete_dict = {'event_name': 'grade_delete'}
+
+    def setUp(self):
+        super(TestXmoduleRuntimeEvent, self).setUp()
+        self.homework = self.add_graded_section_to_course('homework')
+        self.problem = self.add_dropdown_to_section(self.homework.location, 'p1', 1)
+
+    def get_module_for_user(self, user):
+        """Helper function to get useful module at self.location in self.course_id for user"""
+        mock_request = MagicMock()
+        mock_request.user = user
+        field_data_cache = FieldDataCache.cache_for_descriptor_descendents(
+            self.course.id, user, self.course, depth=2)
+
+        return render.get_module(user, mock_request, self.problem.id, field_data_cache, self.course.id)
+
+    def set_module_grade_using_publish(self, dict):
+        """Publish the user's grade, takes dict as input"""
+        module = self.get_module_for_user(self.student_user)
+        module.xmodule_runtime.publish(module, dict)
+        return module
+
+    def test_xmodule_runtime_publish(self):
+        """Tests the publish mechanism"""
+        self.set_module_grade_using_publish(self.grade_dict)
+        student_module = StudentModule.objects.get(student=self.student_user, module_state_key=self.problem.id)
+        self.assertEqual(student_module.grade, self.grade_dict['value'])
+        self.assertEqual(student_module.max_grade, self.grade_dict['max_value'])
+
+    def test_xmodule_runtime_publish_delete(self):
+        """Test deleting the grade using the publish mechanism"""
+        module = self.set_module_grade_using_publish(self.grade_dict)
+        module.xmodule_runtime.publish(module, self.delete_dict)
+        student_module = StudentModule.objects.get(student=self.student_user, module_state_key=self.problem.id)
+        self.assertIsNone(student_module.grade)
+        self.assertIsNone(student_module.max_grade)

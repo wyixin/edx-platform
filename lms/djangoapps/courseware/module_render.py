@@ -60,6 +60,11 @@ xqueue_interface = XQueueInterface(
 )
 
 
+class LmsModuleRenderError(Exception):
+    """An exception class for exceptions thrown by module render that don't fit well elsewhere"""
+    pass
+
+
 def make_track_function(request):
     '''
     Make a tracking function that logs what happened.
@@ -350,7 +355,7 @@ def get_module_for_descriptor_internal(user, descriptor, field_data_cache, cours
             err_msg = ("get_real_user_module_for_noauth_handler can only be called from a module bound to "
                        "an anonymous user")
             log.error(err_msg)
-            raise ProcessingError(err_msg)
+            raise LmsModuleRenderError(err_msg)
 
         field_data_cache_real_user = FieldDataCache.cache_for_descriptor_descendents(
             course_id,
