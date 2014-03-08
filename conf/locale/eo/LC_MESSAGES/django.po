@@ -37,8 +37,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1a\n"
 "Report-Msgid-Bugs-To: openedx-translation@googlegroups.com\n"
-"POT-Creation-Date: 2014-03-05 16:42-0800\n"
-"PO-Revision-Date: 2014-03-06 00:42:46.262958\n"
+"POT-Creation-Date: 2014-03-07 18:15-0800\n"
+"PO-Revision-Date: 2014-03-08 02:15:35.023178\n"
 "Last-Translator: \n"
 "Language-Team: openedx-translation <openedx-translation@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -4786,7 +4786,7 @@ msgstr "Sïgn üp. #"
 msgid "login via openid"
 msgstr "lögïn vïä öpénïd Ⱡ'σ#"
 
-#: lms/templates/lti.html
+#: lms/templates/lti.html lms/templates/lti.html
 msgid "External resource"
 msgstr "Éxtérnäl résöürçé Ⱡ'σ#"
 
@@ -4800,6 +4800,10 @@ msgid ""
 msgstr ""
 "Pléäsé prövïdé läünçh_ürl. Çlïçk \"Édït\", änd fïll ïn thé réqüïréd fïélds. "
 "Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт#"
+
+#: lms/templates/lti.html
+msgid "Score:"
+msgstr "Sçöré: Ⱡ'σяєм ιρѕ#"
 
 #: lms/templates/manage_user_standing.html
 msgid "Disable or Reenable student accounts"

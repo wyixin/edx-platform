@@ -187,7 +187,6 @@ class TestLTIModuleListing(ModuleStoreTestCase):
 
     def test_lti_rest_listing(self):
         """tests that the draft lti module is not a part of the endpoint response, but the published one is"""
-        self.create_one_draft_one_published_lti_module()
         request = mock.Mock()
         request.method = 'GET'
         response = get_course_lti_endpoints(request, self.course.id)

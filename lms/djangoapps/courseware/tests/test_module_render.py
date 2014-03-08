@@ -89,7 +89,7 @@ class ModuleRenderTestCase(ModuleStoreTestCase, LoginEnrollmentTestCase):
             render.LmsModuleRenderError,
             "get_user_module_for_noauth can only be called from a module bound to an anonymous user"
         ):
-            self.assertTrue(module.xmodule_runtime.get_real_user_module_for_noauth_handler(user2))
+            self.assertTrue(module.xmodule_runtime.get_user_module_for_noauth(user2))
 
     def test_get_user_module_for_noauth_anonymous(self):
         """
