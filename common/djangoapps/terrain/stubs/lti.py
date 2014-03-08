@@ -175,7 +175,7 @@ class StubLtiHandler(StubHttpRequestHandler):
             'Authorization': self._oauth_sign(new_url, data,
                                               method='PUT',
                                               content_type=content_type)
-            }
+        }
 
         # Send request ignoring verifirecation of SSL certificate
         response = requests.put(new_url, data=data, headers=headers, verify=False)

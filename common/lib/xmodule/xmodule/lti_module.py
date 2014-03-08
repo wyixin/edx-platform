@@ -570,7 +570,7 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
             return Response(response_xml_template.format(**failure_values), content_type="application/xml")
 
         if action == 'replaceResultRequest':
-            user_instance = self.system.get_real_user_module_for_noauth_handler(real_user)
+            user_instance = self.system.get_user_module_for_noauth(real_user)
 
             LTIModule.set_user_module_score(real_user, user_instance, score, self.max_score())
 
@@ -676,13 +676,13 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
         log.debug("[LTI]: {}".format(msg))
         raise LTIError(msg)
 
-    def _lti_2_0_result_get_handler(self, request, real_user):
+    def _lti_2_0_result_get_handler(self, request, real_user):  # pylint: disable=unused-argument
         """
         GET handler for lti_2_0_result.  Assumes all authorization has been checked.
         """
         base_json_obj = {"@context": "http://purl.imsglobal.org/ctx/lis/v2/Result",
                          "@type": "Result"}
-        user_instance = self.system.get_real_user_module_for_noauth_handler(real_user)
+        user_instance = self.system.get_user_module_for_noauth(real_user)
         if user_instance.module_score is None:  # In this case, no score has been ever set
             return Response(json.dumps(base_json_obj), content_type=LTI_2_0_JSON_CONTENT_TYPE)
 
@@ -691,11 +691,11 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
         base_json_obj['comment'] = user_instance.score_comment
         return Response(json.dumps(base_json_obj), content_type=LTI_2_0_JSON_CONTENT_TYPE)
 
-    def _lti_2_0_result_del_handler(self, request, real_user):
+    def _lti_2_0_result_del_handler(self, request, real_user):  # pylint: disable=unused-argument
         """
         DELETE handler for lti_2_0_result.  Assumes all authorization has been checked.
         """
-        user_instance = self.system.get_real_user_module_for_noauth_handler(real_user)
+        user_instance = self.system.get_user_module_for_noauth(real_user)
         LTIModule.clear_user_module_score(real_user, user_instance)
         return Response(status=200)
 
@@ -708,7 +708,7 @@ oauth_consumer_key="", oauth_signature="frVp4JuvT1mVXlxktiAUjQ7%2F1cw%3D"'}
         except LTIError:
             return Response(status=404)  # have to do 404 due to spec, but 400 is better, with error msg in body
 
-        user_instance = self.system.get_real_user_module_for_noauth_handler(real_user)
+        user_instance = self.system.get_user_module_for_noauth(real_user)
         # According to http://www.imsglobal.org/lti/ltiv2p0/ltiIMGv2p0.html#_Toc361225514
         # PUTting a JSON object with no "resultScore" field is equivalent to a DELETE.
         if score is None:
@@ -929,4 +929,5 @@ class LTIDescriptor(LTIFields, MetadataOnlyEditingDescriptor, EmptyDataRawDescri
     preview_handler = module_attr('preview_handler')
     lti_2_0_result_rest_handler = module_attr('lti_2_0_result_rest_handler')
     clear_user_module_score = module_attr('clear_user_module_score')
+    get_outcome_service_url = module_attr('get_outcome_service_url')
     publish_proxy = module_runtime_attr('publish')

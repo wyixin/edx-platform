@@ -56,7 +56,7 @@ class LTIModuleTest(LogicTest):
             """)
         self.system.get_real_user = Mock()
         self.system.publish = Mock()
-        self.system.get_real_user_module_for_noauth_handler = Mock(return_value=self.xmodule)
+        self.system.get_user_module_for_noauth = Mock(return_value=self.xmodule)
         self.xmodule.publish_proxy = self.system.publish
 
         self.user_id = self.xmodule.runtime.anonymous_student_id
@@ -558,8 +558,8 @@ class LTIModuleTest(LogicTest):
         The happy path for LTI 2.0 PUT that acts like a delete
         """
         self.setup_system_xmodule_mocks_for_lti20_request_test()
-        SCORE = 0.55
-        COMMENT = u"ಠ益ಠ"
+        SCORE = 0.55  # pylint: disable=invalid-name
+        COMMENT = u"ಠ益ಠ"  # pylint: disable=invalid-name
         self.xmodule.module_score = SCORE
         self.xmodule.score_comment = COMMENT
         mock_request = self.get_signed_lti20_mock_request(self.GOOD_JSON_PUT_LIKE_DELETE)
@@ -578,8 +578,8 @@ class LTIModuleTest(LogicTest):
         The happy path for LTI 2.0 DELETE
         """
         self.setup_system_xmodule_mocks_for_lti20_request_test()
-        SCORE = 0.55
-        COMMENT = u"ಠ益ಠ"
+        SCORE = 0.55  # pylint: disable=invalid-name
+        COMMENT = u"ಠ益ಠ"  # pylint: disable=invalid-name
         self.xmodule.module_score = SCORE
         self.xmodule.score_comment = COMMENT
         mock_request = self.get_signed_lti20_mock_request("", method=u'DELETE')
@@ -627,8 +627,8 @@ class LTIModuleTest(LogicTest):
         The happy path for LTI 2.0 GET when there is a score
         """
         self.setup_system_xmodule_mocks_for_lti20_request_test()
-        SCORE = 0.55
-        COMMENT = u"ಠ益ಠ"
+        SCORE = 0.55  # pylint: disable=invalid-name
+        COMMENT = u"ಠ益ಠ"  # pylint: disable=invalid-name
         self.xmodule.module_score = SCORE
         self.xmodule.score_comment = COMMENT
         mock_request = self.get_signed_lti20_mock_request("", method=u'GET')

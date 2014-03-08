@@ -255,41 +255,41 @@ def visit_lti_component(_step):
 
 @step('I see progress div with text "([^"]*)"$')
 def see_progress_div(_step, text):
-    SELECTOR = 'problem-progress'
-    XPATH = '//div[@class="{selector}"]'.format(
-        selector=SELECTOR,
+    selector = 'problem-progress'
+    xpath = '//div[@class="{selector}"]'.format(
+        selector=selector,
     )
-    node = world.browser.find_by_xpath(XPATH)
+    node = world.browser.find_by_xpath(xpath)
     assert (text in node.first.text)
 
 
 @step('I see feedback div with text "([^"]*)"$')
 def see_feedback_div(_step, text):
-    SELECTOR = 'problem-feedback'
-    XPATH = '//div[@class="{selector}"]'.format(
-        selector=SELECTOR,
+    selector = 'problem-feedback'
+    xpath = '//div[@class="{selector}"]'.format(
+        selector=selector,
     )
-    node = world.browser.find_by_xpath(XPATH)
+    node = world.browser.find_by_xpath(xpath)
     assert (text in node.first.text)
 
 
 @step('I do not see feedback div')
 def not_see_feedback_div(_step):
-    SELECTOR = 'problem-feedback'
-    XPATH = '//div[@class="{selector}"]'.format(
-        selector=SELECTOR,
+    selector = 'problem-feedback'
+    xpath = '//div[@class="{selector}"]'.format(
+        selector=selector,
     )
-    node = world.browser.find_by_xpath(XPATH)
+    node = world.browser.find_by_xpath(xpath)
     assert not node
 
 
 @step('I do not see progress div')
 def not_see_progress_div(_step):
-    SELECTOR = 'problem-progress'
-    XPATH = '//div[@class="{selector}"]'.format(
-        selector=SELECTOR,
+    selector = 'problem-progress'
+    xpath = '//div[@class="{selector}"]'.format(
+        selector=selector,
     )
-    node = world.browser.find_by_xpath(XPATH)
+    node = world.browser.find_by_xpath(xpath)
     assert not node
 
 
@@ -300,28 +300,28 @@ def check_progress(_step, text):
 
 @step('I see graph with total progress "([^"]*)"$')
 def see_graph(_step, progress):
-    SELECTOR = 'grade-detail-graph'
-    XPATH = '//div[@id="{parent}"]//div[text()="{progress}"]'.format(
-        parent=SELECTOR,
+    selector = 'grade-detail-graph'
+    xpath = '//div[@id="{parent}"]//div[text()="{progress}"]'.format(
+        parent=selector,
         progress=progress,
     )
-    node = world.browser.find_by_xpath(XPATH)
+    node = world.browser.find_by_xpath(xpath)
 
     assert node
 
 
 @step('I see in the gradebook table that "([^"]*)" is "([^"]*)"$')
 def see_value_in_the_gradebook(_step, label, text):
-    TABLE_SELECTOR = '.grade-table'
+    table_selector = '.grade-table'
     index = 0
-    table_headers = world.css_find('{0} thead th'.format(TABLE_SELECTOR))
+    table_headers = world.css_find('{0} thead th'.format(table_selector))
 
     for i, element in enumerate(table_headers):
         if element.text.strip() == label:
             index = i
             break;
 
-    assert world.css_has_text('{0} tbody td'.format(TABLE_SELECTOR), text, index=index)
+    assert world.css_has_text('{0} tbody td'.format(table_selector), text, index=index)
 
 
 @step('I submit answer to LTI question$')
@@ -334,7 +334,7 @@ def click_grade(_step):
 
 
 @step('I submit answer to question with LTI 2.0 PUT callback$')
-def click_grade(_step):
+def click_grade_lti20(_step):
     location = world.scenario_dict['LTI'].location.html_id()
     iframe_name = 'ltiFrame-' + location
     with world.browser.get_iframe(iframe_name) as iframe:
@@ -374,29 +374,29 @@ def switch_view(_step, view):
 
 @step("I do not see a launch button")
 def check_no_launch_button(_step):
-    SELECTOR = 'link_lti_new_window'
-    XPATH = '//a[@class="{selector}"]'.format(
-        selector=SELECTOR,
+    selector = 'link_lti_new_window'
+    xpath = '//a[@class="{selector}"]'.format(
+        selector=selector,
     )
-    node = world.browser.find_by_xpath(XPATH)
+    node = world.browser.find_by_xpath(xpath)
     assert not node
 
 
 @step("I do see the module title")
 def check_module_title(_step):
-    SELECTOR = 'title'
-    XPATH = '//h3[@class="{selector}"]'.format(
-        selector=SELECTOR,
+    selector = 'title'
+    xpath = '//h3[@class="{selector}"]'.format(
+        selector=selector,
     )
-    node = world.browser.find_by_xpath(XPATH)
+    node = world.browser.find_by_xpath(xpath)
     assert node
 
 
 @step("I do not see an provider iframe")
 def check_no_provider_iframe(_step):
-    SELECTOR = 'ltiLaunchFrame'
-    XPATH = '//iframe[@class="{selector}"]'.format(
-        selector=SELECTOR,
+    selector = 'ltiLaunchFrame'
+    xpath = '//iframe[@class="{selector}"]'.format(
+        selector=selector,
     )
-    node = world.browser.find_by_xpath(XPATH)
+    node = world.browser.find_by_xpath(xpath)
     assert not node

@@ -77,9 +77,9 @@ class ModuleRenderTestCase(ModuleStoreTestCase, LoginEnrollmentTestCase):
 
         return render.get_module(user, mock_request, self.location, field_data_cache, self.course_id)
 
-    def test_get_real_user_module_for_noauth_handler_not_anonymous(self):
+    def test_get_user_module_for_noauth_not_anonymous(self):
         """
-        Tests that an exception is thrown when get_real_user_module_for_noauth_handler is run from a
+        Tests that an exception is thrown when get_user_module_for_noauth is run from a
         module bound to a real user
         """
         module = self.get_module_for_user(self.mock_user)
@@ -87,19 +87,19 @@ class ModuleRenderTestCase(ModuleStoreTestCase, LoginEnrollmentTestCase):
         user2.id = 2
         with self.assertRaisesRegexp(
             render.LmsModuleRenderError,
-            "get_real_user_module_for_noauth_handler can only be called from a module bound to an anonymous user"
+            "get_user_module_for_noauth can only be called from a module bound to an anonymous user"
         ):
             self.assertTrue(module.xmodule_runtime.get_real_user_module_for_noauth_handler(user2))
 
-    def test_get_real_user_module_for_noauth_handler_anonymous(self):
+    def test_get_user_module_for_noauth_anonymous(self):
         """
-        Tests that get_real_user_module_for_noauth_handler succeeds when run is run from a
+        Tests that get_user_module_for_noauth succeeds when run is run from a
         module bound to AnonymousUser
         """
         module = self.get_module_for_user(AnonymousUser())
         user2 = UserFactory()
         user2.id = 2
-        module2 = module.xmodule_runtime.get_real_user_module_for_noauth_handler(user2)
+        module2 = module.xmodule_runtime.get_user_module_for_noauth(user2)
         self.assertTrue(module2)
         self.assertEqual(module2.xmodule_runtime.anonymous_student_id, anonymous_id_for_user(user2, ''))
 
@@ -798,6 +798,7 @@ class TestModuleTrackingContext(ModuleStoreTestCase):
         actual_display_name = self.handle_callback_and_get_display_name_from_event(mock_tracker)
         self.assertTrue(actual_display_name.startswith('problem'))
 
+
 class TestXmoduleRuntimeEvent(TestSubmittingProblems):
     """
     Inherit from TestSubmittingProblems to get functionality that set up a course and problems structure
@@ -820,10 +821,10 @@ class TestXmoduleRuntimeEvent(TestSubmittingProblems):
 
         return render.get_module(user, mock_request, self.problem.id, field_data_cache, self.course.id)
 
-    def set_module_grade_using_publish(self, dict):
-        """Publish the user's grade, takes dict as input"""
+    def set_module_grade_using_publish(self, grade_dict):
+        """Publish the user's grade, takes grade_dict as input"""
         module = self.get_module_for_user(self.student_user)
-        module.xmodule_runtime.publish(module, dict)
+        module.xmodule_runtime.publish(module, grade_dict)
         return module
 
     def test_xmodule_runtime_publish(self):

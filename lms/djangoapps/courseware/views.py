@@ -1,5 +1,6 @@
 import logging
 import urllib
+import json
 
 from collections import defaultdict
 
@@ -7,8 +8,9 @@ from django.conf import settings
 from django.core.context_processors import csrf
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AnonymousUser
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_GET
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect
 from edxmako.shortcuts import render_to_response, render_to_string
@@ -19,7 +21,7 @@ from markupsafe import escape
 
 from courseware import grades
 from courseware.access import has_access
-from courseware.courses import get_courses, get_course_with_access, sort_by_announcement
+from courseware.courses import get_courses, get_course, get_course_with_access, sort_by_announcement
 import courseware.tabs as tabs
 from courseware.masquerade import setup_masquerade
 from courseware.model_data import FieldDataCache
@@ -90,15 +92,6 @@ def render_accordion(request, course, chapter, section, field_data_cache):
 
     Returns the html string
     """
-
-    ### jbau random test ###
-    # from xmodule.modulestore.django import modulestore
-    # from xmodule.modulestore import Location
-    # from django.contrib.auth.models import AnonymousUser
-    # lti_descriptors = modulestore().get_items(Location("i4x", course.org, course.number, "lti", None), course.id)
-    # print([get_module_for_descriptor(AnonymousUser(), request, descriptor, field_data_cache, course.id).service_url()
-    #        for descriptor in lti_descriptors])
-
     # grab the table of contents
     user = User.objects.prefetch_related("groups").get(id=request.user.id)
     request.user = user	# keep just one instance of User
@@ -746,3 +739,44 @@ def submission_history(request, course_id, student_username, location):
     }
 
     return render_to_response('courseware/submission_history.html', context)
+
+
+@require_GET
+def get_course_lti_endpoints(request, course_id):
+    """
+    This is the view that, given a course_id, returns the appropriate JSON dict.
+    """
+    try:
+        course = get_course(course_id, depth=2)
+    except ValueError:  # get_course raises ValueError if course_id is invalid or doesn't refer to a course
+        return HttpResponse(status=404)
+    anonymous_user = AnonymousUser()
+    lti_descriptors = modulestore().get_items(Location("i4x", course.org, course.number, "lti", None), course.id)
+
+    lti_noauth_modules = [
+        get_module_for_descriptor(
+            anonymous_user,
+            request,
+            descriptor,
+            FieldDataCache.cache_for_descriptor_descendents(
+                course_id,
+                anonymous_user,
+                descriptor
+            ),
+            course_id
+        )
+        for descriptor in lti_descriptors
+    ]
+
+    endpoints = [
+        {
+            'display_name': module.display_name,
+            'lti_2_0_result_service_json_endpoint': module.get_outcome_service_url(
+                service_name='lti_2_0_result_rest_handler'),
+            'lti_1_1_result_service_xml_endpoint': module.get_outcome_service_url(
+                service_name='grade_handler'),
+        }
+        for module in lti_noauth_modules
+    ]
+
+    return HttpResponse(json.dumps(endpoints), content_type='application/json')

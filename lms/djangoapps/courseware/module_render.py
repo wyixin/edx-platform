@@ -346,13 +346,13 @@ def get_module_for_descriptor_internal(user, descriptor, field_data_cache, cours
 
         dog_stats_api.increment("lms.courseware.question_answered", tags=tags)
 
-    def get_real_user_module_for_noauth_handler(real_user):
+    def get_user_module_for_noauth(real_user):
         """
         A function that allows an module to get a module instance bound to a real user.  Will only work
         within a module bound to an AnonymousUser, e.g. one that's instantiated by the noauth_handler.
         """
         if user.is_authenticated():
-            err_msg = ("get_real_user_module_for_noauth_handler can only be called from a module bound to "
+            err_msg = ("get_user_module_for_noauth can only be called from a module bound to "
                        "an anonymous user")
             log.error(err_msg)
             raise LmsModuleRenderError(err_msg)
@@ -453,7 +453,7 @@ def get_module_for_descriptor_internal(user, descriptor, field_data_cache, cours
         ),
         node_path=settings.NODE_PATH,
         publish=publish,
-        get_real_user_module_for_noauth_handler=get_real_user_module_for_noauth_handler,
+        get_user_module_for_noauth=get_user_module_for_noauth,
         anonymous_student_id=anonymous_student_id,
         course_id=course_id,
         open_ended_grading_interface=open_ended_grading_interface,
