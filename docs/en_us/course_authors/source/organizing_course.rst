@@ -192,7 +192,7 @@ Click the Edit icon.  Then follow instructions for the type of component you are
 Set the Display Name for a Component
 =====================================
 
-Each component has a display name that shows in the component header when you can edit the component. The display name also shows to students when they hover the mouse pointer over the unit icon in the course accordian.
+Each component has a display name that shows in the component header when you can edit the component. The display name also shows to students when they hover the mouse pointer over the unit icon in the course accordion.
 
 To set the display name for a component:
 
@@ -245,7 +245,7 @@ Click the Delete icon.  Then follow instructions for the type of component you a
 Components that Contain Other Components
 ******************************************
 
-You can configure your course content so that components contain other components.  One example of when you would need to do this is for A/B tests.  See `Setting Up A/B Tests` for more information.
+You can configure your course content so that components contain other components.  One example of when you would need to do this is for A/B tests.  See :ref:`Setting Up A/B Tests` for more information.
 
 The component that contains other components is referred to as the parent; the contained components are referred to as children.  
 
@@ -291,14 +291,14 @@ The two verticals referenced by the parent component refer to the child componen
 
 .. code-block:: xml
 
- <vertical display_name="Group A">
+ <vertical display_name="Child Components">
   <html url_name="4471618afafb45bfb86cbe511973e225"/>
   <video url_name="fbd800d0bdbd4cb69ac70c47c9f699e1"/>
  </vertical>
 
 .. code-block:: xml
 
- <vertical display_name="Group B">
+ <vertical display_name="Child Components">
   <html url_name="dd6ef295fda74a639842e1a49c66b2c7"/>
   <problem url_name="b40ecbe4ed1b4280ae93e2a158edae6f"/>
  </vertical>

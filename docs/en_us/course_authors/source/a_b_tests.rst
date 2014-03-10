@@ -21,7 +21,7 @@ You can set up A/B tests to provide different course content to different groups
 
 Within a unit, you can specify that a component is part of an A/B test and will be shown to one group of students and not the other.
 
-Students are randomly assigned to content groups. You can then research and compare the performance of the groups to gain more insight into the relative effectiveness of your course content.
+Students are randomly assigned to content groups. You can then research and compare the performance of students in those groups to gain more insight into the relative effectiveness of your course content.
 
 .. note:: In the current release, you must configure A/B tests through XML, then import the XML course into edX Studio. You can view A/B tests in Studio, but you cannot create or edit the content of A/B tests directly. See :ref:`Import a Course` for instructions.
 
@@ -84,18 +84,20 @@ You reference an A/B test in the file for the subsection in the ``sequential`` d
 
 .. code-block:: xml
 
+ .....
  <vertical url_name="name for the unit that contains the A/B test">
   <split_test url_name="name of A/B test file"/>
  </vertical>
+ .....
 
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Define the A/B Test Content in the Split Test File
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-You define the A/B test in a file in the ``split_test`` directory.
+After you define the A/B test in the sequential file, you define the course content you want to test in the file in the ``split_test`` directory. This is the file referenced in the ``<split_test>`` element in the sequential file, as shown above.
 
-The following example file defines an A/B test with 
+In this file, you add elements for the A/B test content. For this example, you add two elements to compare the two different video files.
 
 .. code-block:: xml
 
@@ -103,7 +105,7 @@ The following example file defines an A/B test with
           group_id_to_child='{"0": "path to the video file for group 0", 
           "2": "path to the video file for group 2"}'>
     <video url_name="name of the video file from group 0"/>
-    <video url_name="name of the video file from group 0"/>
+    <video url_name="name of the video file from group 2"/>
   </video>
  </split_test>
 
