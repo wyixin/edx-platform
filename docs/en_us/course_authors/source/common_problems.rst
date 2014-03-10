@@ -573,7 +573,7 @@ This is followed by XML that defines the targeted feedback:
          <p>Napster was not an Apple product.</p>
        </div>
      </targetedfeedback>
-     <targetedfeedback explanation-id="feeback3">
+     <targetedfeedback explanation-id="feedback3">
        <div class="detailed-targeted-feedback">
          <p>Targeted Feedback</p>
          <p>No, not even close.</p>
