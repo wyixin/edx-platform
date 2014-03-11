@@ -249,10 +249,6 @@ You can configure your course content so that components contain other component
 
 The component that contains other components is referred to as the parent; the contained components are referred to as children.  
 
-A single component can be the parent of other components, and the child of a different component. These relationships are also referred to as "nested components".
-
-.. note:: In this release, parent and child components are read-only in Studio. You set up components and their relationships to each other in XML. You can then import the course into Studio and verify that your course components are organized as you intended.
-
 In the unit page, a parent component appears with the display name and a **VIEW** link:
 
 .. image:: Images/component_container.png
@@ -262,6 +258,13 @@ When you click **VIEW**, the parent component page opens.  Breadcrumbs at the to
 
 .. image:: Images/child-components.png
  :alt: Image of a child component page
+
+As shown in this example, a single component can be the child of one component, and the parent of other components. These relationships are also referred to as "nested components".
+
+.. note:: In this release, parent and child components are read-only in Studio. You set up components and their relationships to each other in XML. You can then import the course into Studio and verify that your course components are organized as you intended.
+
+
+
 
 ======================================
 XML for Parent and Child Components
