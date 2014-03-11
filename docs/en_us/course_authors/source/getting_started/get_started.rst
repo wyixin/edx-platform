@@ -10,7 +10,7 @@ Overview
 
 This chapter describes the tools you use to build an edX course, and how to create your first course:
 
-* :ref:`What is Studio?`
+* :ref:`What is Studio`
 * :ref:`Use Studio on Edge`
 * :ref:`Create Your First Course`
 * :ref:`View Your Course on Edge`
@@ -18,7 +18,7 @@ This chapter describes the tools you use to build an edX course, and how to crea
 
 If you are using an instance of Open edX, some specifics in this chapter may not apply.
 
-.. _What is Studio?:        
+.. _What is Studio:        
             
 ***************
 What is Studio?

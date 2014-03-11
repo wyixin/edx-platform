@@ -145,14 +145,14 @@ Step 1. Add LTI to the Advanced Modules Policy Key
    Definition** section, and then locate the **advanced_modules**
    policy key (this key is at the top of the list).
 
-   .. image:: ../Images/AdvancedModulesEmpty.gif
+   .. image:: ../Images/AdvancedModulesEmpty.png
     :alt: Image of the advanced_modules key in the Advanced Settings page
 
 #. Under **Policy Value**, place your cursor between the brackets, and
    then enter **“lti”**. Make sure to include the quotation marks, but
    not the period.
 
-   .. image:: ../Images/LTIPolicyKey.gif
+   .. image:: ../Images/LTIPolicyKey.png
     :alt: Image of the advanced_modules key in the Advanced Settings page, with the LTI value added
 
    **Note** If the **Policy Value** field already contains text, place your
@@ -285,7 +285,7 @@ their thoughts to the group.
 For example, the following word cloud was created from students'
 responses to a question in a HarvardX course.
 
-.. image:: ../Images/WordCloudExample.gif
+.. image:: ../Images/WordCloudExample.png
   :alt: Image of a word cloud problem
 
 Create a Word Cloud Exercise
@@ -332,7 +332,7 @@ Zooming Image Tool
 
 You may want to present information to your students as an image. If your image is very large or very detailed, students may not be able to see all the information in the image. You can use the zooming image tool to enlarge areas of your image as the student moves the mouse over the image, as in the example below.
 
-.. image:: ../Images/Zooming_Image.gif
+.. image:: ../Images/Zooming_Image.png
   :alt: Example zooming image tool showing a chemistry exercise
 
 Components of a Zooming Image Tool
@@ -381,7 +381,7 @@ Create a Zooming Image Tool
 
    The HTML in your zooming image tool may resemble the following.
 
-   .. image:: ../Images/ZoomingImage_Modified.gif
+   .. image:: ../Images/ZoomingImage_Modified.png
      :alt: Example HTML for a zooming image tool
 
 #. Click **Save** to save the HTML component.

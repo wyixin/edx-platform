@@ -70,14 +70,14 @@ An open response assessment has three elements:
    following example, the student performs a self assessment, then peers
    perform peer assessments, and then an AI assessment runs.
 
-   .. image:: ../Images/CITL_AssmtTypes.gif
+   .. image:: ../Images/CITL_AssmtTypes.png
       :alt: Image of ORA with assessment types circled
 
 -  The question that you want your students to answer. This appears near
    the top of the component, followed by a field where the student
    enters a response.
 
-   .. image:: ../Images/CITLsample.gif
+   .. image:: ../Images/CITLsample.png
       :alt: Image of ORA question
 
 -  A rubric that you design. After the student enters a response and
@@ -87,7 +87,7 @@ An open response assessment has three elements:
    student sees a "Your response has been submitted" message but doesn't
    see the rubric.)
 
-   .. image:: ../Images/CITL_SA_Rubric.gif
+   .. image:: ../Images/CITL_SA_Rubric.png
       :alt: Image of ORA with rubric showing below the student's response
 
 .. _ORA Types:
@@ -184,7 +184,7 @@ Step 1. Create the ORA Component
    scoring. You'll replace this sample content with the content for your
    problem. 
  
-.. image:: ../Images/ORAComponentEditor.gif
+.. image:: ../Images/ORAComponentEditor.png
    :alt: Image of component editor with prompt, rubric, and assessment type highlighted
   
 .. _Step 2:
@@ -194,10 +194,10 @@ Step 2. Add the Question
 
 #. In the component editor, locate the [prompt] tags.
 
-   .. image:: ../Images/ORA_Prompt.gif
+.. image:: ../Images/ORA_Prompt.png
       :alt: Image of component editor with prompt text highlighted
 
-#. Replace the sample text between the **[prompt]** tags with the text of
+2. Replace the sample text between the **[prompt]** tags with the text of
    your question. When you replace the sample text, make sure you follow
    these guidelines to avoid common formatting mistakes.
 
@@ -216,10 +216,10 @@ Step 3. Add the Rubric
 #. In the component editor, locate the [rubric] tags. (The sample rubric
    is long, so you'll have to scroll down to locate the second tag.)
 
-   .. image:: ../Images/ORA_Rubric.gif
+.. image:: ../Images/ORA_Rubric.png
       :alt: Image of component editor with rubric text highlighted
 
-#. Replace the sample rubric with the text of your rubric. Make sure to
+2. Replace the sample rubric with the text of your rubric. Make sure to
    do the following.
 
    -  Include the beginning and ending [rubric] tags.
@@ -299,8 +299,8 @@ Set the Assessment Type and Scoring
 
 #. In the component editor, locate the [tasks] tags.
 
-   .. image:: ../Images/ORA_Tasks.gif
-      :alt: Image of component editor with tasks tags and text highlighted
+.. image:: ../Images/ORA_Tasks.png
+       :alt: Image of component editor with tasks tags and text highlighted
 
 #. Replace the sample code with the code for your problem.
 
@@ -322,13 +322,14 @@ The name of the problem appears as a heading above the problem in the
 courseware. It also appears in the list of problems on the **Staff
 Grading** page.
 
-.. image:: ../Images/ORA_ProblemName1.gif
+.. image:: ../Images/ORA_ProblemName1.png
    :alt: Image of Staff Grading page with a problem name circled
 
 To change the name:
 
 #. In the upper-right corner of the component editor, click
    **Settings**.
+
 #. In the **Display Name** field, replace **Open Response Assessment**
    with the name of your problem.
 
@@ -342,7 +343,7 @@ responses a student has to peer grade and whether students can upload
 files as part of their response, click the **Settings** tab, and then
 specify the options that you want.
 
-.. image:: ../Images/ORA_Settings.gif
+.. image:: ../Images/ORA_Settings.png
    :alt: Image of component editor with Settings tab selected
 
 Open response assessments include the following settings.
@@ -449,7 +450,7 @@ Step 7. Save the Problem
    The component appears in Studio. In the upper right corner, you can
    see the type of assessments that you have set for this problem.
 
-   .. image:: ../Images/ORA_Component.gif
+   .. image:: ../Images/ORA_Component.png
       :alt: Image of ORA component with assessment types circled
 
 .. _Step 8:
@@ -485,7 +486,7 @@ the ORA problems for the course through this peer grading interface.
 
    The **Peer Grading** page opens.
 
-   .. image:: ../Images/PGI_Single.gif
+   .. image:: ../Images/PGI_Single.png
       :alt: Image of LMS open to the Peer Grading page for the course
 
    When students submit responses for peer assessments in your course,
@@ -519,10 +520,10 @@ week).
    to the right of the word **location**. Press CTRL+C to copy this
    string, starting with **i4x**.
 
-   .. image:: ../Images/PA_StaffDebug_Location.gif
+   .. image:: ../Images/PA_StaffDebug_Location.png
       :alt: Image of Staff Debug screen with ORA problem location circled 
 
-#. Switch back to the unit in Studio. If the visibility of the unit is
+5. Switch back to the unit in Studio. If the visibility of the unit is
    set to **Public**, change the visibility to **Private**.
 #. Scroll to the bottom of the unit, click **Advanced** under **Add New
    Component**, and then click **Peer Grading Interface**.
@@ -532,7 +533,7 @@ week).
    alphanumeric characters that you copied in step 4. Then, change the
    **Show Single Problem** setting to **True**.
 
-   .. image:: ../Images/PGI_CompEditor_Settings.gif
+   .. image:: ../Images/PGI_CompEditor_Settings.png
 
 #. Click **Save** to close the component editor.
 
@@ -549,18 +550,18 @@ Test your problem by adding and grading a response.
 
    When you click **View Live**, the unit opens in the LMS in a new tab.
 
-#. In the LMS, locate your ORA question, and then type your response in
+3. In the LMS, locate your ORA question, and then type your response in
    the Response field under the question.
 
-   .. image:: ../Images/ThreeAssmts_NoResponse.gif
+   .. image:: ../Images/ThreeAssmts_NoResponse.png
 
    Note that when you view your ORA problem in the LMS as an instructor,
    you see the following message below the problem. This message never
    appears to students.
 
-   .. image:: ../Images/ORA_DuplicateWarning.gif
+   .. image:: ../Images/ORA_DuplicateWarning.png
 
-#. Test the problem to make sure that it works as expected.
+4. Test the problem to make sure that it works as expected.
 
 To test your open response assessment, you may want to sign into your
 course as a student, using an account that's different from the account
@@ -601,19 +602,19 @@ The Staff Grading Page
 When a response is available for you to grade, a yellow exclamation mark
 appears next to **Open Ended Panel** at the top of the screen.
 
-.. image:: ../Images/OpenEndedPanel.gif
+.. image:: ../Images/OpenEndedPanel.png
 
 To access the **Staff Grading** page, click **Open Ended Panel**.
 
 When the **Open Ended Console** page opens, click **Staff Grading**.
 Notice the **New submissions to grade** notification.
 
-.. image:: ../Images/OpenEndedConsole_NewSubmissions.gif
+.. image:: ../Images/OpenEndedConsole_NewSubmissions.png
 
 When the **Staff Grading** page opens, information about your open
 response assessment appears in several columns.
 
-.. image:: ../Images/ProblemList-DemoCourse.gif
+.. image:: ../Images/ProblemList-DemoCourse.gpng
 
 +----------------------------------------------------+--------------------------------------------------------------------+
 | **Problem Name**                                   | The name of the problem. Click the name of the problem to open it. |
@@ -653,9 +654,9 @@ Grade Responses
    is a calculation of the difference between the scores that AI
    algorithm provides and the scores that the instructor provides.
 
-   .. image:: ../Images/ResponseToGrade.gif
+.. image:: ../Images/ResponseToGrade.png
 
-#. In the rubric below the response, select the option that best
+3. In the rubric below the response, select the option that best
    describes the response.
 #. If applicable, add additional feedback.
 
@@ -668,20 +669,20 @@ Grade Responses
       Flagged content is accessed on the **Staff Grading** page. If
       necessary, course staff can ban a student from peer grading.
 
-   .. image:: ../Images/AdditionalFeedback.gif
+.. image:: ../Images/AdditionalFeedback.png
 
-#. When you are done grading the response, click **Submit**.
+5. When you are done grading the response, click **Submit**.
 
 When your course is running, another response opens automatically after
 you grade the first response, and a message appears at the top of the
 page.
 
-.. image:: ../Images/FetchingNextSubmission.gif
+.. image:: ../Images/FetchingNextSubmission.png
 
 After you've graded all responses for this problem, **No more
 submissions to grade** appears on the page.
 
-.. image:: ../Images/NoMoreSubmissions.gif
+.. image:: ../Images/NoMoreSubmissions.png
 
 Click **Back to problem list** to return to the list of problems. You
 can also wait for a few minutes and click **Re-check for submissions**
@@ -749,14 +750,14 @@ You access your scores for your responses to AI and peer assessment problems thr
 #. From any page in the LMS, click the **Open Ended Panel** tab at the
    top of the page.
 
-   .. image:: ../Images/OpenEndedPanel.gif
+.. image:: ../Images/OpenEndedPanel.png
 
-#. On the **Open Ended Console** page, click **Problems You Have
+2. On the **Open Ended Console** page, click **Problems You Have
    Submitted**.
 
-   .. image:: ../Images/ProblemsYouHaveSubmitted.gif
+.. image:: ../Images/ProblemsYouHaveSubmitted.png
 
-#. On the **Open Ended Problems** page, check the **Status** column to
+3. On the **Open Ended Problems** page, check the **Status** column to
    see whether your responses have been graded.
 #. When grading for a problem has been finished, click the name of a
    problem in the list to see your score for that problem. When you
@@ -769,11 +770,11 @@ graders.
 
 **Graded AI Assessment**
 
-.. image:: ../Images/AI_ScoredResponse.gif
+.. image:: ../Images/AI_ScoredResponse.png
 
 **Graded Peer Assessment**
 
-.. image:: ../Images/Peer_ScoredResponse.gif
+.. image:: ../Images/Peer_ScoredResponse.png
 
 If you want to see the full rubric for either an AI or peer assessment,
 click **Toggle Full Rubric**.
@@ -782,4 +783,4 @@ click **Toggle Full Rubric**.
           problems to see your score, you receive a message that lets you know how
           many problems you still need to grade.
 
-.. image:: ../Images/FeedbackNotAvailable.gif
+.. image:: ../Images/FeedbackNotAvailable.png

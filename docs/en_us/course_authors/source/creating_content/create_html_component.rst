@@ -196,10 +196,12 @@ You can add a link in an HTML component to any file you've uploaded for the cour
 
 #. On the **Files & Uploads** page, copy the **Embed URL** of the file.
 
-  .. image:: Images/HTML_Link_File.png
+
+  .. image:: ../Images/HTML_Link_File.png
    :alt: Image of Files and Uploads page with the URL field circled 
   
   .. note:: You must use the **Embed URL** to link to the file, not the **External URL**.
+
 
 
 2. Select the text that you want to make into the link.
@@ -239,7 +241,7 @@ To add an image, you'll need the URL of the image that you uploaded to the cours
 
 #. On the **Files & Uploads** page, copy the **Embed URL** of the image that you want.
 
-  .. image:: Images/image_link.png
+  .. image:: ../Images/image_link.png
    :alt: Image of the Files & Upload page with the Embed URL for the image circled
 
   .. note:: You must use the **Embed URL** to add the image, not the **External URL**.
@@ -252,7 +254,7 @@ To add an image, you'll need the URL of the image that you uploaded to the cours
 
    Make sure to include both forward slashes (/).
 
-   .. image:: /Images/HTML_Insert-Edit_Image.png
+   .. image:: ../Images/HTML_Insert-Edit_Image.png
     :alt: Image of the Insert/Edit Image dialog box with a link to a file
 
 4. Enter alternative text in the Image Description field. See :ref:`Best Practices for Describing Images` for more information.
@@ -264,6 +266,8 @@ To add an image, you'll need the URL of the image that you uploaded to the cours
 #. Save the HTML component and test the image.
 
 .. note::  When you add the image URL in the format ``/static/FileName.type``, then later reopen the **Insert/Edit Image** dialog box, you see that the URL changes to ``/c4x/edX/Course-name/asset/FileName.type``. This URL is OK and you do not need to change it. In the HTML view, the URL appears as ``/static/FileName.type``.
+
+   ``<p><img src="/static/GreatLakes.png" alt="Map of the Great Lakes" /></p>``
 
 
 

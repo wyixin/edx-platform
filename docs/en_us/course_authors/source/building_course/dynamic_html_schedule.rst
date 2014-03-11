@@ -5,7 +5,7 @@
 Code for Dynamic HTML Schedule
 ===========================================
 
- :: 
+.. code-block:: html
 
 
 	<div class= "syllabus">

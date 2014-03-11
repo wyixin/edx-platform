@@ -166,14 +166,14 @@ Students see the course start date on their dashboards and on the course summary
 
 The following example shows the course start date on the course summary page:
 
-.. image:: Images/about-page-course-start.png
+.. image:: ../Images/about-page-course-start.png
  :alt: An image of the course summary page, with the start date circled.
 
 .. note:: For courses on edX.org_, you must communicate the course start date to your edX Program Manager, to ensure the date is accurate on the course summary page.
 
 In the dashboard, if the course has not yet started, students see the start date as in the following example:
 
-.. image:: Images/dashboard-course-to-start.png
+.. image:: ../Images/dashboard-course-to-start.png
  :alt: An image of a course that has not started in the student dashboard, with the start date circled.
 
 If the course has started, students see the start date as in the following example:
@@ -225,15 +225,16 @@ When your course is completed, students see the course end date on their dashboa
 
 If grades and certificates are not yet issued, or if students enroll in an archived course after it has ended, the course appears in the dashboard as in the following example:
 
-.. image:: Images/dashboard-wrapping-course.png
+.. image:: ../Images/dashboard-wrapping-course.png
  :alt: Image of a course on the student dashboard that has ended, but not been graded
 
 If grades are complete and certificates are issued, students see the course, the end date, and the message as in the following example:
 
-.. image:: Images/dashboard-completed-course.png
+.. image:: ../Images/dashboard-completed-course.png
  :alt: Image of a course on the student dashboard that has ended, but not been graded
 
-.. _`Describe Your Course`:
+
+.. _Describe Your Course:
 
 ************************
 Describe Your Course
@@ -243,7 +244,7 @@ On Edge_, students that you explicitly invite see the description of your course
 
 For example, the course description is circled in the following course summary page:
 
-.. image:: Images/about-page-course-description.png
+.. image:: ../Images/about-page-course-description.png
  :alt: Image of a course summary with the description circled
 
 .. note:: For courses on edX.org_, you must communicate the course description to your edX Program Manager, to ensure the content is accurate on the course summary page.
@@ -260,7 +261,7 @@ For example, the course description is circled in the following course summary p
  
 4. Click **your course summary page** in the text beneath the field to test how the description will appear to students.
 
-.. _`Add a Course Image`:
+.. _Add a Course Image:
 
 ************************
 Add a Course Image
@@ -272,7 +273,7 @@ On Edge_, the image also appears on the course summary page.
 
 In the following example, the course image that was added in Studio is circled in the student dashboard:
 
-.. image:: Images/dashboard-course-image.png
+.. image:: ../Images/dashboard-course-image.png
  :alt: Image of the course image in the student dashboard
 
 On edX.org_, the course image you add in Studio does not appear on the course summary page automatically. You must work directly with your edX Program Manager to set up the course summary page.
@@ -284,7 +285,7 @@ The course image should be a minimum of 660 pixels in width by 240 pixels in hei
 #. To select an image from your computer, click **Upload Course Image**, then follow the prompts to find and upload your image.
 #. View your dashboard to test how the image will appear to students.
 
-.. _`Add a Course Video`:
+.. _Add a Course Video:
 
 *********************************
 Add a Course Introduction Video
@@ -296,7 +297,7 @@ On Edge_, the course introduction video appears on the course summary page that 
 
 In the following example, the course video is circled in the course summary page:
 
-.. image:: Images/about-page-course-video.png
+.. image:: ../Images/about-page-course-video.png
  :alt: Image of the course video in the course summary page
 
 The course video should excite and entice potential students to register, and reveal some of the personality the instructors bring to the course. 
@@ -325,7 +326,7 @@ To add a course introduction video:
 #. In the field below the video box, enter the YouTube video ID (the code you copied in step 1). When you add the code, the video automatically loads in the video box. Studio automatically saves your changes.
 #. View your course summary page to test how the video will appear to students.
 
-.. _`Set Course Requirements`:
+.. _Set Course Requirements:
 
 ************************
 Set Course Requirements
@@ -337,7 +338,7 @@ The estimated Effort per Week appears on the Course Summary page that students s
 #. In the **Hours of Effort per Week** field, enter the number of hours you expect students to work on this course each week.
 #. View your course summary page to test how the video will appear to students.
 
-.. _`Add Files to a Course`:
+.. _Add Files to a Course:
 
 **********************
 Add Files to a Course
@@ -369,7 +370,7 @@ File URLs
 In the Files & Uploads page, each file has has an **Embed URL** and an **External URL**:
 
 
-.. image:: Images/files_uploads_urls.png
+.. image:: ../Images/files_uploads_urls.png
  :alt: Image of the Files and Uploads page, with Embed URL and External URL columns circled
 
 * You use the **Embed URL** to link to the file or image from a component, a course update, or a course handout. 
@@ -433,7 +434,7 @@ To delete a file, click the **x** icon next to the file.  You are prompted to co
 
 .. warning:: If you have links to a file you delete, those links will be broken. Ensure you change those links before deleting the file.
  
-.. _`Add Static Pages`:
+.. _Add Static Pages:
 
 ****************
 Add Static Pages
@@ -477,7 +478,7 @@ You can embed a Google calendar. Paste the embed code for the calendar in the st
 
 You can also create a dynamic HTML calendar. See :ref:`Appendix B`. 
 
-.. _`Add a Course Update`:
+.. _Add a Course Update:
 
 **********************
 Add a Course Update
@@ -500,7 +501,7 @@ To add a course update:
 
 4. Click **Save**.
 
-.. _`Add Course Handouts`:
+.. _Add Course Handouts:
 
 **********************
 Add Course Handouts
@@ -514,7 +515,7 @@ You can add course handouts that are visible to students on the **Course Info** 
 #. Edit the HTML to add links to the files you uploaded. See :ref:`Add a Link in an HTML Component` for more information.
 #. Click **Save**.
 
-.. _`Add Textbooks`:
+.. _Add Textbooks:
 
 ****************
 Add Textbooks
