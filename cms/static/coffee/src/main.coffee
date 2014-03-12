@@ -17,7 +17,7 @@ define ["domReady", "jquery", "underscore.string", "backbone", "gettext",
     $.ajaxSetup
       headers : { 'X-CSRFToken': $.cookie 'csrftoken' }
       dataType: 'json'
-
+# I changed this line!
     $(document).ajaxError (event, jqXHR, ajaxSettings, thrownError) ->
       if ajaxSettings.notifyOnError is false
           return
