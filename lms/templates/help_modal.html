@@ -30,8 +30,8 @@
     </header>
 
 <%
-  discussion_tab = course.tabs.get_discussion() if course and course.tabs else None
-  discussion_link = discussion_tab.link_func(course) if discussion_tab else None
+  discussion_tab = course.tabs.get_discussion() if (course and course.tabs) else None
+  discussion_link = discussion_tab.link_func(course) if (discussion_tab and discussion_tab.can_display(course, True, True)) else None
 %>
 
 % if discussion_link:

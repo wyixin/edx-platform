@@ -645,8 +645,7 @@ def _config_course_advanced_components(request, course_module):
             'open_ended': OPEN_ENDED_COMPONENT_TYPES,
             'notes': NOTE_COMPONENT_TYPES,
         }
-        # Check to see if the user instantiated any notes or open ended
-        # components
+        # Check to see if the user instantiated any notes or open ended components
         for tab_type in tab_component_map.keys():
             component_types = tab_component_map.get(tab_type)
             found_ac_type = False
@@ -829,7 +828,7 @@ def textbooks_list_handler(request, tag=None, package_id=None, branch=None, vers
                 textbook["id"] = tid
                 tids.add(tid)
 
-        if not any(isinstance(tab.type, PDFTextbookTabs) for tab in course.tabs):
+        if not any(tab['type'] == 'pdf_textbooks' for tab in course.tabs):
             course.tabs.append(PDFTextbookTabs())
         course.pdf_textbooks = textbooks
         store.update_item(course, request.user.id)
@@ -846,7 +845,7 @@ def textbooks_list_handler(request, tag=None, package_id=None, branch=None, vers
         existing = course.pdf_textbooks
         existing.append(textbook)
         course.pdf_textbooks = existing
-        if not any(isinstance(tab.type, PDFTextbookTabs) for tab in course.tabs):
+        if not any(tab['type'] == 'pdf_textbooks' for tab in course.tabs):
             course.tabs.append(PDFTextbookTabs())
         store.update_item(course, request.user.id)
         resp = JsonResponse(textbook, status=201)

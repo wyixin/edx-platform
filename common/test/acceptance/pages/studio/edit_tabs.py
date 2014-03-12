@@ -5,7 +5,7 @@ Pages page for a course.
 from .course_page import CoursePage
 
 
-class StaticPagesPage(CoursePage):
+class PagesPage(CoursePage):
     """
     Pages page for a course.
     """

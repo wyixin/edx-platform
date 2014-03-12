@@ -1,7 +1,6 @@
 from django.test import TestCase
 from mock import MagicMock
 from mock import patch
-from collections import namedtuple
 
 import xmodule.tabs as tabs
 
@@ -14,7 +13,7 @@ from courseware.tests.modulestore_config import TEST_DATA_MIXED_MODULESTORE
 from .helpers import LoginEnrollmentTestCase
 
 class TabTestCase(TestCase):
-
+    '''Base class for Tab-related test cases.'''
     def setUp(self):
 
         self.course = MagicMock()
@@ -49,20 +48,50 @@ class TabTestCase(TestCase):
         )
 
         # validate
-        self.assertIsNone(tab.validate(dict_tab))
+        self.assertTrue(tab.validate(dict_tab))
         if invalid_dict_tab:
             self.assertRaises(tabs.InvalidTabsException, tab.validate, invalid_dict_tab)
 
         # return tab for any additional tests
         return tab
 
+
+class TabEqualityTestCase(TestCase):
+    '''Test cases for tab equality - especially for tabs that override the __eq__ method.'''
+
+    def test_courseware_tab_equality(self):
+        tab1 = tabs.CoursewareTab()
+        tab2 = tabs.CoursewareTab()
+        self.assertEqual(tab1, tab1)
+        self.assertEqual(tab1, tab2)
+        self.assertEqual(tab1, {'type': 'courseware'})
+        self.assertEqual(tab1, {'type': 'courseware', 'name': tab1.name})
+        self.assertNotEqual(tab1, {'type': 'courseware', 'name': 'else'})
+        self.assertNotEqual(tab1, {'type': 'else', 'name': tab1.name})
+
+    def test_static_tab_equality(self):
+        tab1 = tabs.StaticTab(name="name1", url_slug="url1")
+        tab2 = tabs.StaticTab(name="name1", url_slug="url1")
+        tab3 = tabs.StaticTab(name="name3", url_slug="url3")
+        self.assertEqual(tab1, tab1)
+        self.assertEqual(tab1, tab2)
+        self.assertNotEqual(tab1, tab3)
+        self.assertEqual(tab1, {'type': 'static_tab', 'name': tab1.name, 'url_slug': tab1.url_slug})
+        self.assertNotEqual(tab1, {'type': 'static_tab'})
+        self.assertNotEqual(tab1, {'type': 'static_tab', 'name': tab1.name})
+        self.assertNotEqual(tab1, {'type': 'else', 'name': tab1.name, 'url_slug': tab1.url_slug})
+        self.assertNotEqual(tab1, {'type': 'static_tab', 'name': 'else', 'url_slug': tab1.url_slug})
+        self.assertNotEqual(tab1, {'type': 'static_tab', 'name': tab1.name, 'url_slug': 'else'})
+
+
 class ProgressTestCase(TabTestCase):
+    '''Test cases for Progress Tab.'''
 
     def test_progress(self):
 
         self.course.hide_progress_tab = False
         self.check_tab(
-            tab_class = tabs.ProgressTab,
+            tab_class=tabs.ProgressTab,
             dict_tab={'name': 'same'},
             expected_link=reverse('progress', args=[self.course.id]),
             expected_active_page_name='progress',
@@ -71,21 +100,23 @@ class ProgressTestCase(TabTestCase):
 
         self.course.hide_progress_tab = True
         self.check_tab(
-            tab_class = tabs.ProgressTab,
+            tab_class=tabs.ProgressTab,
             dict_tab={'name': 'same'},
             expected_link=reverse('progress', args=[self.course.id]),
             expected_active_page_name='progress',
-            can_display=False,
             invalid_dict_tab=None,
+            can_display=False,
         )
 
+
 class WikiTestCase(TabTestCase):
+    '''Test cases for Wiki Tab.'''
 
     @override_settings(WIKI_ENABLED=True)
     def test_wiki_enabled(self):
 
         self.check_tab(
-            tab_class = tabs.WikiTab,
+            tab_class=tabs.WikiTab,
             dict_tab={'name': 'same'},
             expected_link=reverse('course_wiki', args=[self.course.id]),
             expected_active_page_name='wiki',
@@ -96,7 +127,7 @@ class WikiTestCase(TabTestCase):
     def test_wiki_enabled_false(self):
 
         self.check_tab(
-            tab_class = tabs.WikiTab,
+            tab_class=tabs.WikiTab,
             dict_tab={'name': 'same'},
             expected_link=reverse('course_wiki', args=[self.course.id]),
             expected_active_page_name='wiki',
@@ -105,11 +136,12 @@ class WikiTestCase(TabTestCase):
 
 
 class ExternalLinkTestCase(TabTestCase):
+    '''Test cases for External Link Tab.'''
 
     def test_external_link(self):
 
         self.check_tab(
-            tab_class = tabs.ExternalLinkTab,
+            tab_class=tabs.ExternalLinkTab,
             dict_tab={'name': 'same', 'link': 'blink'},
             expected_link='blink',
             expected_active_page_name=None,
@@ -123,7 +155,7 @@ class StaticTabTestCase(TabTestCase):
         url_slug = 'schmug'
 
         self.check_tab(
-            tab_class = tabs.StaticTab,
+            tab_class=tabs.StaticTab,
             dict_tab={'name': 'same', 'url_slug': url_slug},
             expected_link=reverse('static_tab', args=[self.course.id, url_slug]),
             expected_active_page_name='static_tab_schmug',
@@ -175,16 +207,17 @@ class StaticTabDateTestCase(LoginEnrollmentTestCase, ModuleStoreTestCase):
 
 
 class TextbooksTestCase(TabTestCase):
+    '''Test cases for Textbook Tab.'''
 
     def setUp(self):
         super(TextbooksTestCase, self).setUp()
 
         self.dict_tab = MagicMock()
-        A = MagicMock()
-        T = MagicMock()
-        A.title = 'Book1: Algebra'
-        T.title = 'Book2: Topology'
-        self.course.textbooks = [A, T]
+        textbook_a = MagicMock()
+        textbook_t = MagicMock()
+        textbook_a.title = 'Book1: Algebra'
+        textbook_t.title = 'Book2: Topology'
+        self.course.textbooks = [textbook_a, textbook_t]
 
     @override_settings(FEATURES={'ENABLE_TEXTBOOK': True})
     def test_textbooks1(self):
@@ -198,7 +231,7 @@ class TextbooksTestCase(TabTestCase):
             self.assertEqual(book.active_page_name, 'textbook/{0}'.format(i))
             self.assertNotEquals(book.active_page_name, 'nope')
             self.assertTrue(book.name.startswith('Book{0}:'.format(i+1)))
-            i=i+1
+            i = i + 1
 
     @override_settings(FEATURES={'ENABLE_TEXTBOOK': False})
     def test_textbooks0(self):
@@ -208,6 +241,7 @@ class TextbooksTestCase(TabTestCase):
 
 
 class KeyCheckerTestCase(TestCase):
+    '''Test cases for KeyChecker class'''
 
     def setUp(self):
 
@@ -217,12 +251,13 @@ class KeyCheckerTestCase(TestCase):
 
     def test_key_checker(self):
 
-        self.assertIsNone(tabs.key_checker(self.valid_keys)(self.dict_value))
+        self.assertTrue(tabs.key_checker(self.valid_keys)(self.dict_value, raise_error=False))
         self.assertRaises(tabs.InvalidTabsException,
                           tabs.key_checker(self.invalid_keys), self.dict_value)
 
 
 class NeedNameTestCase(TestCase):
+    '''Test cases for NeedName validator'''
 
     def setUp(self):
 
@@ -232,17 +267,18 @@ class NeedNameTestCase(TestCase):
         self.invalid_dict = {'a': 1, 'b': 2}
 
     def test_need_name(self):
-        self.assertIsNone(tabs.need_name(self.valid_dict1))
-        self.assertIsNone(tabs.need_name(self.valid_dict2))
-        self.assertIsNone(tabs.need_name(self.valid_dict3))
+        self.assertTrue(tabs.need_name(self.valid_dict1))
+        self.assertTrue(tabs.need_name(self.valid_dict2))
+        self.assertTrue(tabs.need_name(self.valid_dict3))
         self.assertRaises(tabs.InvalidTabsException, tabs.need_name, self.invalid_dict)
 
 
 class ValidateTabsTestCase(TestCase):
+    '''Test cases for validating tabs.'''
 
     def setUp(self):
 
-        self.courses = [MagicMock() for i in range(0, 7)]
+        self.courses = [MagicMock() for i in range(0, 7)]  # pylint: disable=unused-variable
 
         # invalid tabs
         self.courses[0].tabs = [{'type': 'courseware'}, {'type': 'fax'}]
@@ -272,7 +308,7 @@ class ValidateTabsTestCase(TestCase):
         self.courses[6].tabs = [
             {'type': 'courseware'},
             {'type': 'course_info', 'name': 'alice'},
-            {'type': 'external_discussion', 'name': 'alice', 'link':'blink'}
+            {'type': 'external_discussion', 'name': 'alice', 'link': 'blink'}
         ]
 
     def test_validate_tabs(self):
@@ -287,25 +323,26 @@ class ValidateTabsTestCase(TestCase):
 
 @override_settings(MODULESTORE=TEST_DATA_MIXED_MODULESTORE)
 class DiscussionLinkTestCase(ModuleStoreTestCase):
+    '''Test cases for discussion link tab.'''
 
     def setUp(self):
-        self.tabs_with_discussion = create_tab_list(
-        [
-            {'type': 'courseware'},
-            {'type': 'course_info', 'name': 'foo'},
-            {'type': 'discussion', 'name': 'foo'},
-            {'type': 'textbooks'},
-        ])
-        self.tabs_without_discussion = create_tab_list(
-        [
-            {'type': 'courseware'},
-            {'type': 'course_info', 'name': 'foo'},
-            {'type': 'textbooks'},
-        ])
+        self.tabs_with_discussion = [
+            tabs.CoursewareTab(),
+            tabs.CourseInfoTab(),
+            tabs.DiscussionTab(),
+            tabs.TextbookTabs(),
+        ]
+        self.tabs_without_discussion = [
+            tabs.CoursewareTab(),
+            tabs.CourseInfoTab(),
+            tabs.TextbookTabs(),
+        ]
 
     @staticmethod
     def _patch_reverse(course):
+        '''Allows tests to override the reverse function'''
         def patched_reverse(viewname, args):
+            '''Function to override the reverse function'''
             if viewname == "django_comment_client.forum.views.forum_form_discussion" and args == [course.id]:
                 return "default_discussion_link"
             else:
@@ -316,7 +353,8 @@ class DiscussionLinkTestCase(ModuleStoreTestCase):
     def test_explicit_discussion_link(self):
         """Test that setting discussion_link overrides everything else"""
         course = CourseFactory.create(discussion_link="other_discussion_link", tabs=self.tabs_with_discussion)
-        self.assertEqual(tabs.CourseTabList.get_discussion(course).link_func(course), "other_discussion_link")
+        discussion = tabs.CourseTabList.get_discussion(course)
+        self.assertTrue(discussion is not None and discussion.link_func(course) == "other_discussion_link")
 
     @patch.dict("django.conf.settings.FEATURES", {"ENABLE_DISCUSSION_SERVICE": False})
     def test_discussions_disabled(self):
@@ -324,32 +362,30 @@ class DiscussionLinkTestCase(ModuleStoreTestCase):
         for i, t in enumerate([[], self.tabs_with_discussion, self.tabs_without_discussion]):
             course = CourseFactory.create(tabs=t, number=str(i))
             discussion = tabs.CourseTabList.get_discussion(course)
-            self.assertTrue(discussion is None or discussion.link_func(course) is None)
+            self.assertTrue(
+                discussion is None or
+                (not discussion.can_display(course, True, True)) or
+                (discussion.link_func(course) is None))
 
     @patch.dict("django.conf.settings.FEATURES", {"ENABLE_DISCUSSION_SERVICE": True})
     def test_no_tabs(self):
         """Test a course without tabs configured"""
-        course = CourseFactory.create(tabs=[])
+        course = CourseFactory.create()
+        discussion = tabs.CourseTabList.get_discussion(course)
         with self._patch_reverse(course):
-            self.assertEqual(tabs.CourseTabList.get_discussion(course).link_func(course), "default_discussion_link")
+            self.assertTrue(discussion is not None and discussion.link_func(course) == "default_discussion_link")
 
     @patch.dict("django.conf.settings.FEATURES", {"ENABLE_DISCUSSION_SERVICE": True})
     def test_tabs_with_discussion(self):
         """Test a course with a discussion tab configured"""
         course = CourseFactory.create(tabs=self.tabs_with_discussion)
+        discussion = tabs.CourseTabList.get_discussion(course)
         with self._patch_reverse(course):
-            self.assertEqual(tabs.CourseTabList.get_discussion(course).link_func(course), "default_discussion_link")
+            self.assertTrue(discussion is not None and discussion.link_func(course) == "default_discussion_link")
 
     @patch.dict("django.conf.settings.FEATURES", {"ENABLE_DISCUSSION_SERVICE": True})
     def test_tabs_without_discussion(self):
         """Test a course with tabs configured but without a discussion tab"""
         course = CourseFactory.create(tabs=self.tabs_without_discussion)
         discussion = tabs.CourseTabList.get_discussion(course)
-        self.assertTrue(discussion is None or discussion.link_func(course) is None)
-
-
-def create_tab_list(dict_tabs):
-#    tab_list = tabs.CourseTabList()
-#    tab_list.from_json(dict_tabs)
-#    return tab_list
-    return dict_tabs
+        self.assertTrue(discussion is None or (discussion.link_func(course) is None))

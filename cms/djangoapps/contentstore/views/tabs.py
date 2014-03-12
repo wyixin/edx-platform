@@ -112,7 +112,7 @@ def tabs_handler(request, tag=None, package_id=None, branch=None, version_guid=N
             else:
                 built_in_tabs.append(tab)
 
-        # create a list of xCode components for the list of static tabs
+        # create a list of components for each static tab
         components = [
             loc_mapper().translate_location(
                 course_item.location.course_id, static_tab.location, False, True
