@@ -109,6 +109,23 @@ class CourseTab(object):  # pylint: disable=incomplete-protocol
     # reason we implement the latter two is to enable callers to continue to use the CourseTab object with dict-type
     # accessors.
 
+    def to_json(self):
+        '''
+        Serializes the necessary members of the CourseTab object.
+        This method is overridden by subclasses that have more members to serialize.
+        '''
+        return {'type': self.type(), 'name': self.name}
+
+    def __eq__(self, other):
+        return \
+            type(self) == type(other) and \
+            self.type() == other.type() and \
+            self.name == other.name and \
+            self.active_page_name == other.active_page_name
+
+    def __ne__(self, other):
+        return not self == other
+
     @classmethod
     def validate(cls, tab):
         """
@@ -153,13 +170,6 @@ class CourseTab(object):  # pylint: disable=incomplete-protocol
         tab_class = sub_class_types[tab['type']]
         tab_class.validate(tab)
         return tab_class(tab=tab)
-
-    def to_json(self):
-        '''
-        Serializes the necessary members of the CourseTab object.
-        This method is overridden by subclasses that have more members to serialize.
-        '''
-        return {'type': self.type(), 'name': self.name}
 
 
 class AuthenticatedCourseTab(CourseTab):  # pylint: disable=incomplete-protocol
@@ -227,12 +237,16 @@ class ProgressTab(AuthenticatedCourseTab):  # pylint: disable=incomplete-protoco
     def __init__(self, tab=None):
         super(ProgressTab, self).__init__(
             name=tab['name'] if tab else _('Progress'),
-            active_page_name=type,
+            active_page_name=self.type(),
             link_func=link_reverse_func(self.type()),
         )
 
     def can_display(self, course, is_user_authenticated, is_user_staff):
         return not course.hide_progress_tab
+
+    @classmethod
+    def validate(cls, tab):
+        need_name(tab)
 
 
 class WikiTab(CourseTab):  # pylint: disable=incomplete-protocol
@@ -308,6 +322,11 @@ class LinkTab(CourseTab):  # pylint: disable=incomplete-protocol
         else:
             super(LinkTab, self).__setitem__(key, value)
 
+    def to_json(self):
+        return {'type': self.type(), 'name': self.name, 'link': self.link_value}
+
+    def __eq__(self, other):
+        return super(LinkTab, self).__eq__(other) and self.link_value == other.link_value
 
 class ExternalDiscussionTab(LinkTab):  # pylint: disable=incomplete-protocol
     """
@@ -330,9 +349,6 @@ class ExternalDiscussionTab(LinkTab):  # pylint: disable=incomplete-protocol
     def validate(cls, tab):
         key_checker(['link'])(tab)
 
-    def to_json(self):
-        return {'type': self.type(), 'name': self.name, 'link': self.link_value}
-
 
 class ExternalLinkTab(LinkTab):  # pylint: disable=incomplete-protocol
     '''
@@ -344,7 +360,7 @@ class ExternalLinkTab(LinkTab):  # pylint: disable=incomplete-protocol
     def __init__(self, tab):
         super(ExternalLinkTab, self).__init__(
             name=tab['name'],
-            active_page_name='',  # External links are never active.
+            active_page_name=None,  # External links are never active.
             link_value=tab['link'],
         )
 
@@ -399,6 +415,9 @@ class StaticTab(CourseTab):  # pylint: disable=incomplete-protocol
 
     def to_json(self):
         return {'type': self.type(), 'name': self.name, 'url_slug': self.url_slug}
+
+    def __eq__(self, other):
+        return super(StaticTab, self).__eq__(other) and self.url_slug == other.url_slug
 
 
 class SingleTextbookTab(CourseTab):  # pylint: disable=incomplete-protocol
@@ -574,6 +593,9 @@ class NotesTab(AuthenticatedCourseTab):  # pylint: disable=incomplete-protocol
             link_func=link_reverse_func(self.type()),
         )
 
+    @classmethod
+    def validate(cls, tab):
+        need_name(tab)
 
 class InstructorTab(StaffTab):  # pylint: disable=incomplete-protocol
     '''
