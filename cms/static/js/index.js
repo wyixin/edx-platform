@@ -19,11 +19,12 @@ require(["domReady", "jquery", "underscore", "js/utils/cancel_on_escape"],
                 return;
             }
 
-            var $newCourseForm = $(this).closest('#create-course-form');
+            var $newCourseForm = $(this).closest('#create-course-form'); // I touched this line
             var display_name = $newCourseForm.find('.new-course-name').val();
             var org = $newCourseForm.find('.new-course-org').val();
             var number = $newCourseForm.find('.new-course-number').val();
             var run = $newCourseForm.find('.new-course-run').val();
+            var foo = "hello"  // I added this line too
 
             analytics.track('Created a Course', {
                 'org': org,
