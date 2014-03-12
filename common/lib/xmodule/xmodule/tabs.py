@@ -37,6 +37,9 @@ class CourseTab(object):  # pylint: disable=incomplete-protocol
         # function that computes the link for the tab, given the course as an input parameter
         self.link_func = link_func
 
+        # indicates whether the tab can be hidden for a particular course
+        self.is_hideable = False
+
     @abstractmethod
     def type(self):
         '''
@@ -117,6 +120,9 @@ class CourseTab(object):  # pylint: disable=incomplete-protocol
         return {'type': self.type(), 'name': self.name}
 
     def __eq__(self, other):
+        '''
+        Overrides the equal operator to check equality of member variables rather than the object's address.
+        '''
         return \
             type(self) == type(other) and \
             self.type() == other.type() and \
@@ -124,6 +130,9 @@ class CourseTab(object):  # pylint: disable=incomplete-protocol
             self.active_page_name == other.active_page_name
 
     def __ne__(self, other):
+        '''
+        Overrides the not equal operator as a partner to the equal operator.
+        '''
         return not self == other
 
     @classmethod
@@ -258,6 +267,9 @@ class WikiTab(CourseTab):  # pylint: disable=incomplete-protocol
         return 'wiki'
 
     def __init__(self, tab=None):
+        # LATER - enable the following flag to enable hiding of the Wiki page
+        # self.is_hideable = True
+
         super(WikiTab, self).__init__(
             name=tab['name'] if tab else _('Wiki'),
             active_page_name=self.type(),
