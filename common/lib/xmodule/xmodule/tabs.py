@@ -10,8 +10,8 @@ from xblock.fields import List
 from django.conf import settings
 from django.core.urlresolvers import reverse
 
-# We only need to scrape strings for i18n in this file, since ugettext is called on them in the template:
-# https://github.com/edx/edx-platform/blob/master/lms/templates/courseware/course_navigation.html#L29
+# We should only scrape strings for i18n in this file, since the target language is known only when
+# they are rendered in the template.  So ugettext gets called in the template.
 _ = lambda text: text
 
 

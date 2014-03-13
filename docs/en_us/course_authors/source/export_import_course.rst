@@ -26,7 +26,7 @@ the following course data:
 * Course content (all Sections, Subsections, and Units)
 * Course structure
 * Individual problems
-* Pages
+* Static pages
 * Course assets
 * Course settings
  

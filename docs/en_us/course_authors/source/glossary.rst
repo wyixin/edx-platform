@@ -466,13 +466,13 @@ S
 
 
 
-.. _Pages_g:
+.. _Static Pages_g:
  
-**Pages**
+**Static Pages**
 
-  Pages that supplement the courseware for a course. Each page appears in your course's navigation bar.
+  Pages that supplement the courseware for a course. Each static page appears in your course's navigation bar. 
 
-  See :ref:`Add Pages` for more information.
+  See :ref:`Add Static Pages` for more information.
 
 
 
