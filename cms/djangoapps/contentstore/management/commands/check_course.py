@@ -2,6 +2,7 @@ from django.core.management.base import BaseCommand, CommandError
 from xmodule.modulestore.django import modulestore
 from xmodule.modulestore.xml_importer import check_module_metadata_editability
 from xmodule.course_module import CourseDescriptor
+from xmodule.modulestore.keys import CourseKey
 
 
 class Command(BaseCommand):
@@ -11,11 +12,11 @@ class Command(BaseCommand):
         if len(args) != 1:
             raise CommandError("check_course requires one argument: <course_id>")
 
-        course_id = CourseKey.from_string(args[0])
+        course_key = CourseKey.from_string(args[0])
 
         store = modulestore()
 
-        course = store.get_course(course_id, depth=3)
+        course = store.get_course(course_key, depth=3)
 
         err_cnt = 0
 
@@ -54,7 +55,7 @@ class Command(BaseCommand):
 
         # now query all discussion items via get_items() and compare with the tree-traversal
         queried_discussion_items = store.get_items(
-            course_key=CourseKey.from_string(course.id),
+            course_key=course_key,
             kwargs={'category': 'discussion'}
         )
 

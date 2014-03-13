@@ -1,6 +1,7 @@
 import re
 from xmodule.contentstore.content import StaticContent
 from xmodule.modulestore import Location
+from xmodule.modulestore.keys import CourseKey
 
 import logging
 
@@ -125,7 +126,7 @@ def clone_course(modulestore, contentstore, source_course_id, dest_course_id, de
         raise Exception("An empty course at {0} must have already been created. Aborting...".format(dest_course_id))
 
     # verify that the dest_location really is an empty course, which means only one with an optional 'overview'
-    dest_modules = modulestore.get_items(dest_course_id)
+    dest_modules = modulestore.get_items(CourseKey.from_string(dest_course_id))
 
     basically_empty = True
     for module in dest_modules:
@@ -145,10 +146,10 @@ def clone_course(modulestore, contentstore, source_course_id, dest_course_id, de
 
     # Get all modules under this namespace which is (tag, org, course) tuple
 
-    modules = modulestore.get_items(source_course_id, qualifiers={'version': None})
+    modules = modulestore.get_items(CourseKey.from_string(source_course_id), kwargs={'version': None})
     _clone_modules(modulestore, modules, source_course_id, dest_course_id)
 
-    modules = modulestore.get_items(source_course_id, qualifiers={'version': 'draft'})
+    modules = modulestore.get_items(CourseKey.from_string(source_course_id), kwargs={'version': 'draft'})
     _clone_modules(modulestore, modules, source_course_id, dest_course_id)
 
     # now iterate through all of the assets and clone them

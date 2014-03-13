@@ -31,6 +31,7 @@ from xblock.exceptions import InvalidScopeError
 from xblock.fields import Scope, ScopeIds
 
 from xmodule.modulestore import ModuleStoreWriteBase, Location, MONGO_MODULESTORE_TYPE
+from xmodule.modulestore.keys import CourseKey
 from xmodule.modulestore.exceptions import ItemNotFoundError
 from xmodule.modulestore.inheritance import own_metadata, InheritanceMixin, inherit_metadata, InheritanceKeyValueStore
 from xmodule.modulestore.xml import LocationReader
@@ -534,7 +535,7 @@ class MongoModuleStore(ModuleStoreWriteBase):
         return [
             course
             for course
-            in self.get_items(course_filter)
+            in self.get_items(CourseKey.from_string(course.id))
             if not (
                 course.location.org == 'edx' and
                 course.location.course == 'templates'
