@@ -127,7 +127,7 @@ When you create a new unit, a page opens for that unit. On the unit page, you ca
 
 - Enter the unit name that you want in the **Display Name** field. Note that students do not see the unit name.
 - Create components in the unit.
-- Change the visibility of the unit. By default, the unit visibility is set to **Private**, so students will not be able to see the unit.Unless you want students to see the unit immediately, leave this setting as-is. For more information, see :ref:`Public and Private Units`.
+- Change the visibility of the unit. By default, the unit visibility is set to **Private**, so students will not be able to see the unit. Unless you want students to see the unit immediately, leave this setting as-is. For more information, see :ref:`Public and Private Units`.
 - Preview a draft of the unit.
 - If a unit has been published, view the live version of the unit.
 
@@ -317,10 +317,13 @@ The Student View of Nested Components
 
 For students, all parent and child components are displayed on the unit page. The following example shows the student view of the unit described above:
 
-TO REPLACE
+TO REPLACE WHEN WORKING IN LMS
 
 .. image:: Images/nested_components_student_view.png
  :alt: Image of the student's view of nested components
+
+.. note:: The visibility of nested components depends on the visibility of the parent unit. The parent unit must be public for students to see nested components. For more information, see :ref:`Visibility of Components Contained by Other Components`.
+
 
 
 .. _Reorganize Your Course:

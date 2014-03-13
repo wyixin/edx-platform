@@ -44,7 +44,7 @@ You can change the group selection to see the different video that a different g
 .. image:: Images/a-b-test-lms-group-2.png
  :alt: Image of a unit page with Group 2 selected
 
- .. note:: The example course content in this chapter use A/B test terminology to make the functionality clear. Typically, you do not want to use terminology in course content that would make students aware of the experiment.
+.. note:: The example course content in this chapter use A/B test terminology to make the functionality clear. Typically, you do not want to use terminology in course content that would make students aware of the experiment.
 
 .. _The Studio Outline View of A/B Tests:
 
@@ -92,8 +92,8 @@ You reference an A/B test in the file for the subsection in the ``sequential`` d
 .. code-block:: xml
 
  .....
- <vertical url_name="name for the unit that contains the A/B test">
-  <split_test url_name="name of A/B test file"/>
+ <vertical url_name="name for the unit that contains the A/B test" display_name="A/B Test Unit">
+  <split_test url_name="name of A/B test file in the split_test folder"/>
  </vertical>
  .....
 

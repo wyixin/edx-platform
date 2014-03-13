@@ -99,11 +99,6 @@ To set the release date for a subsection:
 #. Locate the **Subsection Settings** box in the top right corner.
 #. Enter the release date in MM/DD/YYYY format, and the UTC time.
 
-
-================================================
-Synch the Release Date for a Subsection
-================================================
-
 You or other course staff could inadvertantly set the release date for a subsection 
 earlier than the release date for the containing section. In this situation, the subsection is 
 not released until the section is released.
@@ -124,16 +119,32 @@ Public and Private Units
 
 Units are released at the release date of the subsection they are in.
 
-In addition, unites have a **Visibility** setting that you can set to **Public** or
+In addition, units have a **Visibility** setting that you can set to **Public** or
 **Private**. 
 
 When you create a unit, it is Private by default. 
-A Private unit is never visible to students, even if it is contained by a subsection that has been released.
+Components in a Private unit are never visible to students, even if the unit is contained by a subsection that has been released.
 
-When you change the visibility setting of a unit from Private to Public, you publish the unit and its contents. 
-You must set the Visibility to Public for students to be able to see the unit.
+When you change the visibility setting of a unit from Private to Public, you publish the unit and its components. 
+You must set the Visibility to Public for students to be able to see the components in the unit.
 
 Course staff cannot see Private units in the LMS.
+
+.. _Visibility of Components Contained by Other Components:
+
+================================================================
+Visibility of Components Contained by Other Components
+================================================================
+
+See :ref:`Nested Components` for more information.
+
+The visibility of components contained by other components is handled in the same way as all unit content. If the unit is Public and the section and subsection are published, students can view nested components. If the unit is Private, or if the section or subsection is not yet published, students cannot see nested components. 
+
+When you view child components in Studio, the read-only page indicates that the publishing status of those components depends on the unit:
+
+.. image:: Images/container_pub_status.png
+ :alt: Image of the parent component page with the publishing status message highlighted.
+
 
 
 .. _Modifying Public Units:
