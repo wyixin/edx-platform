@@ -55,7 +55,7 @@ class Command(BaseCommand):
         # now query all discussion items via get_items() and compare with the tree-traversal
         queried_discussion_items = store.get_items(
             course_id=course.id,
-            qualifiers={'category': 'discussion'}
+            kwargs={'category': 'discussion'}
         )
 
         for item in queried_discussion_items:
