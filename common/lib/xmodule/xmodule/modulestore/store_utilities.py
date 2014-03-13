@@ -146,10 +146,10 @@ def clone_course(modulestore, contentstore, source_course_id, dest_course_id, de
 
     # Get all modules under this namespace which is (tag, org, course) tuple
 
-    modules = modulestore.get_items(CourseKey.from_string(source_course_id), kwargs={'version': None})
+    modules = modulestore.get_items(CourseKey.from_string(source_course_id), revision=None)
     _clone_modules(modulestore, modules, source_course_id, dest_course_id)
 
-    modules = modulestore.get_items(CourseKey.from_string(source_course_id), kwargs={'version': 'draft'})
+    modules = modulestore.get_items(CourseKey.from_string(source_course_id), revision='draft')
     _clone_modules(modulestore, modules, source_course_id, dest_course_id)
 
     # now iterate through all of the assets and clone them
@@ -231,7 +231,7 @@ def delete_course(modulestore, contentstore, source_location, commit=False):
     _delete_modules_except_course(modulestore, modules, source_location, commit)
 
     # then delete all draft course modules
-    modules = module.store.get_items(CourseKey.from_string(source_location.course_id), kwargs={'revision': 'draft'})
+    modules = module.store.get_items(CourseKey.from_string(source_location.course_id), revision='draft')
     _delete_modules_except_course(modulestore, modules, source_location, commit)
 
     # finally delete the top-level course module itself

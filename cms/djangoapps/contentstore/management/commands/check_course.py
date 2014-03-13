@@ -16,7 +16,7 @@ class Command(BaseCommand):
 
         store = modulestore()
 
-        course = store.get_course(course_key, depth=3)
+        course = store.get_course(course_key)
 
         err_cnt = 0
 
@@ -54,10 +54,7 @@ class Command(BaseCommand):
         discussion_items = _get_discussion_items(course)
 
         # now query all discussion items via get_items() and compare with the tree-traversal
-        queried_discussion_items = store.get_items(
-            course_key=course_key,
-            kwargs={'category': 'discussion'}
-        )
+        queried_discussion_items = store.get_items(course_key=course_key, category='discussion',)
 
         for item in queried_discussion_items:
             if item.location.url() not in discussion_items:

@@ -121,14 +121,14 @@ class ContentStoreToyCourseTest(ModuleStoreTestCase):
         import_from_xml(store, 'common/test/data/', ['simple'])
 
         course_id = 'edX/simple/2012_Fall'
-        course = store.get_item(CourseKey.from_string(course_id), kwargs={'tag': 'i4x', 'category': 'course', 'revision': None,})
+        course = store.get_item(CourseKey.from_string(course_id), category='course', revision=None,)
 
         course.advanced_modules = component_types
 
         store.update_item(course, self.user.id)
 
         # just pick one vertical
-        descriptor = store.get_items(CourseKey.from_string(course.id), kwargs={'category': 'vertical',})
+        descriptor = store.get_items(CourseKey.from_string(course.id), category='vertical',)
         locator = loc_mapper().translate_location(course.location.course_id, descriptor.location, True, True)
         resp = self.client.get_html(locator.url_reverse('unit'))
         self.assertEqual(resp.status_code, 200)

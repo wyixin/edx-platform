@@ -741,10 +741,7 @@ def perform_xlint(
         )
 
         # check for a presence of a course marketing video
-        if not module_store.get_items(CourseKey.from_string(course_id), kwargs={
-            'category': 'about',
-            'name': 'video'
-        }):
+        if not module_store.get_items(CourseKey.from_string(course_id), category='about', name='video'):
             print(
                 "WARN: Missing course marketing video. It is recommended "
                 "that every course have a marketing video."

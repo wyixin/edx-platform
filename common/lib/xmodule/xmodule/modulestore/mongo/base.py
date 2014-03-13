@@ -778,7 +778,7 @@ class MongoModuleStore(ModuleStoreWriteBase):
         # to assume there's only one item in this query even though we are not specifying a name
         from nose.tools import set_trace; set_trace()
         course_search_location = Location('i4x', location.org, location.course, 'course', None)
-        courses = self.get_items(course_search_location, depth=depth)
+        courses = self.get_items(CourseKey.from_string(course_search_location.course_id))
 
         # make sure we found exactly one match on this above course search
         found_cnt = len(courses)
