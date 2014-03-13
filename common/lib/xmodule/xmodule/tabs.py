@@ -719,8 +719,9 @@ class CourseTabList(List):
             raise InvalidTabsException(
                 "Expected second tab to have type 'course_info'.  tabs: '{0}'".format(tabs))
 
-        cls._validate_num_tabs_of_type(tabs, CoursewareTab.type, 1)
-        cls._validate_num_tabs_of_type(tabs, CourseInfoTab.type, 1)
+        # the following tabs should appear only once
+        for tab_type in [CoursewareTab.type, CourseInfoTab.type, NotesTab.type]:
+            cls._validate_num_tabs_of_type(tabs, tab_type, 1)
 
     @staticmethod
     def _validate_num_tabs_of_type(tabs, tab_type, max_num):
