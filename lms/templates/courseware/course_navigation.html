@@ -22,7 +22,7 @@ def url_class(is_active):
   <div class="inner-wrapper">
     <ol class="course-tabs">
       % for tab in CourseTabList.iterate_displayable(course, user.is_authenticated(), has_access(user, course, 'staff')):
-        <% tab_is_active = tab.active_page_name == active_page %>
+        <% tab_is_active = (tab.tab_id == active_page) %>
         <% tab_image = image_for_tab(tab, user, course) %>
         % if waffle.flag_is_active(request, 'visual_treatment'):
           <li class="${"prominent" if tab.name in ("Courseware", "Course Content") else ""}">

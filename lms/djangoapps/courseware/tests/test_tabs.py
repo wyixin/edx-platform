@@ -22,8 +22,8 @@ class TabTestCase(TestCase):
     def check_tab(
             self, tab_class, dict_tab,
             expected_link,
-            expected_active_page_name,
-            incorrect_active_page_name='nope',
+            expected_tab_id,
+            incorrect_tab_id='nope',
             expected_name='same',
             invalid_dict_tab={'none': 'wrong'},
             can_display=True
@@ -38,8 +38,8 @@ class TabTestCase(TestCase):
         self.assertEqual(tab.link_func(self.course), expected_link)
 
         # active page name
-        self.assertTrue(tab.active_page_name == expected_active_page_name)
-        self.assertFalse(tab.active_page_name == incorrect_active_page_name)
+        self.assertTrue(tab.tab_id == expected_tab_id)
+        self.assertFalse(tab.tab_id == incorrect_tab_id)
 
         # can display
         self.assertEqual(
@@ -94,7 +94,7 @@ class ProgressTestCase(TabTestCase):
             tab_class=tabs.ProgressTab,
             dict_tab={'name': 'same'},
             expected_link=reverse('progress', args=[self.course.id]),
-            expected_active_page_name='progress',
+            expected_tab_id='progress',
             invalid_dict_tab=None,
         )
 
@@ -103,7 +103,7 @@ class ProgressTestCase(TabTestCase):
             tab_class=tabs.ProgressTab,
             dict_tab={'name': 'same'},
             expected_link=reverse('progress', args=[self.course.id]),
-            expected_active_page_name='progress',
+            expected_tab_id='progress',
             invalid_dict_tab=None,
             can_display=False,
         )
@@ -119,7 +119,7 @@ class WikiTestCase(TabTestCase):
             tab_class=tabs.WikiTab,
             dict_tab={'name': 'same'},
             expected_link=reverse('course_wiki', args=[self.course.id]),
-            expected_active_page_name='wiki',
+            expected_tab_id='wiki',
             can_display=True
         )
 
@@ -130,7 +130,7 @@ class WikiTestCase(TabTestCase):
             tab_class=tabs.WikiTab,
             dict_tab={'name': 'same'},
             expected_link=reverse('course_wiki', args=[self.course.id]),
-            expected_active_page_name='wiki',
+            expected_tab_id='wiki',
             can_display=False
         )
 
@@ -144,7 +144,7 @@ class ExternalLinkTestCase(TabTestCase):
             tab_class=tabs.ExternalLinkTab,
             dict_tab={'name': 'same', 'link': 'blink'},
             expected_link='blink',
-            expected_active_page_name=None,
+            expected_tab_id=None,
             can_display=True
         )
 
@@ -158,8 +158,8 @@ class StaticTabTestCase(TabTestCase):
             tab_class=tabs.StaticTab,
             dict_tab={'name': 'same', 'url_slug': url_slug},
             expected_link=reverse('static_tab', args=[self.course.id, url_slug]),
-            expected_active_page_name='static_tab_schmug',
-            incorrect_active_page_name='static_tab_schlug',
+            expected_tab_id='static_tab_schmug',
+            incorrect_tab_id='static_tab_schlug',
             can_display=True
         )
 
@@ -228,8 +228,8 @@ class TextbooksTestCase(TabTestCase):
         for book in tab.books(self.course):
             expected_link = reverse('book', args=[self.course.id, i])
             self.assertEqual(book.link_func(self.course), expected_link)
-            self.assertEqual(book.active_page_name, 'textbook/{0}'.format(i))
-            self.assertNotEquals(book.active_page_name, 'nope')
+            self.assertEqual(book.tab_id, 'textbook/{0}'.format(i))
+            self.assertNotEquals(book.tab_id, 'nope')
             self.assertTrue(book.name.startswith('Book{0}:'.format(i+1)))
             i = i + 1
 

@@ -29,7 +29,7 @@ class CourseTab(object):  # pylint: disable=incomplete-protocol
     # subclass, shared by all instances of the subclass.
     type = ''
 
-    def __init__(self, name, active_page_name, link_func):
+    def __init__(self, name, tab_id, link_func):
         '''
         Initializes class members with values passed in by subclasses.
         '''
@@ -37,8 +37,9 @@ class CourseTab(object):  # pylint: disable=incomplete-protocol
         # name of the tab
         self.name = name
 
-        # used by UI layers to display which tab is active
-        self.active_page_name = active_page_name
+        # Intended to be a unique id for this tab, although it is not enforced within this module
+        # at this time.  It is currently used by the UI to determine which page is active.
+        self.tab_id = tab_id
 
         # function that computes the link for the tab, given the course as an input parameter
         self.link_func = link_func
@@ -75,8 +76,8 @@ class CourseTab(object):  # pylint: disable=incomplete-protocol
             return self.name
         elif key == 'type':
             return self.type
-        elif key == 'active_page_name':
-            return self.active_page_name
+        elif key == 'tab_id':
+            return self.tab_id
         else:
             return default
 
@@ -100,8 +101,8 @@ class CourseTab(object):  # pylint: disable=incomplete-protocol
         '''
         if key == 'name':
             self.name = value
-        elif key == 'active_page_name':
-            self.active_page_name = value
+        elif key == 'tab_id':
+            self.tab_id = value
         else:
             raise KeyError()
 
@@ -128,7 +129,7 @@ class CourseTab(object):  # pylint: disable=incomplete-protocol
             return \
                 self.type == other.type and \
                 self.name == other.name and \
-                self.active_page_name == other.active_page_name
+                self.tab_id == other.tab_id
         else:
             # allow tabs without names; if a name is required, it will be checked in the validator
             return \
@@ -215,7 +216,7 @@ class CoursewareTab(CourseTab):
         # Translators: 'Courseware' refers to the tab in the courseware that leads to the content of a course
         super(CoursewareTab, self).__init__(
             name=_('Courseware'),
-            active_page_name=self.type,
+            tab_id=self.type,
             link_func=link_reverse_func(self.type),
         )
 
@@ -231,7 +232,7 @@ class CourseInfoTab(CourseTab):
         # Translators: "Course Info" is the name of the course's information and updates page
         super(CourseInfoTab, self).__init__(
             name=tab['name'] if tab else _('Course Info'),
-            active_page_name='info',
+            tab_id='info',
             link_func=link_reverse_func('info'),
         )
 
@@ -250,7 +251,7 @@ class ProgressTab(AuthenticatedCourseTab):
     def __init__(self, tab=None):
         super(ProgressTab, self).__init__(
             name=tab['name'] if tab else _('Progress'),
-            active_page_name=self.type,
+            tab_id=self.type,
             link_func=link_reverse_func(self.type),
         )
 
@@ -275,7 +276,7 @@ class WikiTab(CourseTab):
 
         super(WikiTab, self).__init__(
             name=tab['name'] if tab else _('Wiki'),
-            active_page_name=self.type,
+            tab_id=self.type,
             link_func=link_reverse_func('course_wiki'),
         )
 
@@ -298,7 +299,7 @@ class DiscussionTab(CourseTab):
         # Translators: "Discussion" is the title of the course forum page
         super(DiscussionTab, self).__init__(
             name=tab['name'] if tab else _('Discussion'),
-            active_page_name=self.type,
+            tab_id=self.type,
             link_func=link_reverse_func('django_comment_client.forum.views.forum_form_discussion'),
         )
 
@@ -316,11 +317,11 @@ class LinkTab(CourseTab):
     '''
     link_value = ''
 
-    def __init__(self, name, active_page_name, link_value):
+    def __init__(self, name, tab_id, link_value):
         self.link_value = link_value
         super(LinkTab, self).__init__(
             name=name,
-            active_page_name=active_page_name,
+            tab_id=tab_id,
             link_func=link_value_func(self.link_value),
         )
 
@@ -363,7 +364,7 @@ class ExternalDiscussionTab(LinkTab):
         # Translators: 'Discussion' refers to the tab in the courseware that leads to the discussion forums
         super(ExternalDiscussionTab, self).__init__(
             name=_('Discussion'),
-            active_page_name='discussion',
+            tab_id='discussion',
             link_value=tab['link'] if tab else link_value,
         )
 
@@ -377,7 +378,7 @@ class ExternalLinkTab(LinkTab):
     def __init__(self, tab):
         super(ExternalLinkTab, self).__init__(
             name=tab['name'],
-            active_page_name=None,  # External links are never active.
+            tab_id=None,  # External links are never active.
             link_value=tab['link'],
         )
 
@@ -398,7 +399,7 @@ class StaticTab(CourseTab):
         tab_name = tab['name'] if tab else name
         super(StaticTab, self).__init__(
             name=tab_name,
-            active_page_name='static_tab_{0}'.format(self.url_slug),
+            tab_id='static_tab_{0}'.format(self.url_slug),
             link_func=lambda course: reverse(self.type, args=[course.id, self.url_slug]),
         )
 
@@ -476,7 +477,7 @@ class TextbookTabs(TextbookTabsType):
         for index, textbook in enumerate(course.textbooks):
             yield SingleTextbookTab(
                 name=textbook.title,
-                active_page_name='textbook/{0}'.format(index),
+                tab_id='textbook/{0}'.format(index),
                 link_func=lambda course: reverse('book', args=[course.id, index]),
             )
 
@@ -491,7 +492,7 @@ class PDFTextbookTabs(TextbookTabsType):
         for index, textbook in enumerate(course.pdf_textbooks):
             yield SingleTextbookTab(
                 name=textbook['tab_title'],
-                active_page_name='pdftextbook/{0}'.format(index),
+                tab_id='pdftextbook/{0}'.format(index),
                 link_func=lambda course: reverse('pdf_book', args=[course.id, index]),
             )
 
@@ -506,7 +507,7 @@ class HtmlTextbookTabs(TextbookTabsType):
         for index, textbook in enumerate(course.html_textbooks):
             yield SingleTextbookTab(
                 name=textbook['tab_title'],
-                active_page_name='htmltextbook/{0}'.format(index),
+                tab_id='htmltextbook/{0}'.format(index),
                 link_func=lambda course: reverse('html_book', args=[course.id, index]),
             )
 
@@ -529,7 +530,7 @@ class StaffGradingTab(StaffTab, GradingTab):
         # staff to view open-ended problems that require staff grading
         super(StaffGradingTab, self).__init__(
             name=_("Staff grading"),
-            active_page_name=self.type,
+            tab_id=self.type,
             link_func=link_reverse_func(self.type),
         )
 
@@ -545,7 +546,7 @@ class PeerGradingTab(AuthenticatedCourseTab, GradingTab):
         # students to view open-ended problems that require grading
         super(PeerGradingTab, self).__init__(
             name=_("Peer grading"),
-            active_page_name=self.type,
+            tab_id=self.type,
             link_func=link_reverse_func(self.type),
         )
 
@@ -561,7 +562,7 @@ class OpenEndedGradingTab(AuthenticatedCourseTab, GradingTab):
         # displays information about open-ended problems that a user has submitted or needs to grade
         super(OpenEndedGradingTab, self).__init__(
             name=_("Open Ended Panel"),
-            active_page_name=self.type,
+            tab_id=self.type,
             link_func=link_reverse_func('open_ended_notifications'),
         )
 
@@ -579,7 +580,7 @@ class SyllabusTab(CourseTab):
         super(SyllabusTab, self).__init__(
             # Translators: "Syllabus" appears on a tab that, when clicked, opens the syllabus of the course.
             name=_('Syllabus'),
-            active_page_name=self.type,
+            tab_id=self.type,
             link_func=link_reverse_func(self.type),
         )
 
@@ -596,7 +597,7 @@ class NotesTab(AuthenticatedCourseTab):
     def __init__(self, tab=None):
         super(NotesTab, self).__init__(
             name=tab['name'],
-            active_page_name=self.type,
+            tab_id=self.type,
             link_func=link_reverse_func(self.type),
         )
 
@@ -616,7 +617,7 @@ class InstructorTab(StaffTab):
         # a portal where an instructor can get data and perform various actions on their course
         super(InstructorTab, self).__init__(
             name=_('Instructor'),
-            active_page_name=self.type,
+            tab_id=self.type,
             link_func=link_reverse_func('instructor_dashboard'),
         )
 
@@ -635,7 +636,16 @@ class CourseTabList(List):
         within the course.
         '''
 
-        # If they have a discussion link specified, use that even if we feature
+        course.tabs.extend([
+            CoursewareTab(),
+            CourseInfoTab(),
+        ])
+
+        # Presence of syllabus tab is indicated by a course attribute
+        if hasattr(course, 'syllabus_present') and course.syllabus_present:
+            course.tabs.append(SyllabusTab())
+
+        # If the course has a discussion link specified, use that even if we feature
         # flag discussions off. Disabling that is mostly a server safety feature
         # at this point, and we don't need to worry about external sites.
         if course.discussion_link:
@@ -644,9 +654,6 @@ class CourseTabList(List):
             discussion_tab = DiscussionTab()
 
         course.tabs.extend([
-            CoursewareTab(),
-            CourseInfoTab(),
-            SyllabusTab(),
             TextbookTabs(),
             discussion_tab,
             WikiTab(),
