@@ -127,7 +127,7 @@ When you create a new unit, a page opens for that unit. On the unit page, you ca
 
 - Enter the unit name that you want in the **Display Name** field. Note that students do not see the unit name.
 - Create components in the unit.
-- Change the visibility of the unit. By default, the unit visibility is set to **Private**, so students will not be able to see the unit.Unless you want students to see the unit immediately, leave this setting as-is. For more information, see :ref:`Publishing Your Course`.
+- Change the visibility of the unit. By default, the unit visibility is set to **Private**, so students will not be able to see the unit.Unless you want students to see the unit immediately, leave this setting as-is. For more information, see :ref:`Public and Private Units`.
 - Preview a draft of the unit.
 - If a unit has been published, view the live version of the unit.
 
@@ -245,25 +245,26 @@ Click the Delete icon.  Then follow instructions for the type of component you a
 Components that Contain Other Components
 ******************************************
 
-You can configure your course content so that components contain other components.  One example of when you would need to do this is for A/B tests.  See :ref:`Setting Up A/B Tests` for more information.
+You can configure your course content so that components contain other components.  Example of when you would need to do this is for conditional content or A/B tests.  See :ref:`Setting Up A/B Tests` for more information.
 
 The component that contains other components is referred to as the parent; the contained components are referred to as children.  
 
-In the unit page, a parent component appears with the display name and a **VIEW** link:
+In the unit page, a parent component appears with the display name and a **VIEW** link. For example:
 
 .. image:: Images/component_container.png
  :alt: Image of a unit page with a parent component
 
-When you click **VIEW**, the parent component page opens.  Breadcrumbs at the top of the page indicate that the components you are viewing are the children components:
+When you click **VIEW**, the parent component page opens, showing all child components.  Breadcrumbs at the top of the page show the unit and parent component:
 
 .. image:: Images/child-components.png
  :alt: Image of a child component page
 
-As shown in this example, a single component can be the child of one component, and the parent of other components. These relationships are also referred to as "nested components".
+Click the arrow next to a child component name to expand that component to see its contents. In this example, Child Component A contains an HTML component and a video:
+
+.. image:: Images/child_component_a.png
+ :alt: Image of an expanded child component
 
 .. note:: In this release, parent and child components are read-only in Studio. You set up components and their relationships to each other in XML. You can then import the course into Studio and verify that your course components are organized as you intended.
-
-
 
 
 ======================================
@@ -272,7 +273,7 @@ XML for Parent and Child Components
 
 You develop parent and child components in XML, then import the XML course into Studio to verify that the structure is as you intended. The following examples show the XML used to create the unit and components shown in Studio above.
 
-The XML for Unit one is:
+The XML for the unit is:
 
 .. code-block:: xml
 
@@ -281,7 +282,7 @@ The XML for Unit one is:
   <vertical url_name="131a499ddaa3474194c1aa2eced34455"/>
  </vertical>
 
-The ``<vertical>`` element above references the parent component file that contains the child components:
+The ``<vertical url_name="131a499ddaa3474194c1aa2eced34455"/>`` element above references the parent component file that contains the child components:
  
 .. code-block:: xml
 
@@ -294,14 +295,14 @@ The two verticals referenced by the parent component refer to the child componen
 
 .. code-block:: xml
 
- <vertical display_name="Child Components">
+ <vertical display_name="Child Component A">
   <html url_name="4471618afafb45bfb86cbe511973e225"/>
   <video url_name="fbd800d0bdbd4cb69ac70c47c9f699e1"/>
  </vertical>
 
 .. code-block:: xml
 
- <vertical display_name="Child Components">
+ <vertical display_name="Child Component B">
   <html url_name="dd6ef295fda74a639842e1a49c66b2c7"/>
   <problem url_name="b40ecbe4ed1b4280ae93e2a158edae6f"/>
  </vertical>
@@ -316,8 +317,11 @@ The Student View of Nested Components
 
 For students, all parent and child components are displayed on the unit page. The following example shows the student view of the unit described above:
 
+TO REPLACE
+
 .. image:: Images/nested_components_student_view.png
  :alt: Image of the student's view of nested components
+
 
 .. _Reorganize Your Course:
 

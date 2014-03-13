@@ -44,6 +44,8 @@ You can change the group selection to see the different video that a different g
 .. image:: Images/a-b-test-lms-group-2.png
  :alt: Image of a unit page with Group 2 selected
 
+ .. note:: The example course content in this chapter use A/B test terminology to make the functionality clear. Typically, you do not want to use terminology in course content that would make students aware of the experiment.
+
 .. _The Studio Outline View of A/B Tests:
 
 ********************************************
@@ -61,10 +63,15 @@ For example, the following unit page contains just one component, which is the A
 .. image:: Images/a-b-test-studio_unit_page.png
  :alt: Image of a unit page in Studio and an A/B test component
 
+You see the A/B test's child components by clicking the arrow in the link above.  A read-only page then shows all the components in the A/B test:
 
-.. You see the A/B test's child components by clicking the arrow in the link above.  A read-only page then shows all the components in the A/B test:
+.. image:: Images/a_b_test_children.png
+ :alt: Image of the A/B test child components
 
-.. no image, studio issue currently
+Click the arrow next to a test component name to expand that test to see its contents. In this example, Group A contains an HTML component and a video:
+
+.. image:: Images/a_b_test_child_expanded.png
+ :alt: Image of an expanded A/B test component
 
 .. _Configure the A/B Test in XML:
 
