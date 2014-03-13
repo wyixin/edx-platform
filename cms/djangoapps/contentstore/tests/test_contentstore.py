@@ -127,7 +127,7 @@ class ContentStoreToyCourseTest(ModuleStoreTestCase):
         store.update_item(course, self.user.id)
 
         # just pick one vertical
-        descriptor = store.get_items(CourseKey.from_str(course.id), kwargs={'category': 'vertical',})
+        descriptor = store.get_items(CourseKey.from_string(course.id), kwargs={'category': 'vertical',})
         locator = loc_mapper().translate_location(course.location.course_id, descriptor.location, True, True)
         resp = self.client.get_html(locator.url_reverse('unit'))
         self.assertEqual(resp.status_code, 200)
