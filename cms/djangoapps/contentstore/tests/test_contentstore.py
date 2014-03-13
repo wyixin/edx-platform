@@ -26,6 +26,7 @@ from contentstore.tests.modulestore_config import TEST_MODULESTORE
 from xmodule.modulestore.tests.factories import CourseFactory, ItemFactory
 
 from xmodule.modulestore import Location, mongo
+from xmodule.modulestore.keys import CourseKey
 from xmodule.modulestore.store_utilities import clone_course
 from xmodule.modulestore.store_utilities import delete_course
 from xmodule.modulestore.django import modulestore
@@ -119,8 +120,8 @@ class ContentStoreToyCourseTest(ModuleStoreTestCase):
         store = modulestore('direct')
         import_from_xml(store, 'common/test/data/', ['simple'])
 
-        course = store.get_item(Location(['i4x', 'edX', 'simple',
-                                          'course', '2012_Fall', None]), depth=None)
+        course_id = 'edX/simple/2012_Fall'
+        course = store.get_item(CourseKey.from_string(course_id), kwargs={'tag': 'i4x', 'category': 'course', 'revision': None,})
 
         course.advanced_modules = component_types
 

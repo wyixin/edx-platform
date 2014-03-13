@@ -6,6 +6,7 @@ import logging
 import lxml.etree
 from xblock.fields import Scope
 from xmodule.modulestore import Location
+from xmodule.modulestore.keys import CourseKey
 from xmodule.modulestore.inheritance import own_metadata
 from fs.osfs import OSFS
 from json import dumps
@@ -105,7 +106,7 @@ def export_to_xml(modulestore, contentstore, course_id, root_dir, course_dir, dr
     # should we change the application, then this assumption will no longer
     # be valid
     if draft_modulestore is not None:
-        draft_verticals = draft_modulestore.get_items(course_id, qualifiers={
+        draft_verticals = draft_modulestore.get_items(CourseKey.from_string(course_id), kwargs={
             'category': 'vertical',
             'version': 'draft'
         })
@@ -140,7 +141,7 @@ def _export_field_content(xblock_item, item_dir):
 
 
 def export_extra_content(export_fs, modulestore, course_id, category_type, dirname, file_suffix=''):
-    items = modulestore.get_items(course_id, qualifiers={'category': category_type})
+    items = modulestore.get_items(CourseKey.from_string(course_id), kwargs={'category': category_type})
 
     if len(items) > 0:
         item_dir = export_fs.makeopendir(dirname)

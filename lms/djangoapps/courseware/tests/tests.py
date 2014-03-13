@@ -11,6 +11,7 @@ from textwrap import dedent
 
 from xmodule.error_module import ErrorDescriptor
 from xmodule.modulestore.django import modulestore
+from xmodule.modulestore.keys import CourseKey
 from xmodule.modulestore import Location
 from xmodule.modulestore.xml_importer import import_from_xml
 from xmodule.modulestore.tests.django_utils import ModuleStoreTestCase
@@ -68,11 +69,7 @@ class PageLoaderTestCase(LoginEnrollmentTestCase):
             course_loc.course, None, None, None
         )
 
-        items = store.get_items(
-            location_query,
-            course_id=course_id,
-            depth=2
-        )
+        items = store.get_items(CourseKey.from_string(course_id))
 
         if len(items) < 1:
             self.fail('Could not retrieve any items from course')

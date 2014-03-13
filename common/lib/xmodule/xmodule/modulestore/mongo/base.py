@@ -776,6 +776,7 @@ class MongoModuleStore(ModuleStoreWriteBase):
         # @hack! We need to find the course location however, we don't
         # know the 'name' parameter in this context, so we have
         # to assume there's only one item in this query even though we are not specifying a name
+        from nose.tools import set_trace; set_trace()
         course_search_location = Location('i4x', location.org, location.course, 'course', None)
         courses = self.get_items(course_search_location, depth=depth)
 

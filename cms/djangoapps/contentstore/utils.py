@@ -76,7 +76,7 @@ def get_course_location_for_item(location):
         # @hack! We need to find the course location however, we don't
         # know the 'name' parameter in this context, so we have
         # to assume there's only one item in this query even though we are not specifying a name
-        courses = modulestore().get_items(CourseKey.from_string(location.course.id), kwargs={'category': 'course'})
+        courses = modulestore().get_items(CourseKey.from_string(location.course_id), kwargs={'category': 'course'})
 
         # make sure we found exactly one match on this above course search
         found_cnt = len(courses)
@@ -101,7 +101,7 @@ def get_course_for_item(location):
     # @hack! We need to find the course location however, we don't
     # know the 'name' parameter in this context, so we have
     # to assume there's only one item in this query even though we are not specifying a name
-    courses = modulestore().get_items(CourseKey.from_string(location.course.id), qualifiers={'category': 'course'})
+    courses = modulestore().get_items(CourseKey.from_string(location.course_id), kwargs={'category': 'course'})
 
     # make sure we found exactly one match on this above course search
     found_cnt = len(courses)
