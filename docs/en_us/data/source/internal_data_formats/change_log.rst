@@ -10,12 +10,14 @@ Change Log
 
    * - Date
      - Change
+   * - 17 Mar 2014
+     - Added the ``user_api_usercoursetag`` table to the :ref:`Student_Info` chapter and the ``assigned_user_to_partition`` and ``child_render`` event types to the :ref:`Tracking Logs` chapter.
    * - 13 Mar 2014
      - Updated the :ref:`Student_Info` chapter.
-   * - 24 Feb 14
+   * - 24 Feb 2014
      - Added descriptions of new fields to the :ref:`Wiki_Data` chapter.
-   * - 21 Feb 14
+   * - 21 Feb 2014
      - Added descriptions of new fields to the :ref:`Discussion Forums Data` chapter.
-   * - 14 Feb 14
+   * - 14 Feb 2014
      - Added the ``seek_video`` and ``speed_change_video`` event types to the :ref:`Tracking Logs` chapter.
 
