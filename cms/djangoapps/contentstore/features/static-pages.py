@@ -90,5 +90,5 @@ def _verify_tab_names(first, second):
         timeout_msg="Timed out waiting for two tabs to be present"
     )
     tabs = world.css_find('.xmodule_StaticTabModule')
-    assert tabs[5].text == first
-    assert tabs[6].text == second
+    assert tabs[0].text == first
+    assert tabs[1].text == second
