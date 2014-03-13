@@ -53,7 +53,7 @@ def change_name(step, new_name):
 @step(u'I reorder the tabs')
 def reorder_tabs(_step):
     # For some reason, the drag_and_drop method did not work in this case.
-    draggables = world.css_find('.drag-handle')
+    draggables = world.css_find('.component .drag-handle')
     source = draggables.first
     target = draggables.last
     source.action_chains.click_and_hold(source._element).perform()
