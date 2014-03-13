@@ -4,7 +4,7 @@
   from django.core.urlresolvers import reverse
 %>
 <%inherit file="base.html" />
-<%block name="title">Pages</%block>
+<%block name="title">${_("Pages")}</%block>
 <%block name="bodyclass">is-signedin course view-static-pages</%block>
 
 <%block name="jsextra">
@@ -81,7 +81,7 @@
               % endfor
 
               % for locator in components:
-              <li class="component" data-locator="${locator}"/>
+              <li class="component" data-locator="${locator}"></li>
               % endfor
 
               <li class="new-component-item">
