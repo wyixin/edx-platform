@@ -10,7 +10,7 @@
        % endif
   >${value|h}</textarea>
 
-  <div class="grader-status" tabindex="1">
+  <div class="grader-status" tabindex="-1">
     % if status == 'unsubmitted':
       <span class="unanswered" style="display:inline-block;" id="status_${id}" aria-describedby="input_${id}"><span class="sr">Status: </span>Unanswered</span>
     % elif status == 'correct':

@@ -484,6 +484,9 @@ class @Problem
 
       return display
 
+    matlabinput: (container) =>
+      window.setupCodeMirror $(container).find("textarea")[0]
+
   inputtypeShowAnswerMethods:
     choicegroup: (element, display, answers) =>
       element = $(element)
