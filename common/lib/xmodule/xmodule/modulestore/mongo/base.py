@@ -799,11 +799,10 @@ class MongoModuleStore(ModuleStoreWriteBase):
                 course = self._get_course_for_item(xblock.location)
                 # find the course's reference to this tab and update the name.
                 static_tab = CourseTabList.get_tab_by_slug(course, xblock.location.name)
-                if static_tab:
-                    # only update if changed
-                    if static_tab['name'] != xblock.display_name:
-                        static_tab['name'] = xblock.display_name
-                        self.update_item(course, user)
+                # only update if changed
+                if static_tab and static_tab['name'] != xblock.display_name:
+                    static_tab['name'] = xblock.display_name
+                    self.update_item(course, user)
 
             # recompute (and update) the metadata inheritance tree which is cached
             # was conditional on children or metadata having changed before dhm made one update to rule them all

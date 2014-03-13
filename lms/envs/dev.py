@@ -38,7 +38,7 @@ FEATURES['ENABLE_S3_GRADE_DOWNLOADS'] = True
 
 FEEDBACK_SUBMISSION_EMAIL = "dummy@example.com"
 
-# Note: this wiki setting is also configured in the cms.envs.dev.py file.
+# Note: this wiki setting is also configured in the cms/envs/dev.py file.
 # For a consistent user experience, both values should be updated together.
 WIKI_ENABLED = True
 

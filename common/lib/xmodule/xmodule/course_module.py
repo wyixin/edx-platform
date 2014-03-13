@@ -463,7 +463,7 @@ class CourseDescriptor(CourseFields, SequenceDescriptor):
         if self.discussion_topics == {}:
             self.discussion_topics = {_('General'): {'id': self.location.html_id()}}
 
-        if not hasattr(self, 'tabs') or not self.tabs or len(self.tabs) == 0:
+        if not getattr(self, "tabs", []):
             CourseTabList.initialize_default(self)
 
     def set_grading_policy(self, course_policy):

@@ -222,16 +222,14 @@ class TextbooksTestCase(TabTestCase):
     @override_settings(FEATURES={'ENABLE_TEXTBOOK': True})
     def test_textbooks1(self):
 
-        i = 0
         tab = tabs.TextbookTabs(self.dict_tab)
         self.assertTrue(tab.can_display(self.course, is_user_authenticated=True, is_user_staff=True))
-        for book in tab.books(self.course):
+        for i, book in enumerate(tab.books(self.course)):
             expected_link = reverse('book', args=[self.course.id, i])
             self.assertEqual(book.link_func(self.course), expected_link)
             self.assertEqual(book.tab_id, 'textbook/{0}'.format(i))
             self.assertNotEquals(book.tab_id, 'nope')
             self.assertTrue(book.name.startswith('Book{0}:'.format(i+1)))
-            i = i + 1
 
     @override_settings(FEATURES={'ENABLE_TEXTBOOK': False})
     def test_textbooks0(self):

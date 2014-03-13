@@ -828,7 +828,7 @@ def textbooks_list_handler(request, tag=None, package_id=None, branch=None, vers
                 textbook["id"] = tid
                 tids.add(tid)
 
-        if not any(tab['type'] == 'pdf_textbooks' for tab in course.tabs):
+        if not any(tab['type'] == PDFTextbookTabs.type for tab in course.tabs):
             course.tabs.append(PDFTextbookTabs())
         course.pdf_textbooks = textbooks
         store.update_item(course, request.user.id)
@@ -845,7 +845,7 @@ def textbooks_list_handler(request, tag=None, package_id=None, branch=None, vers
         existing = course.pdf_textbooks
         existing.append(textbook)
         course.pdf_textbooks = existing
-        if not any(tab['type'] == 'pdf_textbooks' for tab in course.tabs):
+        if not any(tab['type'] == PDFTextbookTabs.type for tab in course.tabs):
             course.tabs.append(PDFTextbookTabs())
         store.update_item(course, request.user.id)
         resp = JsonResponse(textbook, status=201)

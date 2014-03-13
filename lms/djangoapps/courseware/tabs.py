@@ -14,6 +14,7 @@ import logging
 
 from .module_render import get_module
 from xmodule.modulestore.django import modulestore
+from xmodule.modulestore import Location
 from xmodule.tabs import GradingTab, StaffGradingTab, PeerGradingTab, OpenEndedGradingTab
 from courseware.model_data import FieldDataCache
 from open_ended_grading import open_ended_notifications
@@ -46,7 +47,11 @@ def get_static_tab_contents(request, course, static_tab):
     '''
     Returns the contents for the given static_tab
     '''
-    loc = static_tab.get_location(course)
+    loc = Location(
+        course.location.tag, course.location.org, course.location.course,
+        static_tab.type,
+        static_tab.url_slug
+    )
     field_data_cache = FieldDataCache.cache_for_descriptor_descendents(course.id,
         request.user, modulestore().get_instance(course.id, loc), depth=0)
     tab_module = get_module(request.user, request, loc, field_data_cache, course.id,

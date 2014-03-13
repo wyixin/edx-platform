@@ -6,7 +6,6 @@ Implement CourseTab
 from abc import ABCMeta, abstractmethod
 
 from xblock.fields import List
-from xmodule.modulestore import Location
 
 from django.conf import settings
 from django.core.urlresolvers import reverse
@@ -72,13 +71,9 @@ class CourseTab(object):  # pylint: disable=incomplete-protocol
         Akin to the get method on Python dictionary objects, gracefully returns the value associated with the
         given key, or the default if key does not exist.
         '''
-        if key == 'name':
-            return self.name
-        elif key == 'type':
-            return self.type
-        elif key == 'tab_id':
-            return self.tab_id
-        else:
+        try:
+            return self[key]
+        except KeyError:
             return default
 
     def __getitem__(self, key):
@@ -86,11 +81,14 @@ class CourseTab(object):  # pylint: disable=incomplete-protocol
         This method allows callers to access CourseTab members with the d[key] syntax as is done with
         Python dictionary objects.
         '''
-        item = self.get(key=key, default=KeyError)
-        if item is KeyError:
-            raise KeyError()
+        if key == 'name':
+            return self.name
+        elif key == 'type':
+            return self.type
+        elif key == 'tab_id':
+            return self.tab_id
         else:
-            return item
+            raise KeyError()
 
     def __setitem__(self, key, value):
         '''
@@ -325,11 +323,11 @@ class LinkTab(CourseTab):
             link_func=link_value_func(self.link_value),
         )
 
-    def get(self, key, default=None):
+    def __getitem__(self, key):
         if key == 'link':
             return self.link_value
         else:
-            return super(LinkTab, self).get(key)
+            return super(LinkTab, self).__getitem__(key)
 
     def __setitem__(self, key, value):
         if key == 'link':
@@ -403,27 +401,17 @@ class StaticTab(CourseTab):
             link_func=lambda course: reverse(self.type, args=[course.id, self.url_slug]),
         )
 
-    def get(self, key, default=None):
+    def __getitem__(self, key):
         if key == 'url_slug':
             return self.url_slug
         else:
-            return super(StaticTab, self).get(key)
+            return super(StaticTab, self).__getitem__(key)
 
     def __setitem__(self, key, value):
         if key == 'url_slug':
             self.url_slug = value
         else:
             super(StaticTab, self).__setitem__(key, value)
-
-    def get_location(self, course):
-        '''
-        Returns the location for this static tab for the given course.
-        '''
-        return Location(
-            course.location.tag, course.location.org, course.location.course,
-            'static_tab',
-            self.url_slug
-        )
 
     def to_json(self):
         return {'type': self.type, 'name': self.name, 'url_slug': self.url_slug}
@@ -723,16 +711,16 @@ class CourseTabList(List):
         if len(tabs) < 2:
             raise InvalidTabsException("Expected at least two tabs.  tabs: '{0  }'".format(tabs))
 
-        if tabs[0]['type'] != 'courseware':
+        if tabs[0]['type'] != CoursewareTab.type:
             raise InvalidTabsException(
                 "Expected first tab to have type 'courseware'.  tabs: '{0}'".format(tabs))
 
-        if tabs[1]['type'] != 'course_info':
+        if tabs[1]['type'] != CourseInfoTab.type:
             raise InvalidTabsException(
                 "Expected second tab to have type 'course_info'.  tabs: '{0}'".format(tabs))
 
-        cls._validate_num_tabs_of_type(tabs, 'courseware', 1)
-        cls._validate_num_tabs_of_type(tabs, 'pdf_textbooks', 1)
+        cls._validate_num_tabs_of_type(tabs, CoursewareTab.type, 1)
+        cls._validate_num_tabs_of_type(tabs, CourseInfoTab.type, 1)
 
     @staticmethod
     def _validate_num_tabs_of_type(tabs, tab_type, max_num):
