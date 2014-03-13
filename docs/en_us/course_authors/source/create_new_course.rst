@@ -438,7 +438,6 @@ To delete a file, click the **x** icon next to the file.  You are prompted to co
 ****************
 Add Pages
 ****************
-You can add pages to your course. Each page appears in your course's' navigation bar. 
 
 By default, your course has the following pages:
 
@@ -447,17 +446,17 @@ By default, your course has the following pages:
 * Discussion
 * Progress
 
-You cannot reorder or remove those pages.
+You cannot rename, reorder, or remove these pages.
 
-You can add additional pages.
+You can add pages to your course. Each page appears in your course's navigation bar. 
 
-For example, the following navigation bar includes a
-**Syllabus** and **Projects** static pages.
+For example, the following navigation bar includes
+**Course Schedule** and **Supplements & Instructor's Blog** pages.
 
 .. image:: Images/page_bar_lms.png
  :alt: Image of the page bar in the LMS
 
-You can create other pages for the grading policy, course slides, or any other purpose. Other options for pages include:
+You can create other pages for the grading policy, course slides, or any other purpose. More examples of pages you can add are:
 
 * Embedding the code for a Google calendar.  
 
@@ -467,7 +466,7 @@ You can create other pages for the grading policy, course slides, or any other p
 
 To create a page:
 
-#. From the **Content** menu, select **Pages**. The following screen opens:
+#. From the **Content** menu, select **Pages**. 
 
   .. image:: Images/pages_page.png
    :alt: Image of the Pages screen
@@ -493,7 +492,7 @@ The new page is immediately available to students, if the course has started.
 Reorder Pages
 ==================
 
-You can reorder pages your course by dragging and dropping the pages to different locations. The order you set controls the order of pages students see in your course.
+You can reorder pages in your course by dragging and dropping the pages to different locations. 
 
 To move a page, hover over the element handle on the right side of the page row until the mouse pointer changes to a four-headed arrow. Then, click and drag the page to the location that you want.
 
@@ -503,7 +502,7 @@ To move a page, hover over the element handle on the right side of the page row 
 Delete a Page
 ==================
 
-To delete a static page, click the trash can icon in the row for the page.  You are prompted to confirm the deletion.
+To delete a page that you previously added, click the trash can icon in the row for the page.  You are prompted to confirm the deletion.
 
 .. _`Add a Course Update`:
 
