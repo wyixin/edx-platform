@@ -2,6 +2,7 @@ import logging
 import urllib
 
 from collections import defaultdict
+from django.utils.translation import ugettext as _
 
 from django.conf import settings
 from django.core.context_processors import csrf
@@ -715,9 +716,9 @@ def submission_history(request, course_id, student_username, location):
                                                    module_state_key=location,
                                                    student_id=student.id)
     except User.DoesNotExist:
-        return HttpResponse(escape("User {0} does not exist.".format(student_username)))
+        return HttpResponse(escape(_("User {0} does not exist.").format(student_username)))
     except StudentModule.DoesNotExist:
-        return HttpResponse(escape("{0} has never accessed problem {1}".format(student_username, location)))
+        return HttpResponse(escape(_("{0} has never accessed problem {1}").format(student_username, location)))
 
     history_entries = StudentModuleHistory.objects.filter(
         student_module=student_module
