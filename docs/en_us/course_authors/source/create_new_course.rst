@@ -444,6 +444,7 @@ By default, your course has the following pages:
 * Courseware
 * Course Info
 * Discussion
+* Wiki
 * Progress
 
 You cannot rename, reorder, or remove these pages.
@@ -458,11 +459,11 @@ For example, the following navigation bar includes
 
 You can create other pages for the grading policy, course slides, or any other purpose. More examples of pages you can add are:
 
-* Embedding the code for a Google calendar.  
+* A Google calendar, by embedding the code for it.  
 
-* Copying the template for a dynamic HTML calendar from :ref:`Appendix B` and customizing for your course.
+* A dynamic HTML calendar, using the template in :ref:`Appendix B`.
 
-* Adding an instant hangout to a page.  See :ref:`Using an Instant Hangout in Your Course` for more information.
+* An instant hangout.  See :ref:`Using an Instant Hangout in Your Course` for more information.
 
 To create a page:
 
@@ -496,7 +497,7 @@ You can reorder pages in your course by dragging and dropping the pages to diffe
 
 To move a page, hover over the element handle on the right side of the page row until the mouse pointer changes to a four-headed arrow. Then, click and drag the page to the location that you want.
 
-.. note:: You cannot reorder the default pages listed above.
+.. note:: You cannot reorder the Courseware, Course Info, Discussion, Wiki, and Progress pages that your course includes by default
 
 ==================
 Delete a Page
