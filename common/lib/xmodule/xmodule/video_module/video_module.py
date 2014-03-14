@@ -426,7 +426,6 @@ class VideoModule(VideoFields, XModule):
                         Transcript.delete_asset(self.location, self.transcripts[lang])
 
                 return Response(status=204)
-
             if not language:
                 log.info("Invalid /translation request: no language.")
                 return Response(status=400)
