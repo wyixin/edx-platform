@@ -336,7 +336,7 @@ class VideoModule(VideoFields, XModule):
             - KeyError if transcript file has incorrect format.
 
         If language is 'en', self.sub should be correct subtitles name.
-        If language is 'en', but if self.sub is not defined, this means that we 
+        If language is 'en', but if self.sub is not defined, this means that we
         should search for video name in order to get proper transcript (old style courses).
         If language is not 'en', give back transcript in proper language and format.
         """
@@ -418,7 +418,6 @@ class VideoModule(VideoFields, XModule):
 
         if dispatch.startswith('translation'):
             language = dispatch.replace('translation', '').strip('/')
-
             if request.method == 'DELETE':  # We will clear field on front-end on save. So we remove files here:
                 if language:
                     Transcript.delete_asset(self.location, self.transcripts[language])
