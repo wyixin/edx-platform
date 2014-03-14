@@ -266,6 +266,7 @@ def course_listing(request):
         'user': request.user,
         'request_course_creator_url': reverse('contentstore.views.request_course_creator'),
         'course_creator_status': _get_course_creator_status(request.user),
+        'allow_unicode_course_id': settings.FEATURES.get('ALLOW_UNICODE_COURSE_ID', False)
     })
 
 
@@ -312,6 +313,23 @@ def create_new_course(request):
     number = request.json.get('number')
     display_name = request.json.get('display_name')
     run = request.json.get('run')
+
+    # allow/disable unicode characters in course_id according to settings
+    if settings.FEATURES.get('ALLOW_UNICODE_COURSE_ID', False) is False:
+        unicode_fields = []
+        if _has_non_ascii_characters(org):
+            unicode_fields.append(_('organization'))
+        if _has_non_ascii_characters(number):
+            unicode_fields.append(_('course number'))
+        if _has_non_ascii_characters(run):
+            unicode_fields.append(_('course run'))
+        if unicode_fields:
+            return JsonResponse({
+                'ErrMsg': _(
+                    'Unicode characters not allowed in organization, course number, and course run. '
+                    'Please remove unicode characters from {0}.'.format(', '.join(unicode_fields))
+                )
+            })
 
     try:
         dest_location = Location(u'i4x', org, number, u'course', run)
@@ -418,6 +436,18 @@ def create_new_course(request):
     _users_assign_default_role(new_course.location)
 
     return JsonResponse({'url': new_location.url_reverse("course/", "")})
+
+
+def _has_non_ascii_characters(data_string):
+    """
+    Check that if provided string contains unicode characters
+    """
+    try:
+        data_string.encode('ascii')
+    except UnicodeEncodeError:
+        return True
+
+    return False
 
 
 def _users_assign_default_role(course_location):

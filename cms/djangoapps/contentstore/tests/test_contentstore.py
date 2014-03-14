@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #pylint: disable=E1101
 
 import json
@@ -1562,6 +1563,29 @@ class ContentStoreTest(ModuleStoreTestCase):
             auth.add_users(self.user, CourseCreatorRole(), self.user)
             self.assert_created_course()
 
+    def test_create_course_with_unicode_in_id_disabled(self):
+        """
+        Test new course creation with feature setting: ALLOW_UNICODE_COURSE_ID disabled.
+        """
+        with mock.patch.dict('django.conf.settings.FEATURES', {'ALLOW_UNICODE_COURSE_ID': False}):
+            self.course_data['org'] = u'Юникода'
+            self.assert_course_creation_failed(
+                "Unicode characters not allowed in organization, course number, and course run. "
+                "Please remove unicode characters from organization."
+            )
+
+            self.course_data['number'] = u'échantillon'
+            self.assert_course_creation_failed(
+                "Unicode characters not allowed in organization, course number, and course run. "
+                "Please remove unicode characters from organization, course number."
+            )
+
+            self.course_data['run'] = u'Юникода'
+            self.assert_course_creation_failed(
+                "Unicode characters not allowed in organization, course number, and course run. "
+                "Please remove unicode characters from organization, course number, course run."
+            )
+
     def assert_course_permission_denied(self):
         """
         Checks that the course did not get created due to a PermissionError.
@@ -2073,7 +2097,7 @@ def _course_factory_create_course():
 
 def _get_course_id(test_course_data):
     """Returns the course ID (org/number/run)."""
-    return "{org}/{number}/{run}".format(**test_course_data)
+    return u"{org}/{number}/{run}".format(**test_course_data)
 
 
 def _test_no_locations(test, resp, status_code=200, html=True):
