@@ -312,7 +312,7 @@ def import_module(
         source_course_location, dest_course_location, allow_not_found=False,
         do_import_static=True):
 
-    logging.debug('processing import of module {}...'.format(module.location.url()))
+    logging.debug(u'processing import of module {}...'.format(module.location.url()))
 
     if do_import_static and 'data' in module.fields and isinstance(module.fields['data'], xblock.fields.String):
         # we want to convert all 'non-portable' links in the module_data
