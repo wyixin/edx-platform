@@ -516,8 +516,8 @@ STATICFILES_DIRS = [
 FAVICON_PATH = 'images/favicon.ico'
 
 # Locale/Internationalization
-TIME_ZONE = 'America/New_York'  # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
-LANGUAGE_CODE = 'en'  # http://www.i18nguy.com/unicode/language-identifiers.html
+TIME_ZONE = 'Asia/Shanghai'  # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
+LANGUAGE_CODE = 'zh_CN'  # http://www.i18nguy.com/unicode/language-identifiers.html
 
 # Sourced from http://www.localeplanet.com/icu/ and wikipedia
 LANGUAGES = (
@@ -578,6 +578,7 @@ LANGUAGES = (
     ('vi', u'Tiếng Việt'),  # Vietnamese
     ('zh-cn', u'大陆简体'),  # Chinese (China)
     ('zh-tw', u'台灣正體'),  # Chinese (Taiwan)
+    ('zh_CN','en'),
 )
 
 LANGUAGE_DICT = dict(LANGUAGES)
