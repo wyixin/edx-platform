@@ -15,6 +15,8 @@ import os
 import sys
 import importlib
 from argparse import ArgumentParser
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 def parse_args():
     """Parse edx specific arguments to manage.py"""
